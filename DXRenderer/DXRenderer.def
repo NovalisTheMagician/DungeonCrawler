@@ -1,0 +1,8 @@
+LIBRARY DXRENDERER
+EXPORTS
+	Initialize
+	Dispose
+	AttachRenderbuffer
+	DetachRenderbuffer
+	ResizeRenderbuffer
+	SetRenderbufferMode
