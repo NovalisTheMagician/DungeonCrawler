@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Editor
+namespace Editor.Forms
 {
     public partial class TextureManager : Form
     {
@@ -27,7 +27,7 @@ namespace Editor
             public TexturePanel()
             {
                 this.Paint += OnPaint;
-                this.Size = new Size(256, 256);
+                this.Size = new Size(PANEL_WIDTH, PANEL_HEIGHT);
 
                 Texture = null;
 

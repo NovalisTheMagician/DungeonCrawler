@@ -1,4 +1,4 @@
-﻿namespace Editor
+﻿namespace Editor.Forms
 {
     partial class EditorForm
     {
@@ -43,6 +43,8 @@
             this.buildAndRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textureManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.modelManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.materialManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.entitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,8 +61,12 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.layout6Pane1 = new Editor.Layout6Pane();
-            this.modelManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.materialManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pullBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewChangesBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.pushBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.setupBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -71,6 +77,7 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.gitToolStripMenuItem,
             this.exportToolStripMenuItem,
             this.importToolStripMenuItem,
             this.toolsToolStripMenuItem,
@@ -153,13 +160,13 @@
             // buildToolStripMenuItem
             // 
             this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
-            this.buildToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.buildToolStripMenuItem.Size = new System.Drawing.Size(206, 30);
             this.buildToolStripMenuItem.Text = "Build";
             // 
             // buildAndRunToolStripMenuItem
             // 
             this.buildAndRunToolStripMenuItem.Name = "buildAndRunToolStripMenuItem";
-            this.buildAndRunToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.buildAndRunToolStripMenuItem.Size = new System.Drawing.Size(206, 30);
             this.buildAndRunToolStripMenuItem.Text = "Build and Run";
             // 
             // importToolStripMenuItem
@@ -176,14 +183,28 @@
             // textureManagerBtn
             // 
             this.textureManagerBtn.Name = "textureManagerBtn";
-            this.textureManagerBtn.Size = new System.Drawing.Size(252, 30);
+            this.textureManagerBtn.Size = new System.Drawing.Size(234, 30);
             this.textureManagerBtn.Text = "Texture Manager";
             this.textureManagerBtn.Click += new System.EventHandler(this.textureManagerBtnClick);
+            // 
+            // modelManagerBtn
+            // 
+            this.modelManagerBtn.Name = "modelManagerBtn";
+            this.modelManagerBtn.Size = new System.Drawing.Size(234, 30);
+            this.modelManagerBtn.Text = "Model Manager";
+            this.modelManagerBtn.Click += new System.EventHandler(this.modelManagerBtnClick);
+            // 
+            // materialManagerBtn
+            // 
+            this.materialManagerBtn.Name = "materialManagerBtn";
+            this.materialManagerBtn.Size = new System.Drawing.Size(234, 30);
+            this.materialManagerBtn.Text = "Material Manager";
+            this.materialManagerBtn.Click += new System.EventHandler(this.materialManagerBtnClick);
             // 
             // entitiesToolStripMenuItem
             // 
             this.entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
-            this.entitiesToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.entitiesToolStripMenuItem.Size = new System.Drawing.Size(234, 30);
             this.entitiesToolStripMenuItem.Text = "Entities";
             // 
             // toolsToolStripMenuItem
@@ -204,14 +225,14 @@
             // standardViewBtn
             // 
             this.standardViewBtn.Name = "standardViewBtn";
-            this.standardViewBtn.Size = new System.Drawing.Size(252, 30);
+            this.standardViewBtn.Size = new System.Drawing.Size(167, 30);
             this.standardViewBtn.Text = "Standard";
             this.standardViewBtn.Click += new System.EventHandler(this.standardViewBtnClick);
             // 
             // texturingViewBtn
             // 
             this.texturingViewBtn.Name = "texturingViewBtn";
-            this.texturingViewBtn.Size = new System.Drawing.Size(252, 30);
+            this.texturingViewBtn.Size = new System.Drawing.Size(167, 30);
             this.texturingViewBtn.Text = "Texturing";
             this.texturingViewBtn.Click += new System.EventHandler(this.texturingViewBtnClick);
             // 
@@ -227,14 +248,14 @@
             // settingsBtn
             // 
             this.settingsBtn.Name = "settingsBtn";
-            this.settingsBtn.Size = new System.Drawing.Size(160, 30);
+            this.settingsBtn.Size = new System.Drawing.Size(252, 30);
             this.settingsBtn.Text = "Settings";
             this.settingsBtn.Click += new System.EventHandler(this.settingsBtnClick);
             // 
             // aboutBtn
             // 
             this.aboutBtn.Name = "aboutBtn";
-            this.aboutBtn.Size = new System.Drawing.Size(160, 30);
+            this.aboutBtn.Size = new System.Drawing.Size(252, 30);
             this.aboutBtn.Text = "About";
             // 
             // toolStrip1
@@ -320,19 +341,52 @@
             this.layout6Pane1.Size = new System.Drawing.Size(1224, 710);
             this.layout6Pane1.TabIndex = 4;
             // 
-            // modelManagerBtn
+            // gitToolStripMenuItem
             // 
-            this.modelManagerBtn.Name = "modelManagerBtn";
-            this.modelManagerBtn.Size = new System.Drawing.Size(252, 30);
-            this.modelManagerBtn.Text = "Model Manager";
-            this.modelManagerBtn.Click += new System.EventHandler(this.modelManagerBtnClick);
+            this.gitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pullBtn,
+            this.viewChangesBtn,
+            this.commitBtn,
+            this.pushBtn,
+            this.setupBtn});
+            this.gitToolStripMenuItem.Name = "gitToolStripMenuItem";
+            this.gitToolStripMenuItem.Size = new System.Drawing.Size(46, 29);
+            this.gitToolStripMenuItem.Text = "Git";
             // 
-            // materialManagerBtn
+            // pullBtn
             // 
-            this.materialManagerBtn.Name = "materialManagerBtn";
-            this.materialManagerBtn.Size = new System.Drawing.Size(252, 30);
-            this.materialManagerBtn.Text = "Material Manager";
-            this.materialManagerBtn.Click += new System.EventHandler(this.materialManagerBtnClick);
+            this.pullBtn.Name = "pullBtn";
+            this.pullBtn.Size = new System.Drawing.Size(252, 30);
+            this.pullBtn.Text = "Pull";
+            this.pullBtn.Click += new System.EventHandler(this.pullBtnClick);
+            // 
+            // viewChangesBtn
+            // 
+            this.viewChangesBtn.Name = "viewChangesBtn";
+            this.viewChangesBtn.Size = new System.Drawing.Size(252, 30);
+            this.viewChangesBtn.Text = "View Changes";
+            this.viewChangesBtn.Click += new System.EventHandler(this.viewChangesBtnClick);
+            // 
+            // commitBtn
+            // 
+            this.commitBtn.Name = "commitBtn";
+            this.commitBtn.Size = new System.Drawing.Size(252, 30);
+            this.commitBtn.Text = "Commit";
+            this.commitBtn.Click += new System.EventHandler(this.commitBtnClick);
+            // 
+            // pushBtn
+            // 
+            this.pushBtn.Name = "pushBtn";
+            this.pushBtn.Size = new System.Drawing.Size(252, 30);
+            this.pushBtn.Text = "Push";
+            this.pushBtn.Click += new System.EventHandler(this.pushBtnClick);
+            // 
+            // setupBtn
+            // 
+            this.setupBtn.Name = "setupBtn";
+            this.setupBtn.Size = new System.Drawing.Size(252, 30);
+            this.setupBtn.Text = "Setup";
+            this.setupBtn.Click += new System.EventHandler(this.setupBtnClick);
             // 
             // EditorForm
             // 
@@ -391,6 +445,12 @@
         private Layout6Pane layout6Pane1;
         private System.Windows.Forms.ToolStripMenuItem modelManagerBtn;
         private System.Windows.Forms.ToolStripMenuItem materialManagerBtn;
+        private System.Windows.Forms.ToolStripMenuItem gitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pullBtn;
+        private System.Windows.Forms.ToolStripMenuItem viewChangesBtn;
+        private System.Windows.Forms.ToolStripMenuItem commitBtn;
+        private System.Windows.Forms.ToolStripMenuItem pushBtn;
+        private System.Windows.Forms.ToolStripMenuItem setupBtn;
     }
 }
 

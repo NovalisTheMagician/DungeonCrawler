@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Editor
+namespace Editor.Forms
 {
     public partial class EditorForm : Form
     {
@@ -56,6 +56,35 @@ namespace Editor
         private void quitBtnClick(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        #endregion
+
+        #region GitMenu
+
+        private void pullBtnClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void viewChangesBtnClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void commitBtnClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pushBtnClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void setupBtnClick(object sender, EventArgs e)
+        {
+
         }
 
         #endregion

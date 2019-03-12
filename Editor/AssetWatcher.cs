@@ -21,6 +21,8 @@ namespace Editor
             set
             {
                 assetRoot = value;
+                if (!Directory.Exists(assetRoot))
+                    Directory.CreateDirectory(assetRoot);
                 watcher.Path = assetRoot;
                 watcher.EnableRaisingEvents = true;
             }
@@ -48,8 +50,6 @@ namespace Editor
             watcher.Deleted += FileDeleted;
 
             watcher.SynchronizingObject = formToSynchronize;
-
-            //watcher.EnableRaisingEvents = true;
         }
 
         private void FileCreated(object sender, FileSystemEventArgs e)

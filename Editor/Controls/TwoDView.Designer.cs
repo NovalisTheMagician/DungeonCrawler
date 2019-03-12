@@ -1,4 +1,4 @@
-﻿namespace Editor
+﻿namespace Editor.Controls
 {
     partial class TwoDView
     {
