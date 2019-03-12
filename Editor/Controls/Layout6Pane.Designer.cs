@@ -31,14 +31,18 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.threeDView1 = new Editor.Controls.ThreeDView();
             this.label1 = new System.Windows.Forms.Label();
+            this.twoDView2 = new Editor.Controls.TwoDView();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.twoDView1 = new Editor.Controls.TwoDView();
+            this.twoDView3 = new Editor.Controls.TwoDView();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.threeDView1 = new Editor.ThreeDView();
-            this.twoDView2 = new Editor.TwoDView();
-            this.twoDView1 = new Editor.TwoDView();
-            this.twoDView3 = new Editor.TwoDView();
+            this.assetTabControl = new System.Windows.Forms.TabControl();
+            this.materilasTabPage = new System.Windows.Forms.TabPage();
+            this.textureView = new Editor.Controls.TextureView();
+            this.modelsTabPage = new System.Windows.Forms.TabPage();
+            this.entitiesTabPage = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -58,6 +62,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.assetTabControl.SuspendLayout();
+            this.materilasTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -65,6 +71,7 @@
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -74,8 +81,9 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(872, 504);
-            this.splitContainer1.SplitterDistance = 672;
+            this.splitContainer1.Size = new System.Drawing.Size(1308, 775);
+            this.splitContainer1.SplitterDistance = 1008;
+            this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer3
@@ -84,6 +92,7 @@
             this.splitContainer3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainer3.Name = "splitContainer3";
             // 
             // splitContainer3.Panel1
@@ -93,9 +102,9 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer5);
-            this.splitContainer3.Size = new System.Drawing.Size(672, 504);
-            this.splitContainer3.SplitterDistance = 325;
-            this.splitContainer3.SplitterWidth = 6;
+            this.splitContainer3.Size = new System.Drawing.Size(1008, 775);
+            this.splitContainer3.SplitterDistance = 487;
+            this.splitContainer3.SplitterWidth = 9;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -103,6 +112,7 @@
             this.splitContainer4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainer4.Name = "splitContainer4";
             this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -116,25 +126,48 @@
             this.splitContainer4.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.splitContainer4.Panel2.Controls.Add(this.label1);
             this.splitContainer4.Panel2.Controls.Add(this.twoDView2);
-            this.splitContainer4.Size = new System.Drawing.Size(325, 504);
-            this.splitContainer4.SplitterDistance = 229;
-            this.splitContainer4.SplitterWidth = 6;
+            this.splitContainer4.Size = new System.Drawing.Size(487, 775);
+            this.splitContainer4.SplitterDistance = 363;
+            this.splitContainer4.SplitterWidth = 9;
             this.splitContainer4.TabIndex = 0;
+            // 
+            // threeDView1
+            // 
+            this.threeDView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.threeDView1.Location = new System.Drawing.Point(0, 0);
+            this.threeDView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.threeDView1.Name = "threeDView1";
+            this.threeDView1.Size = new System.Drawing.Size(483, 359);
+            this.threeDView1.TabIndex = 0;
+            this.threeDView1.Text = "threeDView1";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 12);
+            this.label1.Location = new System.Drawing.Point(4, 18);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.Size = new System.Drawing.Size(51, 20);
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
+            // 
+            // twoDView2
+            // 
+            this.twoDView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.twoDView2.Location = new System.Drawing.Point(0, 0);
+            this.twoDView2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.twoDView2.Name = "twoDView2";
+            this.twoDView2.Orientation = Editor.Controls.Orientation.SIDE;
+            this.twoDView2.Size = new System.Drawing.Size(483, 399);
+            this.twoDView2.TabIndex = 0;
+            this.twoDView2.Text = "twoDView2";
             // 
             // splitContainer5
             // 
             this.splitContainer5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer5.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainer5.Name = "splitContainer5";
             this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -147,65 +180,19 @@
             // 
             this.splitContainer5.Panel2.BackColor = System.Drawing.Color.Aqua;
             this.splitContainer5.Panel2.Controls.Add(this.twoDView3);
-            this.splitContainer5.Size = new System.Drawing.Size(341, 504);
-            this.splitContainer5.SplitterDistance = 230;
-            this.splitContainer5.SplitterWidth = 6;
+            this.splitContainer5.Size = new System.Drawing.Size(512, 775);
+            this.splitContainer5.SplitterDistance = 364;
+            this.splitContainer5.SplitterWidth = 9;
             this.splitContainer5.TabIndex = 0;
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.flowLayoutPanel1);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.BackColor = System.Drawing.Color.Fuchsia;
-            this.splitContainer2.Size = new System.Drawing.Size(196, 504);
-            this.splitContainer2.SplitterDistance = 310;
-            this.splitContainer2.SplitterWidth = 6;
-            this.splitContainer2.TabIndex = 0;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(192, 306);
-            this.flowLayoutPanel1.TabIndex = 0;
-            // 
-            // threeDView1
-            // 
-            this.threeDView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.threeDView1.Location = new System.Drawing.Point(0, 0);
-            this.threeDView1.Name = "threeDView1";
-            this.threeDView1.Size = new System.Drawing.Size(321, 225);
-            this.threeDView1.TabIndex = 0;
-            this.threeDView1.Text = "threeDView1";
-            // 
-            // twoDView2
-            // 
-            this.twoDView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.twoDView2.Location = new System.Drawing.Point(0, 0);
-            this.twoDView2.Name = "twoDView2";
-            this.twoDView2.Orientation = Editor.Orientation.SIDE;
-            this.twoDView2.Size = new System.Drawing.Size(321, 265);
-            this.twoDView2.TabIndex = 0;
-            this.twoDView2.Text = "twoDView2";
             // 
             // twoDView1
             // 
             this.twoDView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.twoDView1.Location = new System.Drawing.Point(0, 0);
+            this.twoDView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.twoDView1.Name = "twoDView1";
-            this.twoDView1.Orientation = Editor.Orientation.TOP;
-            this.twoDView1.Size = new System.Drawing.Size(337, 226);
+            this.twoDView1.Orientation = Editor.Controls.Orientation.TOP;
+            this.twoDView1.Size = new System.Drawing.Size(508, 360);
             this.twoDView1.TabIndex = 0;
             this.twoDView1.Text = "twoDView1";
             // 
@@ -213,19 +200,92 @@
             // 
             this.twoDView3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.twoDView3.Location = new System.Drawing.Point(0, 0);
+            this.twoDView3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.twoDView3.Name = "twoDView3";
-            this.twoDView3.Orientation = Editor.Orientation.FRONT;
-            this.twoDView3.Size = new System.Drawing.Size(337, 264);
+            this.twoDView3.Orientation = Editor.Controls.Orientation.FRONT;
+            this.twoDView3.Size = new System.Drawing.Size(508, 398);
             this.twoDView3.TabIndex = 0;
             this.twoDView3.Text = "twoDView3";
             // 
+            // splitContainer2
+            // 
+            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.assetTabControl);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.BackColor = System.Drawing.Color.Fuchsia;
+            this.splitContainer2.Size = new System.Drawing.Size(294, 775);
+            this.splitContainer2.SplitterDistance = 468;
+            this.splitContainer2.SplitterWidth = 9;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // assetTabControl
+            // 
+            this.assetTabControl.Controls.Add(this.materilasTabPage);
+            this.assetTabControl.Controls.Add(this.modelsTabPage);
+            this.assetTabControl.Controls.Add(this.entitiesTabPage);
+            this.assetTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.assetTabControl.Location = new System.Drawing.Point(0, 0);
+            this.assetTabControl.Name = "assetTabControl";
+            this.assetTabControl.SelectedIndex = 0;
+            this.assetTabControl.Size = new System.Drawing.Size(290, 464);
+            this.assetTabControl.TabIndex = 0;
+            // 
+            // materilasTabPage
+            // 
+            this.materilasTabPage.Controls.Add(this.textureView);
+            this.materilasTabPage.Location = new System.Drawing.Point(4, 29);
+            this.materilasTabPage.Name = "materilasTabPage";
+            this.materilasTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.materilasTabPage.Size = new System.Drawing.Size(282, 431);
+            this.materilasTabPage.TabIndex = 0;
+            this.materilasTabPage.Text = "Materials";
+            this.materilasTabPage.UseVisualStyleBackColor = true;
+            // 
+            // textureView
+            // 
+            this.textureView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textureView.Location = new System.Drawing.Point(3, 3);
+            this.textureView.Name = "textureView";
+            this.textureView.Size = new System.Drawing.Size(276, 425);
+            this.textureView.TabIndex = 0;
+            // 
+            // modelsTabPage
+            // 
+            this.modelsTabPage.Location = new System.Drawing.Point(4, 29);
+            this.modelsTabPage.Name = "modelsTabPage";
+            this.modelsTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.modelsTabPage.Size = new System.Drawing.Size(278, 436);
+            this.modelsTabPage.TabIndex = 1;
+            this.modelsTabPage.Text = "Models";
+            this.modelsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // entitiesTabPage
+            // 
+            this.entitiesTabPage.Location = new System.Drawing.Point(4, 29);
+            this.entitiesTabPage.Name = "entitiesTabPage";
+            this.entitiesTabPage.Size = new System.Drawing.Size(278, 436);
+            this.entitiesTabPage.TabIndex = 2;
+            this.entitiesTabPage.Text = "Entities";
+            this.entitiesTabPage.UseVisualStyleBackColor = true;
+            // 
             // Layout6Pane
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Layout6Pane";
-            this.Size = new System.Drawing.Size(872, 504);
+            this.Size = new System.Drawing.Size(1308, 775);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -246,6 +306,8 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.assetTabControl.ResumeLayout(false);
+            this.materilasTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -257,11 +319,15 @@
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.SplitContainer splitContainer5;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private ThreeDView threeDView1;
         private TwoDView twoDView2;
         private TwoDView twoDView1;
         private TwoDView twoDView3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TabControl assetTabControl;
+        private System.Windows.Forms.TabPage materilasTabPage;
+        private TextureView textureView;
+        private System.Windows.Forms.TabPage modelsTabPage;
+        private System.Windows.Forms.TabPage entitiesTabPage;
     }
 }

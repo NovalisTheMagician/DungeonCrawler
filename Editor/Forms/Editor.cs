@@ -12,8 +12,8 @@ namespace Editor.Forms
 {
     public partial class EditorForm : Form
     {
-        private AssetWatcher assetWatcher;
         private TextureManager textureManager;
+        private TextureCache textureCache;
 
         private bool isDirty = false;
 
@@ -21,12 +21,11 @@ namespace Editor.Forms
         {
             InitializeComponent();
 
-            //textureCache = new TextureCache(@"Assets\Textures");
-            assetWatcher = new AssetWatcher(this);
-            assetWatcher.AssetRoot = @"Assets";
+            textureCache = new TextureCache();
+            textureCache.BaseTexturePath = @"Assets\Textures";
 
-            textureManager = new TextureManager();
-            textureManager.BaseTexturePath = @"Assets/Textures";
+            textureManager = new TextureManager(textureCache);
+            layout6Pane.TextureView.TextureCache = textureCache;
         }
 
         #region MenuHandlers
@@ -124,7 +123,7 @@ namespace Editor.Forms
 
         private void standardViewBtnClick(object sender, EventArgs e)
         {
-            RendererInterop.Initialize();
+            Interop.RendererInterop.Initialize();
         }
 
         private void texturingViewBtnClick(object sender, EventArgs e)

@@ -12,6 +12,14 @@ namespace Editor.Controls
 {
     public partial class Layout6Pane : UserControl
     {
+        public TextureView TextureView
+        {
+            get
+            {
+                return textureView;
+            }
+        }
+
         public Layout6Pane()
         {
             InitializeComponent();

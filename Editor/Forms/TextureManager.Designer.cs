@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.texturePanel = new System.Windows.Forms.FlowLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,17 +37,9 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.closeBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textureView = new Editor.Controls.TextureView();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // texturePanel
-            // 
-            this.texturePanel.AutoScroll = true;
-            this.texturePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.texturePanel.Location = new System.Drawing.Point(0, 35);
-            this.texturePanel.Name = "texturePanel";
-            this.texturePanel.Size = new System.Drawing.Size(872, 563);
-            this.texturePanel.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -120,12 +111,20 @@
             this.searchToolStripMenuItem.Size = new System.Drawing.Size(76, 29);
             this.searchToolStripMenuItem.Text = "Search";
             // 
+            // textureView
+            // 
+            this.textureView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textureView.Location = new System.Drawing.Point(0, 35);
+            this.textureView.Name = "textureView";
+            this.textureView.Size = new System.Drawing.Size(872, 563);
+            this.textureView.TabIndex = 2;
+            // 
             // TextureManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(872, 598);
-            this.Controls.Add(this.texturePanel);
+            this.Controls.Add(this.textureView);
             this.Controls.Add(this.menuStrip1);
             this.Name = "TextureManager";
             this.Text = "TextureManager";
@@ -138,8 +137,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.FlowLayoutPanel texturePanel;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importBtn;
@@ -149,5 +146,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem closeBtn;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
+        private Controls.TextureView textureView;
     }
 }
