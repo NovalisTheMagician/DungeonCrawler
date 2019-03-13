@@ -49,6 +49,9 @@ namespace Editor
             }
             textureMap.Clear();
 
+            if (!Directory.Exists(baseTexturePath))
+                Directory.CreateDirectory(baseTexturePath);
+
             string[] files = Directory.GetFiles(baseTexturePath);
             foreach (string file in files)
             {

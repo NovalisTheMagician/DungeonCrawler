@@ -23,8 +23,11 @@ namespace Editor.Controls
 
             set
             {
-                textureCache = value;
-                ReloadAllItems();
+                if(value != null)
+                {
+                    textureCache = value;
+                    ReloadAllItems();
+                }
             }
         }
 

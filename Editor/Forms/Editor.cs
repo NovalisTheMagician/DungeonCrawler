@@ -20,39 +20,33 @@ namespace Editor.Forms
         public EditorForm()
         {
             InitializeComponent();
-
-            textureCache = new TextureCache();
-            textureCache.BaseTexturePath = @"Assets\Textures";
-
-            textureManager = new TextureManager(textureCache);
-            layout6Pane.TextureView.TextureCache = textureCache;
         }
 
         #region MenuHandlers
 
         #region FileMenu
 
-        private void newBtnClick(object sender, EventArgs e)
+        private void OnNewBtnClick(object sender, EventArgs e)
         {
             
         }
 
-        private void openBtnClick(object sender, EventArgs e)
+        private void OnOpenBtnClick(object sender, EventArgs e)
         {
             
         }
 
-        private void saveBtnClick(object sender, EventArgs e)
+        private void OnSaveBtnClick(object sender, EventArgs e)
         {
             
         }
 
-        private void saveAsBtnClick(object sender, EventArgs e)
+        private void OnSaveAsBtnClick(object sender, EventArgs e)
         {
             
         }
 
-        private void quitBtnClick(object sender, EventArgs e)
+        private void OnQuitBtnClick(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -61,27 +55,27 @@ namespace Editor.Forms
 
         #region GitMenu
 
-        private void pullBtnClick(object sender, EventArgs e)
+        private void OnPullBtnClick(object sender, EventArgs e)
         {
 
         }
 
-        private void viewChangesBtnClick(object sender, EventArgs e)
+        private void OnViewChangesBtnClick(object sender, EventArgs e)
         {
 
         }
 
-        private void commitBtnClick(object sender, EventArgs e)
+        private void OnCommitBtnClick(object sender, EventArgs e)
         {
 
         }
 
-        private void pushBtnClick(object sender, EventArgs e)
+        private void OnPushBtnClick(object sender, EventArgs e)
         {
 
         }
 
-        private void setupBtnClick(object sender, EventArgs e)
+        private void OnSetupBtnClick(object sender, EventArgs e)
         {
 
         }
@@ -96,17 +90,17 @@ namespace Editor.Forms
 
         #region AssetMenu
 
-        private void textureManagerBtnClick(object sender, EventArgs e)
+        private void OnTextureManagerBtnClick(object sender, EventArgs e)
         {
             textureManager.Show();
         }
 
-        private void modelManagerBtnClick(object sender, EventArgs e)
+        private void OnModelManagerBtnClick(object sender, EventArgs e)
         {
 
         }
 
-        private void materialManagerBtnClick(object sender, EventArgs e)
+        private void OnMaterialManagerBtnClick(object sender, EventArgs e)
         {
 
         }
@@ -121,12 +115,12 @@ namespace Editor.Forms
 
         #region ViewMenu
 
-        private void standardViewBtnClick(object sender, EventArgs e)
+        private void OnStandardViewBtnClick(object sender, EventArgs e)
         {
             Interop.RendererInterop.Initialize();
         }
 
-        private void texturingViewBtnClick(object sender, EventArgs e)
+        private void OnTexturingViewBtnClick(object sender, EventArgs e)
         {
 
         }
@@ -135,7 +129,7 @@ namespace Editor.Forms
 
         #region HelpMenu
     
-        private void settingsBtnClick(object sender, EventArgs e)
+        private void OnSettingsBtnClick(object sender, EventArgs e)
         {
             SettingsForm settingsForm = new SettingsForm();
             settingsForm.ShowDialog();
@@ -153,7 +147,16 @@ namespace Editor.Forms
 
         #region WindowEventsHandler
 
-        private void editorClosing(object sender, FormClosingEventArgs e)
+        private void OnEditorLoading(object sender, EventArgs e)
+        {
+            textureCache = new TextureCache();
+            textureCache.BaseTexturePath = @"Assets\Textures";
+
+            textureManager = new TextureManager(textureCache);
+            layout6Pane.TextureView.TextureCache = textureCache;
+        }
+
+        private void OnEditorClosing(object sender, FormClosingEventArgs e)
         {
 
         }
