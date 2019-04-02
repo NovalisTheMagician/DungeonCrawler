@@ -2,6 +2,9 @@
 #include <Windows.h>
 #include <assert.h>
 
+#include <string>
+#include <sstream>
+
 #include "renderer.h"
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
@@ -32,7 +35,7 @@ extern "C"
 
 	void Dispose()
 	{
-
+		renderer.ShutdownD3D();
 	}
 
 	uint32_t AttachRenderbuffer(HWND hWnd)
@@ -42,16 +45,36 @@ extern "C"
 
 	void DetachRenderbuffer(uint32_t renderID)
 	{
-		assert(renderID < 0);
+		assert(renderID >= 0);
 	}
 
 	void ResizeRenderbuffer(uint32_t renderID, uint32_t width, uint32_t height)
 	{
-		assert(renderID < 0);
+		assert(renderID >= 0);
 	}
 
 	void SetRenderbufferMode(uint32_t renderID, uint32_t mode)
 	{
-		assert(renderID < 0);
+		assert(renderID >= 0);
+	}
+
+	void RenderTexture(uint32_t renderID, DXTexture texture)
+	{
+		assert(renderID >= 0);
+
+		std::stringstream str;
+		str << texture.width;
+
+		MessageBoxA(nullptr, str.str().c_str(), "OH BOY!!!", MB_OK);
+	}
+
+	void RenderMaterial(uint32_t renderID, DXMaterial material)
+	{
+		assert(renderID >= 0);
+	}
+
+	DXTexture *RenderModelPreview(DXModel *model)
+	{
+		return nullptr;
 	}
 }

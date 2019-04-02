@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Editor.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +15,8 @@ namespace Editor.Forms
     public partial class EditorForm : Form
     {
         private TextureManager textureManager;
-        private TextureCache textureCache;
+        private AssetCache<Texture> textureCache;
+        private TextureView textureView;
 
         private bool isDirty = false;
 
@@ -149,11 +152,28 @@ namespace Editor.Forms
 
         private void OnEditorLoading(object sender, EventArgs e)
         {
-            textureCache = new TextureCache();
-            textureCache.BaseTexturePath = @"Assets\Textures";
+            Interop.RendererInterop.Initialize();
 
-            textureManager = new TextureManager(textureCache);
-            layout6Pane.TextureView.TextureCache = textureCache;
+            textureCache = new AssetCache<Texture>();
+            textureCache.BaseAssetPath = @"Assets\Textures";
+
+            textureView = new TextureView();
+            textureView.TextureCache = textureCache;
+
+            textureManager = new TextureManager(textureView);
+
+            using (FileStream fs = new FileStream("Assets/Textures/grid.png", FileMode.Open))
+            {
+                Texture tex = new Texture();
+                tex.Construct(fs);
+                Interop.RendererInterop.RenderTexture(1, tex);
+                tex.Dispose();
+            }
+        }
+
+        private void OnEditorClosed(object sender, FormClosedEventArgs e)
+        {
+            Interop.RendererInterop.Dispose();
         }
 
         private void OnEditorClosing(object sender, FormClosingEventArgs e)

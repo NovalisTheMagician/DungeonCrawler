@@ -24,11 +24,11 @@ namespace Editor
         {
             get
             {
-                return materialMap.Keys.ToList<string>();
+                return materialMap.Keys.ToList();
             }
         }
 
-        public IReadOnlyDictionary<string, Material> Textures
+        public IReadOnlyDictionary<string, Material> Materials
         {
             get
             {
@@ -72,7 +72,7 @@ namespace Editor
                 }
                 else
                 {
-                    // optimize here to only load the images which have been changed since last loaded
+                    // optimize here to only load the materials which have been changed since last loaded
                     // (check file last modified date and store the date somewhere)
                     materialMap[file] = new Material();
                 }

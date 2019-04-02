@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.threeDView1 = new Editor.Controls.ThreeDView();
+            this.textureView = new Editor.Controls.TextureView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -39,8 +39,10 @@
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -50,35 +52,39 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.flowLayoutPanel1);
-            this.splitContainer1.Size = new System.Drawing.Size(709, 456);
-            this.splitContainer1.SplitterDistance = 433;
+            this.splitContainer1.Panel2.Controls.Add(this.textureView);
+            this.splitContainer1.Size = new System.Drawing.Size(1064, 702);
+            this.splitContainer1.SplitterDistance = 649;
+            this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(272, 456);
-            this.flowLayoutPanel1.TabIndex = 0;
             // 
             // threeDView1
             // 
             this.threeDView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.threeDView1.Location = new System.Drawing.Point(0, 0);
+            this.threeDView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.threeDView1.Name = "threeDView1";
-            this.threeDView1.Size = new System.Drawing.Size(433, 456);
+            this.threeDView1.Size = new System.Drawing.Size(645, 698);
             this.threeDView1.TabIndex = 0;
             this.threeDView1.Text = "threeDView1";
             // 
+            // textureView
+            // 
+            this.textureView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textureView.Location = new System.Drawing.Point(0, 0);
+            this.textureView.Name = "textureView";
+            this.textureView.Size = new System.Drawing.Size(405, 698);
+            this.textureView.TabIndex = 0;
+            this.textureView.TextureCache = null;
+            // 
             // Layout2Pane
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Layout2Pane";
-            this.Size = new System.Drawing.Size(709, 456);
+            this.Size = new System.Drawing.Size(1064, 702);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -90,7 +96,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private Controls.ThreeDView threeDView1;
+        private TextureView textureView;
     }
 }

@@ -1,32 +1,22 @@
 ﻿using Editor.Controls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Editor.Forms
 {
     public partial class TextureManager : Form
     {
-        public TextureView TextureView
-        {
-            get
-            {
-                return textureView;
-            }
-        }
+        public TextureView TextureView { get; private set; }
 
-        public TextureManager(TextureCache textureCache)
+        public TextureManager(TextureView textureView)
         {
             InitializeComponent();
-            textureView.TextureCache = textureCache;
+
+            TextureView = textureView;
+
+            contentPanel.Controls.Add(TextureView);
+            UpdateNumberOfTextures();
         }
 
         private void OnTextureClick(object sender, EventArgs e)
@@ -47,7 +37,7 @@ namespace Editor.Forms
                 foreach(string file in files)
                 {
                     string name = Path.GetFileName(file);
-                    string destination = textureView.TextureCache.BaseTexturePath + @"\" + name;
+                    string destination = TextureView.TextureCache.BaseAssetPath + @"\" + name;
 
                     if (!File.Exists(destination))
                     {
@@ -59,18 +49,21 @@ namespace Editor.Forms
                     }
                 }
 
-                textureView.ReloadTextures();
+                TextureView.ReloadTextures();
+                UpdateNumberOfTextures();
             }
         }
 
         private void OnReloadBtnClick(object sender, EventArgs e)
         {
-            textureView.ReloadTextures();
+            TextureView.ReloadTextures();
+            UpdateNumberOfTextures();
         }
 
         private void OnRefreshBtnClick(object sender, EventArgs e)
         {
-            textureView.RefreshTextures();
+            TextureView.RefreshTextures();
+            UpdateNumberOfTextures();
         }
 
         private void OnCloseButtonClick(object sender, EventArgs e)
@@ -85,6 +78,12 @@ namespace Editor.Forms
                 this.Hide();
                 e.Cancel = true;
             }
+        }
+
+        private void UpdateNumberOfTextures()
+        {
+            int numTextures = TextureView.TextureCache.Assets.Count;
+            numberOfTexturesLbl.Text = numTextures.ToString();
         }
     }
 }

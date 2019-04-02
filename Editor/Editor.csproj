@@ -92,6 +92,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetCache.cs" />
+    <Compile Include="Controls\MaterialItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MaterialItem.Designer.cs">
+      <DependentUpon>MaterialItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MaterialView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MaterialView.Designer.cs">
+      <DependentUpon>MaterialView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ThreeDView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -103,6 +116,12 @@
     </Compile>
     <Compile Include="Controls\TwoDView.Designer.cs">
       <DependentUpon>TwoDView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editor.cs">
       <SubType>Form</SubType>
@@ -122,12 +141,19 @@
     <Compile Include="Controls\Layout2Pane.Designer.cs">
       <DependentUpon>Layout2Pane.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MaterialManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MaterialManager.Designer.cs">
+      <DependentUpon>MaterialManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TextureManager.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\TextureManager.Designer.cs">
       <DependentUpon>TextureManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="IAsset.cs" />
     <Compile Include="Interop\RendererInterop.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="MaterialCache.cs" />
@@ -153,9 +179,16 @@
     <Compile Include="Controls\TextureItem.Designer.cs">
       <DependentUpon>TextureItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Texture.cs" />
     <Compile Include="TextureCache.cs" />
     <EmbeddedResource Include="Controls\Layout2Pane.resx">
       <DependentUpon>Layout2Pane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MaterialItem.resx">
+      <DependentUpon>MaterialItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MaterialView.resx">
+      <DependentUpon>MaterialView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TextureItem.resx">
       <DependentUpon>TextureItem.cs</DependentUpon>
@@ -166,8 +199,14 @@
     <EmbeddedResource Include="Controls\ThreeDView.resx">
       <DependentUpon>ThreeDView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MaterialManager.resx">
+      <DependentUpon>MaterialManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>

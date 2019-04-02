@@ -6,3 +6,6 @@ EXPORTS
 	DetachRenderbuffer
 	ResizeRenderbuffer
 	SetRenderbufferMode
+	RenderTexture
+	RenderMaterial
+	RenderModelPreview

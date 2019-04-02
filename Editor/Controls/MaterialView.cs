@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Editor.Controls
 {
-    public partial class Layout6Pane : UserControl
+    public partial class MaterialView : UserControl
     {
-        public Layout6Pane()
+        public MaterialView()
         {
             InitializeComponent();
         }

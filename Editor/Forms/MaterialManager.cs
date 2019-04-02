@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Editor.Controls
+namespace Editor.Forms
 {
-    public partial class Layout6Pane : UserControl
+    public partial class MaterialManager : Form
     {
-        public Layout6Pane()
+        public MaterialManager()
         {
             InitializeComponent();
         }

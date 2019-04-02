@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.ComponentModel;
 
 namespace Editor.Controls
 {
     public partial class TextureView : UserControl
     {
-        private TextureCache textureCache;
-        public TextureCache TextureCache
+        private AssetCache<Texture> textureCache;
+
+        [Browsable(false)]
+        public AssetCache<Texture> TextureCache
         {
             get
             {
@@ -34,19 +33,20 @@ namespace Editor.Controls
         public TextureView()
         {
             InitializeComponent();
+            this.Dock = DockStyle.Fill;
         }
 
         private void ReloadAllItems()
         {
             textureFlowPanel.Controls.Clear();
 
-            var textureList = textureCache.TextureFiles;
-            var textureMap = textureCache.Textures;
+            var textureList = textureCache.AssetFiles;
+            var textureMap = textureCache.Assets;
             
             foreach(string textureFile in textureList.OrderBy(o => o).ToList())
             {
                 string name = GetName(textureFile);
-                Image texture = textureMap[textureFile];
+                Image texture = textureMap[textureFile].TextureBitmap;
                 textureFlowPanel.Controls.Add(CreateTextureItem(name, texture));
             }
         }
@@ -63,7 +63,7 @@ namespace Editor.Controls
         {
             if (textureCache != null)
             {
-                textureCache.RefreshTextures();
+                textureCache.RefreshAssets();
                 ReloadAllItems();
             }
         }
@@ -72,7 +72,7 @@ namespace Editor.Controls
         {
             if (textureCache != null)
             {
-                textureCache.ReloadTextures();
+                textureCache.ReloadAssets();
                 ReloadAllItems();
             }
         }
