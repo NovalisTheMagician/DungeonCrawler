@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    public class Texture : IAsset
+    public class Texture : AssetBase
     {
         public int Width { get; private set; }
 
@@ -19,7 +19,7 @@ namespace Editor
         
         public Bitmap TextureBitmap { get; private set; }
 
-        public bool Construct(Stream stream)
+        public override bool Construct(Stream stream)
         {
             if (TextureBitmap != null)
                 TextureBitmap.Dispose();
@@ -49,7 +49,7 @@ namespace Editor
             return true;
         }
         
-        public void Dispose()
+        public override void Dispose()
         {
             if(TextureBitmap != null)
             {

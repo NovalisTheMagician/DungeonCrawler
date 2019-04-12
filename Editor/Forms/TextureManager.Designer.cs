@@ -158,6 +158,7 @@
             this.Name = "TextureManager";
             this.Text = "TextureManager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
+            this.Load += new System.EventHandler(this.OnLoad);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);

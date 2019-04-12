@@ -30,6 +30,9 @@ namespace Editor.Controls
             }
         }
 
+        [Browsable(false)]
+        public TagManager TagManager { get; set; }
+
         public TextureView()
         {
             InitializeComponent();
@@ -46,16 +49,19 @@ namespace Editor.Controls
             foreach(string textureFile in textureList.OrderBy(o => o).ToList())
             {
                 string name = GetName(textureFile);
-                Image texture = textureMap[textureFile].TextureBitmap;
+                Texture texture = textureMap[textureFile];
                 textureFlowPanel.Controls.Add(CreateTextureItem(name, texture));
             }
+
+            textureFlowPanel.Refresh();
         }
 
-        private TextureItem CreateTextureItem(string name, Image texture)
+        private TextureItem CreateTextureItem(string name, Texture texture)
         {
             TextureItem item = new TextureItem();
             item.Texture = texture;
             item.TextureName = name;
+            item.TagManager = TagManager;
             return item;
         }
 

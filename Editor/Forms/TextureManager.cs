@@ -1,5 +1,7 @@
 ﻿using Editor.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -7,14 +9,16 @@ namespace Editor.Forms
 {
     public partial class TextureManager : Form
     {
-        public TextureView TextureView { get; private set; }
 
-        public TextureManager(TextureView textureView)
+        public TextureView TextureView { get; set; }
+
+        public TextureManager()
         {
             InitializeComponent();
+        }
 
-            TextureView = textureView;
-
+        private void OnLoad(object sender, EventArgs e)
+        {
             contentPanel.Controls.Add(TextureView);
             UpdateNumberOfTextures();
         }
@@ -26,14 +30,16 @@ namespace Editor.Forms
 
         private void OnImportBtnClick(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            CommonOpenFileDialog openFileDialog = new CommonOpenFileDialog();
             openFileDialog.Multiselect = true;
-            openFileDialog.Filter = "Image files (*.bmp, *.png, *.tga)|*.bmp;*.png;*.tga|All files (*.*)|*.*";
+            openFileDialog.Filters.Add(new CommonFileDialogFilter("Image Files", "*.bmp, *.png, *.tga"));
+            openFileDialog.Filters.Add(new CommonFileDialogFilter("All Files", "*.*"));
+            openFileDialog.RestoreDirectory = true;
 
-            DialogResult result = openFileDialog.ShowDialog();
-            if(result == DialogResult.OK)
+            CommonFileDialogResult result = openFileDialog.ShowDialog(this.Handle);
+            if(result == CommonFileDialogResult.Ok)
             {
-                string[] files = openFileDialog.FileNames;
+                IEnumerable<string> files = openFileDialog.FileNames;
                 foreach(string file in files)
                 {
                     string name = Path.GetFileName(file);
@@ -73,11 +79,7 @@ namespace Editor.Forms
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
-            if(e.CloseReason == CloseReason.UserClosing)
-            {
-                this.Hide();
-                e.Cancel = true;
-            }
+            contentPanel.Controls.Remove(TextureView);
         }
 
         private void UpdateNumberOfTextures()

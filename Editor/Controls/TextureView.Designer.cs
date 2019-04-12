@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.textureFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,15 +47,6 @@
             this.textureFlowPanel.TabIndex = 0;
             this.textureFlowPanel.VisibleChanged += new System.EventHandler(this.OnVisibleChanged);
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshBtn,
-            this.reloadBtn});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(143, 64);
-            // 
             // refreshBtn
             // 
             this.refreshBtn.Name = "refreshBtn";
@@ -69,6 +60,15 @@
             this.reloadBtn.Size = new System.Drawing.Size(240, 30);
             this.reloadBtn.Text = "Reload";
             this.reloadBtn.Click += new System.EventHandler(this.ReloadBtnClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshBtn,
+            this.reloadBtn});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(241, 97);
             // 
             // TextureView
             // 

@@ -26,7 +26,7 @@ extern "C"
 {
 	bool Initialize()
 	{
-		MessageBoxA(nullptr, "Test", "Test", MB_OK);
+		//MessageBoxA(nullptr, "Test", "Test", MB_OK);
 
 		renderer.InitD3D();
 
