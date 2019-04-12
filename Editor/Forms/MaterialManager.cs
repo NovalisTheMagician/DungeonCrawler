@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Editor.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,8 @@ namespace Editor.Forms
 {
     public partial class MaterialManager : Form
     {
+        public MaterialView MaterialView { get; set; }
+
         public MaterialManager()
         {
             InitializeComponent();

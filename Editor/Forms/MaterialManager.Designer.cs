@@ -41,7 +41,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.numberOfMaterialsLbl = new System.Windows.Forms.ToolStripStatusLabel();
-            this.materialView = new Editor.Controls.MaterialView();
+            this.contentPanel = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -142,23 +142,22 @@
             this.numberOfMaterialsLbl.Size = new System.Drawing.Size(22, 25);
             this.numberOfMaterialsLbl.Text = "0";
             // 
-            // materialView
+            // contentPanel
             // 
-            this.materialView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.materialView.Location = new System.Drawing.Point(0, 33);
-            this.materialView.Name = "materialView";
-            this.materialView.Size = new System.Drawing.Size(869, 512);
-            this.materialView.TabIndex = 2;
+            this.contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contentPanel.Location = new System.Drawing.Point(0, 33);
+            this.contentPanel.Name = "contentPanel";
+            this.contentPanel.Size = new System.Drawing.Size(869, 512);
+            this.contentPanel.TabIndex = 2;
             // 
             // MaterialManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(869, 575);
-            this.Controls.Add(this.materialView);
+            this.Controls.Add(this.contentPanel);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MaterialManager";
             this.Text = "MaterialManager";
@@ -186,6 +185,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel numberOfMaterialsLbl;
-        private Controls.MaterialView materialView;
+        private System.Windows.Forms.Panel contentPanel;
     }
 }
