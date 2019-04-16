@@ -63,14 +63,14 @@
             // editBtn
             // 
             this.editBtn.Name = "editBtn";
-            this.editBtn.Size = new System.Drawing.Size(240, 30);
+            this.editBtn.Size = new System.Drawing.Size(134, 30);
             this.editBtn.Text = "Edit";
             this.editBtn.Click += new System.EventHandler(this.OnEditBtnClick);
             // 
             // deleteBtn
             // 
             this.deleteBtn.Name = "deleteBtn";
-            this.deleteBtn.Size = new System.Drawing.Size(240, 30);
+            this.deleteBtn.Size = new System.Drawing.Size(134, 30);
             this.deleteBtn.Text = "Delete";
             this.deleteBtn.Click += new System.EventHandler(this.OnDeleteBtnClick);
             // 
@@ -87,6 +87,7 @@
             this.Name = "TextureItem";
             this.Size = new System.Drawing.Size(252, 252);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

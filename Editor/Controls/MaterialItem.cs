@@ -8,12 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Editor.Properties;
+using Editor.Forms;
+using System.IO;
 
 namespace Editor.Controls
 {
     public partial class MaterialItem : UserControl
     {
         private AssetCache<Texture> textureCache;
+        private AssetCache<Material> materialCache;
 
         private Image previewImage;
         private Material material;
@@ -25,10 +28,11 @@ namespace Editor.Controls
                 string previewTexture = material.GetPreviewTexture();
                 if(previewTexture != string.Empty)
                 {
-                    Texture texture = textureCache.Assets[previewTexture];
+                    Texture texture = textureCache[previewTexture];
                     if(texture != null)
                     {
                         previewImage = texture.TextureBitmap;
+                        Invalidate();
                     }
                 }
             }
@@ -44,14 +48,15 @@ namespace Editor.Controls
             }
         }
 
-        public MaterialItem(AssetCache<Texture> textureCache)
+        public MaterialItem(AssetCache<Texture> textureCache, AssetCache<Material> materialCache)
         {
             InitializeComponent();
 
             this.textureCache = textureCache;
+            this.materialCache = materialCache;
 
             previewImage = Resources.ErrorImage;
-            MaterialName = "Error!";
+            MaterialName = "!404";
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
@@ -62,7 +67,18 @@ namespace Editor.Controls
 
         private void OnEditBtnClick(object sender, EventArgs e)
         {
+            MaterialEdit materialEdit = new MaterialEdit(textureCache);
+            materialEdit.Material = material;
+            materialEdit.TagManager = TagManager;
+            materialEdit.Show();
 
+            string file = materialCache.BaseAssetPath + material.Name;
+            using (FileStream fileStream = new FileStream(file, FileMode.Truncate))
+            {
+                material.Save(fileStream);
+            }
+
+            materialCache.RefreshAssets();
         }
 
         private void OnDeleteBtnClick(object sender, EventArgs e)

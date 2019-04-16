@@ -42,6 +42,7 @@ namespace Editor.Controls
         {
             InitializeComponent();
             this.textureCache = textureCache;
+            this.Dock = DockStyle.Fill;
         }
 
         private void ReloadAllItems()
@@ -51,10 +52,10 @@ namespace Editor.Controls
             var materialList = materialCache.AssetFiles;
             var materialMap = materialCache.Assets;
 
-            foreach (string textureFile in materialList.OrderBy(o => o).ToList())
+            foreach (string materialFile in materialList.OrderBy(s => s).ToList())
             {
-                string name = GetName(textureFile);
-                Material material = materialMap[textureFile];
+                string name = GetName(materialFile);
+                Material material = materialMap[materialFile];
                 materialFlowPanel.Controls.Add(CreateMaterialItem(name, material));
             }
 
@@ -63,7 +64,7 @@ namespace Editor.Controls
 
         private MaterialItem CreateMaterialItem(string name, Material material)
         {
-            MaterialItem item = new MaterialItem(textureCache);
+            MaterialItem item = new MaterialItem(textureCache, materialCache);
             item.Material = material;
             item.MaterialName = name;
             item.TagManager = TagManager;

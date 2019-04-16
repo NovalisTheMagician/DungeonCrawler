@@ -54,19 +54,21 @@
             this.editBtn,
             this.deleteBtn});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(135, 64);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(241, 97);
             // 
             // editBtn
             // 
             this.editBtn.Name = "editBtn";
-            this.editBtn.Size = new System.Drawing.Size(134, 30);
+            this.editBtn.Size = new System.Drawing.Size(240, 30);
             this.editBtn.Text = "Edit";
+            this.editBtn.Click += new System.EventHandler(this.OnEditBtnClick);
             // 
             // deleteBtn
             // 
             this.deleteBtn.Name = "deleteBtn";
-            this.deleteBtn.Size = new System.Drawing.Size(134, 30);
+            this.deleteBtn.Size = new System.Drawing.Size(240, 30);
             this.deleteBtn.Text = "Delete";
+            this.deleteBtn.Click += new System.EventHandler(this.OnDeleteBtnClick);
             // 
             // MaterialItem
             // 
@@ -80,6 +82,7 @@
             this.MinimumSize = new System.Drawing.Size(64, 64);
             this.Name = "MaterialItem";
             this.Size = new System.Drawing.Size(252, 252);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 

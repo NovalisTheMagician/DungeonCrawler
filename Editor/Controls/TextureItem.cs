@@ -54,13 +54,17 @@ namespace Editor.Controls
             TextureEdit textureEdit = new TextureEdit();
             textureEdit.Texture = texture;
             textureEdit.TagManager = TagManager;
-
-            textureEdit.ShowDialog();
+            textureEdit.Show();
         }
 
         private void OnDeleteBtnClick(object sender, EventArgs e)
         {
 
+        }
+
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            DoDragDrop(Texture, DragDropEffects.Link);
         }
     }
 }

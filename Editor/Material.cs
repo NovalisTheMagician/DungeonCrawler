@@ -13,7 +13,9 @@ namespace Editor
 
         public Material()
         {
-
+            Diffuse = "";
+            Normal = "";
+            Specular = "";
         }
 
         public string GetPreviewTexture()
@@ -39,9 +41,20 @@ namespace Editor
                 {
                     Diffuse = tmp.Diffuse;
                     Normal = tmp.Normal;
+                    Specular = tmp.Specular;
                     return true;
                 }
                 return false;
+            }
+        }
+
+        public override void Save(Stream stream)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            using (StreamWriter writer = new StreamWriter(stream))
+            using (JsonTextWriter jsonTextWriter = new JsonTextWriter(writer))
+            {
+                serializer.Serialize(jsonTextWriter, this);
             }
         }
 

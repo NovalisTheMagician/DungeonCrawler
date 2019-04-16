@@ -10,6 +10,7 @@ namespace Editor
     public abstract class AssetBase : IAsset
     {
         public Tags Tags { get; set; }
+        public string Name { get; set; }
 
         public AssetBase()
         {
@@ -17,6 +18,7 @@ namespace Editor
         }
 
         public abstract bool Construct(Stream stream);
+        public abstract void Save(Stream stream);
         public abstract void Dispose();
     }
 }

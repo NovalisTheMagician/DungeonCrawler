@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    public class AssetCache<T> where T : IAsset, new()
+    public class AssetCache<T> where T : AssetBase, new()
     {
         public delegate void AssetReloaded();
         public event AssetReloaded OnAssetReloaded;
@@ -42,6 +42,17 @@ namespace Editor
             assetMap = new Dictionary<string, T>();
         }
 
+        public T this[string name]
+        {
+            get
+            {
+                string path = BaseAssetPath + name;
+                if (assetMap.ContainsKey(path))
+                    return assetMap[path];
+                return default(T);
+            }
+        }
+
         public void ReloadAssets()
         {
             foreach (T asset in assetMap.Values)
@@ -57,6 +68,8 @@ namespace Editor
             foreach (string file in files)
             {
                 T asset = new T();
+                string name = Path.GetFileName(file);
+                asset.Name = name;
                 using (FileStream fs = new FileStream(file, FileMode.Open))
                 {
                     if (asset.Construct(fs))

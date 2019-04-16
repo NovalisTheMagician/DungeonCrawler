@@ -49,6 +49,11 @@ namespace Editor
             return true;
         }
         
+        public override void Save(Stream stream)
+        {
+            //DO SOMETHING
+        }
+
         public override void Dispose()
         {
             if(TextureBitmap != null)

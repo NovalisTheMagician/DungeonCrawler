@@ -30,13 +30,13 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.newBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -61,56 +61,61 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.importToolStripMenuItem,
-            this.newToolStripMenuItem,
+            this.importBtn,
+            this.newBtn,
             this.toolStripSeparator1,
-            this.refreshToolStripMenuItem,
-            this.reloadToolStripMenuItem,
+            this.refreshBtn,
+            this.reloadBtn,
             this.toolStripSeparator2,
-            this.closeToolStripMenuItem});
+            this.closeBtn});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 29);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // importToolStripMenuItem
+            // importBtn
             // 
-            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
-            this.importToolStripMenuItem.Text = "Import";
+            this.importBtn.Name = "importBtn";
+            this.importBtn.Size = new System.Drawing.Size(252, 30);
+            this.importBtn.Text = "Import";
+            this.importBtn.Click += new System.EventHandler(this.OnImportBtnClick);
             // 
-            // newToolStripMenuItem
+            // newBtn
             // 
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
-            this.newToolStripMenuItem.Text = "New";
+            this.newBtn.Name = "newBtn";
+            this.newBtn.Size = new System.Drawing.Size(252, 30);
+            this.newBtn.Text = "New";
+            this.newBtn.Click += new System.EventHandler(this.OnNewBtnClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(249, 6);
             // 
-            // refreshToolStripMenuItem
+            // refreshBtn
             // 
-            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
-            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshBtn.Name = "refreshBtn";
+            this.refreshBtn.Size = new System.Drawing.Size(252, 30);
+            this.refreshBtn.Text = "Refresh";
+            this.refreshBtn.Click += new System.EventHandler(this.OnRefreshBtnClick);
             // 
-            // reloadToolStripMenuItem
+            // reloadBtn
             // 
-            this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
-            this.reloadToolStripMenuItem.Text = "Reload";
+            this.reloadBtn.Name = "reloadBtn";
+            this.reloadBtn.Size = new System.Drawing.Size(252, 30);
+            this.reloadBtn.Text = "Reload";
+            this.reloadBtn.Click += new System.EventHandler(this.OnReloadBtnClick);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(249, 6);
             // 
-            // closeToolStripMenuItem
+            // closeBtn
             // 
-            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
-            this.closeToolStripMenuItem.Text = "Close";
+            this.closeBtn.Name = "closeBtn";
+            this.closeBtn.Size = new System.Drawing.Size(252, 30);
+            this.closeBtn.Text = "Close";
+            this.closeBtn.Click += new System.EventHandler(this.OnCloseBtnClick);
             // 
             // searchToolStripMenuItem
             // 
@@ -161,6 +166,8 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MaterialManager";
             this.Text = "MaterialManager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
+            this.Load += new System.EventHandler(this.OnLoad);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -174,13 +181,13 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importBtn;
+        private System.Windows.Forms.ToolStripMenuItem newBtn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem refreshBtn;
+        private System.Windows.Forms.ToolStripMenuItem reloadBtn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeBtn;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;

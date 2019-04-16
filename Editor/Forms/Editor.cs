@@ -213,14 +213,18 @@ namespace Editor.Forms
     
         private void OnSettingsBtnClick(object sender, EventArgs e)
         {
-            SettingsForm settingsForm = new SettingsForm();
-            settingsForm.ShowDialog();
+            using (SettingsForm settingsForm = new SettingsForm())
+            {
+                settingsForm.ShowDialog();
+            }
         }
 
         private void OnAboutBtnClick(object sender, EventArgs e)
         {
-            AboutBox aboutBox = new AboutBox();
-            aboutBox.ShowDialog();
+            using (AboutBox aboutBox = new AboutBox())
+            {
+                aboutBox.ShowDialog();
+            }
         }
 
         #endregion
@@ -295,14 +299,16 @@ namespace Editor.Forms
             }
             else
             {
-                CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog();
-                commonOpenFileDialog.IsFolderPicker = true;
-                //commonOpenFileDialog.RestoreDirectory = true;
-                commonOpenFileDialog.Multiselect = false;
-                CommonFileDialogResult result = commonOpenFileDialog.ShowDialog();
-                if (result == CommonFileDialogResult.Ok)
+                using (CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog())
                 {
-                    string folder = commonOpenFileDialog.FileName;
+                    commonOpenFileDialog.IsFolderPicker = true;
+                    //commonOpenFileDialog.RestoreDirectory = true;
+                    commonOpenFileDialog.Multiselect = false;
+                    CommonFileDialogResult result = commonOpenFileDialog.ShowDialog();
+                    if (result == CommonFileDialogResult.Ok)
+                    {
+                        string folder = commonOpenFileDialog.FileName;
+                    }
                 }
             }
 
@@ -321,20 +327,22 @@ namespace Editor.Forms
 
         private void LoadLevel()
         {
-            CommonOpenFileDialog openFileDialog = new CommonOpenFileDialog();
-            openFileDialog.EnsureFileExists = true;
-            openFileDialog.DefaultExtension = ".lvl";
-            openFileDialog.Filters.Add(new CommonFileDialogFilter("Level Files", "*.lvl"));
-            openFileDialog.Filters.Add(new CommonFileDialogFilter("All Files", "*.*"));
-            openFileDialog.InitialDirectory = currentProjectPath + "Levels/";
-            openFileDialog.Multiselect = false;
-            //openFileDialog.RestoreDirectory = true;
-
-            CommonFileDialogResult result = openFileDialog.ShowDialog();
-            if(result == CommonFileDialogResult.Ok)
+            using (CommonOpenFileDialog openFileDialog = new CommonOpenFileDialog())
             {
-                string fileName = openFileDialog.FileName;
+                openFileDialog.EnsureFileExists = true;
+                openFileDialog.DefaultExtension = ".lvl";
+                openFileDialog.Filters.Add(new CommonFileDialogFilter("Level Files", "*.lvl"));
+                openFileDialog.Filters.Add(new CommonFileDialogFilter("All Files", "*.*"));
+                openFileDialog.InitialDirectory = currentProjectPath + "Levels/";
+                openFileDialog.Multiselect = false;
+                //openFileDialog.RestoreDirectory = true;
 
+                CommonFileDialogResult result = openFileDialog.ShowDialog();
+                if (result == CommonFileDialogResult.Ok)
+                {
+                    string fileName = openFileDialog.FileName;
+
+                }
             }
         }
 
@@ -342,22 +350,24 @@ namespace Editor.Forms
         {
             if(forceSaveDialog || currentLevelName == string.Empty)
             {
-                CommonSaveFileDialog saveFileDialog = new CommonSaveFileDialog();
-                saveFileDialog.EnsurePathExists = true;
-                saveFileDialog.DefaultExtension = ".lvl";
-                saveFileDialog.InitialDirectory = currentProjectPath + "Levels/";
-                saveFileDialog.Filters.Add(new CommonFileDialogFilter("Level Files", "*.lvl"));
-                saveFileDialog.RestoreDirectory = true;
+                using (CommonSaveFileDialog saveFileDialog = new CommonSaveFileDialog())
+                {
+                    saveFileDialog.EnsurePathExists = true;
+                    saveFileDialog.DefaultExtension = ".lvl";
+                    saveFileDialog.InitialDirectory = currentProjectPath + "Levels/";
+                    saveFileDialog.Filters.Add(new CommonFileDialogFilter("Level Files", "*.lvl"));
+                    saveFileDialog.RestoreDirectory = true;
 
-                CommonFileDialogResult result = saveFileDialog.ShowDialog();
-                if (result == CommonFileDialogResult.Cancel)
-                {
-                    return false;
-                }
-                else if(result == CommonFileDialogResult.Ok)
-                {
-                    string fileName = saveFileDialog.FileName;
-                    //currentLevelName = ;
+                    CommonFileDialogResult result = saveFileDialog.ShowDialog();
+                    if (result == CommonFileDialogResult.Cancel)
+                    {
+                        return false;
+                    }
+                    else if (result == CommonFileDialogResult.Ok)
+                    {
+                        string fileName = saveFileDialog.FileName;
+                        //currentLevelName = ;
+                    }
                 }
             }
 

@@ -47,6 +47,7 @@
             this.Controls.Add(this.materialFlowPanel);
             this.Name = "MaterialView";
             this.Size = new System.Drawing.Size(489, 402);
+            this.VisibleChanged += new System.EventHandler(this.OnVisibleChanged);
             this.ResumeLayout(false);
 
         }
