@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    public struct EditorSettings
+    public struct ProjectSettings
     {
-
+        public string name;
+        public int version;
+        public DateTime lastUpdated;
     }
 }

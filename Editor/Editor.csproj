@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="AssetBase.cs" />
     <Compile Include="AssetCache.cs" />
+    <Compile Include="AssetCaches.cs" />
     <Compile Include="Controls\MaterialItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -198,6 +199,7 @@
     <Compile Include="Interop\RendererInterop.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProjectSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\Settings.cs">
       <SubType>Form</SubType>

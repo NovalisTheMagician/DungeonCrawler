@@ -1,6 +1,7 @@
 ﻿using Editor.Controls;
 using Editor.Interop;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,6 +27,9 @@ namespace Editor.Forms
 
         private AssetCache<Texture> textureCache;
         private AssetCache<Material> materialCache;
+
+        private ProjectSettings projectSettings;
+        private EditorSettings editorSettings;
 
         private bool isDirty;
         private string currentLevelName;
@@ -291,28 +295,64 @@ namespace Editor.Forms
 
         #endregion
 
+        private void CreateFolderHierarchy(string projectFolder)
+        {
+            Directory.CreateDirectory(projectFolder + "/cache/");
+            Directory.CreateDirectory(projectFolder + "/assets/");
+            Directory.CreateDirectory(projectFolder + "/assets/textures/");
+            Directory.CreateDirectory(projectFolder + "/assets/materials/");
+            Directory.CreateDirectory(projectFolder + "/assets/models/");
+            Directory.CreateDirectory(projectFolder + "/assets/sounds/");
+            Directory.CreateDirectory(projectFolder + "/levels/");
+        }
+
         private void OpenProject(bool createNew)
         {
-            if(createNew)
+            using (CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog())
             {
-
-            }
-            else
-            {
-                using (CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog())
+                commonOpenFileDialog.IsFolderPicker = true;
+                commonOpenFileDialog.Multiselect = false;
+                CommonFileDialogResult result = commonOpenFileDialog.ShowDialog();
+                if (result == CommonFileDialogResult.Ok)
                 {
-                    commonOpenFileDialog.IsFolderPicker = true;
-                    //commonOpenFileDialog.RestoreDirectory = true;
-                    commonOpenFileDialog.Multiselect = false;
-                    CommonFileDialogResult result = commonOpenFileDialog.ShowDialog();
-                    if (result == CommonFileDialogResult.Ok)
+                    string folder = commonOpenFileDialog.FileName;
+
+                    bool folderEmpty = Directory.EnumerateFiles(folder).Count() == 0;
+                    folderEmpty = folderEmpty &&  (Directory.EnumerateDirectories(folder).Count() == 0);
+                    
+                    if (createNew)
                     {
-                        string folder = commonOpenFileDialog.FileName;
+                        if(!folderEmpty)
+                        {
+                            MessageBox.Show("Specified Folder is not Empty!", "Couldn't create new Project", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        CreateFolderHierarchy(folder);
+
+                        projectSettings = new ProjectSettings();
+                        projectSettings.name = Path.GetFileNameWithoutExtension(folder);
+                        projectSettings.version = 1;
+                        projectSettings.lastUpdated = DateTime.Now;
+
+                        string serializedSettings = JsonConvert.SerializeObject(projectSettings);
+                        File.AppendAllText(folder + "/settings.json", serializedSettings);
                     }
+                    else
+                    {
+                        if(!File.Exists(folder + "/settings.json"))
+                        {
+                            MessageBox.Show("Specified Folder is not a valid Project", "Couldn't open Project", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        string serilizedSettings = File.ReadAllText(folder + "/settings.json");
+                        projectSettings = JsonConvert.DeserializeObject<ProjectSettings>(serilizedSettings);
+                    }
+                    currentProjectPath = $"{folder}/";
+                    EnableMenus();
                 }
             }
-
-            EnableMenus();
         }
 
         private void CloneProject()
