@@ -7,113 +7,170 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    public class AssetCache<T> where T : AssetBase, new()
+    public class AssetCache
     {
         public delegate void AssetReloaded();
         public event AssetReloaded OnAssetReloaded;
 
-        private string baseAssetPath;
-        public string BaseAssetPath
-        {
-            get { return baseAssetPath; }
-            set { baseAssetPath = value; ReloadAssets(); }
-        }
+        public delegate void AssetAdded(string name, IAsset asset);
+        public event AssetAdded OnAssetAdded;
 
-        private Dictionary<string, T> assetMap;
+        public delegate void AssetRemoved(string name, IAsset asset);
+        public event AssetRemoved OnAssetRemoved;
 
-        public IReadOnlyList<string> AssetFiles
-        {
-            get
-            {
-                return assetMap.Keys.ToList();
-            }
-        }
+        public delegate void AssetChanged(string name, IAsset asset);
+        public event AssetChanged OnAssetChanged;
 
-        public IReadOnlyDictionary<string, T> Assets
-        {
-            get
-            {
-                return assetMap;
-            }
-        }
+        private IDictionary<Type, Dictionary<string, IAsset>> assets;
+        private IDictionary<string, IAssetLoader> assetLoaders;
+        private IDictionary<string, string> assetNameToPath;
+        private IDictionary<string, DateTime> assetLastModified;
+
+        public string AssetPath { get; set; }
 
         public AssetCache()
         {
-            assetMap = new Dictionary<string, T>();
+            assets = new Dictionary<Type, Dictionary<string, IAsset>>();
+            assetLoaders = new Dictionary<string, IAssetLoader>();
+            assetNameToPath = new Dictionary<string, string>();
+            assetLastModified = new Dictionary<string, DateTime>();
         }
 
-        public T this[string name]
+        public void RegisterLoader(IAssetLoader loader)
         {
-            get
+            string[] exts = loader.GetAssociatedExtensions();
+            foreach(string extension in exts)
             {
-                string path = BaseAssetPath + name;
-                if (assetMap.ContainsKey(path))
-                    return assetMap[path];
-                return default(T);
+                assetLoaders.Add(extension, loader);
             }
+            assets.Add(loader.GetAssociatedAssetType(), new Dictionary<string, IAsset>());
         }
 
-        public void ReloadAssets()
+        public void CheckChanges()
         {
-            foreach (T asset in assetMap.Values)
-            {
-                asset.Dispose();
-            }
-            assetMap.Clear();
-
-            if (!Directory.Exists(baseAssetPath))
-                Directory.CreateDirectory(baseAssetPath);
-
-            string[] files = Directory.GetFiles(baseAssetPath);
+            string[] files = Directory.GetFiles(AssetPath, "*.*", SearchOption.AllDirectories);
             foreach (string file in files)
             {
-                T asset = new T();
                 string name = Path.GetFileName(file);
-                asset.Name = name;
-                using (FileStream fs = new FileStream(file, FileMode.Open))
+                bool fileHandled = false;
+                string ext = Path.GetExtension(file);
+                if (!assetLoaders.ContainsKey(ext))
+                    continue;
+                IAssetLoader loader = assetLoaders[ext];
+                DateTime assetTime = File.GetLastWriteTime(file);
+
+                foreach (IDictionary<string, IAsset> assetEntry in assets.Values)
                 {
-                    if (asset.Construct(fs))
+                    foreach(string assetName in assetEntry.Keys)
                     {
-                        assetMap.Add(file, asset);
-                    }
-                    else
-                    {
-                        asset.Dispose();
-                    }
-                }
-            }
-
-            OnAssetReloaded?.Invoke();
-        }
-
-        public void RefreshAssets()
-        {
-            foreach (var assMap in assetMap.ToList())
-            {
-                string file = assMap.Key;
-                T asset = assMap.Value;
-
-                asset.Dispose();
-
-                if (!File.Exists(file))
-                {
-                    assetMap.Remove(file);
-                }
-                else
-                {
-                    // optimize here to only load the images which have been changed since last loaded
-                    // (check file last modified date and store the date somewhere)
-                    using (FileStream fs = new FileStream(file, FileMode.Open))
-                    {
-                        if (!asset.Construct(fs))
+                        if(name == assetName)
                         {
-                            assetMap.Remove(file);
+                            if(assetTime != assetLastModified[name])
+                            {
+                                //file changed!
+                                IAsset changedAsset = loader.LoadAsset(file, this);
+                                if(changedAsset != null)
+                                {
+                                    assetEntry[name] = changedAsset;
+                                    assetLastModified[name] = assetTime;
+
+                                    OnAssetChanged?.Invoke(name, changedAsset);
+                                }
+
+                                fileHandled = true;
+                            }
                         }
                     }
                 }
+
+                if (fileHandled)
+                    continue;
+
+                //might be new file
+                IAsset asset = loader.LoadAsset(file, this);
+                if (asset != null)
+                {
+                    assets[loader.GetAssociatedAssetType()].Add(name, asset);
+                    assetNameToPath.Add(name, file);
+                    assetLastModified.Add(name, assetTime);
+
+                    OnAssetAdded?.Invoke(name, asset);
+                }
+            }
+        }
+
+        public void ClearAll()
+        {
+            foreach (Dictionary<string, IAsset> assetDict in assets.Values)
+            {
+                foreach (KeyValuePair<string, IAsset> assetEntry in assetDict)
+                {
+                    string name = assetEntry.Key;
+                    IAsset asset = assetEntry.Value;
+
+                    string ext = Path.GetExtension(name);
+
+                    IAssetLoader loader = assetLoaders[ext];
+                    loader.SaveAsset(assetNameToPath[name], asset);
+
+                    asset.Dispose();
+                }
+
+                assetDict.Clear();
+            }
+        }
+
+        public void ReloadAll()
+        {
+            ClearAll();
+            string[] files = Directory.GetFiles(AssetPath, "*.*", SearchOption.AllDirectories);
+            foreach(string file in files)
+            {
+                string ext = Path.GetExtension(file);
+                if(assetLoaders.ContainsKey(ext))
+                {
+                    string name = Path.GetFileName(file);
+
+                    IAssetLoader loader = assetLoaders[ext];
+                    IAsset asset = loader.LoadAsset(file, this);
+                    if(asset != null)
+                    {
+                        DateTime time = File.GetLastWriteTime(file);
+
+                        assets[loader.GetAssociatedAssetType()].Add(name, asset);
+                        assetNameToPath.Add(name, file);
+                        assetLastModified.Add(name, time);
+                    }
+                }
             }
 
             OnAssetReloaded?.Invoke();
+        }
+
+        public IList<IAsset> GetAllAssets()
+        {
+            IList<IAsset> assetList = new List<IAsset>();
+            foreach(Dictionary<string, IAsset> assetDict in assets.Values)
+            {
+                foreach(IAsset asset in assetDict.Values)
+                {
+                    assetList.Add(asset);
+                }
+            }
+            return assetList;
+        }
+
+        public T GetAsset<T>(string name) where T : IAsset
+        {
+            Type type = typeof(T);
+            if(assets.ContainsKey(type))
+            {
+                if(assets[type].ContainsKey(name))
+                {
+                    return (T)assets[type][name];
+                }
+            }
+            return default(T);
         }
     }
 }

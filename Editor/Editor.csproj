@@ -110,19 +110,6 @@
   <ItemGroup>
     <Compile Include="AssetBase.cs" />
     <Compile Include="AssetCache.cs" />
-    <Compile Include="AssetCaches.cs" />
-    <Compile Include="Controls\MaterialItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\MaterialItem.Designer.cs">
-      <DependentUpon>MaterialItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MaterialView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\MaterialView.Designer.cs">
-      <DependentUpon>MaterialView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\ThreeDView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -153,29 +140,11 @@
     <Compile Include="Controls\Layout6Pane.Designer.cs">
       <DependentUpon>Layout6Pane.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Layout2Pane.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Layout2Pane.Designer.cs">
-      <DependentUpon>Layout2Pane.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\InputBox.Designer.cs">
       <DependentUpon>InputBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\MaterialEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MaterialEdit.Designer.cs">
-      <DependentUpon>MaterialEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\MaterialManager.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MaterialManager.Designer.cs">
-      <DependentUpon>MaterialManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TagsForm.cs">
       <SubType>Form</SubType>
@@ -183,21 +152,11 @@
     <Compile Include="Forms\TagsForm.Designer.cs">
       <DependentUpon>TagsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TextureEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\TextureEdit.Designer.cs">
-      <DependentUpon>TextureEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\TextureManager.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\TextureManager.Designer.cs">
-      <DependentUpon>TextureManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="IAsset.cs" />
+    <Compile Include="IAssetLoader.cs" />
     <Compile Include="Interop\RendererInterop.cs" />
     <Compile Include="Material.cs" />
+    <Compile Include="MaterialLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -209,35 +168,9 @@
     </Compile>
     <Compile Include="AssetWatcher.cs" />
     <Compile Include="EditorSettings.cs" />
-    <Compile Include="Controls\TextureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\TextureView.Designer.cs">
-      <DependentUpon>TextureView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\TextureItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\TextureItem.Designer.cs">
-      <DependentUpon>TextureItem.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tags.cs" />
     <Compile Include="Texture.cs" />
-    <EmbeddedResource Include="Controls\Layout2Pane.resx">
-      <DependentUpon>Layout2Pane.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MaterialItem.resx">
-      <DependentUpon>MaterialItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MaterialView.resx">
-      <DependentUpon>MaterialView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TextureItem.resx">
-      <DependentUpon>TextureItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TextureView.resx">
-      <DependentUpon>TextureView.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="TextureLoader.cs" />
     <EmbeddedResource Include="Controls\ThreeDView.resx">
       <DependentUpon>ThreeDView.cs</DependentUpon>
     </EmbeddedResource>
@@ -250,23 +183,11 @@
     <EmbeddedResource Include="Forms\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MaterialEdit.resx">
-      <DependentUpon>MaterialEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MaterialManager.resx">
-      <DependentUpon>MaterialManager.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Layout6Pane.resx">
       <DependentUpon>Layout6Pane.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TextureEdit.resx">
-      <DependentUpon>TextureEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TextureManager.resx">
-      <DependentUpon>TextureManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

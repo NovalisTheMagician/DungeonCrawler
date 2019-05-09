@@ -11,47 +11,35 @@ namespace Editor
 {
     public class Texture : AssetBase
     {
-        public int Width { get; private set; }
+        public int Width { get { return TextureBitmap.Width; } }
 
-        public int Height { get; private set; }
-
-        public byte[] TextureData { get; private set; }
+        public int Height { get { return TextureBitmap.Height; } }
         
         public Bitmap TextureBitmap { get; private set; }
 
-        public override bool Construct(Stream stream)
+        public override Bitmap GetPreviewImage()
         {
-            if (TextureBitmap != null)
-                TextureBitmap.Dispose();
-            
+            return PreviewImage;
+        }
+
+        public override bool Load(Stream stream)
+        {
             try
             {
                 TextureBitmap = new Bitmap(stream);
             }
             catch(ArgumentException e)
             {
+                Console.WriteLine(e.Message);
                 return false;
             }
 
-            Width = TextureBitmap.Width;
-            Height = TextureBitmap.Height;
-
-            BitmapData bitmapData = TextureBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-            IntPtr ptr = bitmapData.Scan0;
-            int numBytes = Math.Abs(bitmapData.Stride) * Height;
-            TextureData = new byte[numBytes];
-
-            System.Runtime.InteropServices.Marshal.Copy(ptr, TextureData, 0, numBytes);
-
-            TextureBitmap.UnlockBits(bitmapData);
-
             return true;
         }
-        
+
         public override void Save(Stream stream)
         {
-            //DO SOMETHING
+            
         }
 
         public override void Dispose()

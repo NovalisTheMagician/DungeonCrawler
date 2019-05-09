@@ -18,15 +18,8 @@ namespace Editor.Forms
     public partial class EditorForm : Form
     {
         private TagManager tagManager;
-        
-        private TextureView textureView;
-        private MaterialView materialView;
 
-        private TextureManager textureManager;
-        private MaterialManager materialManager;
-
-        private AssetCache<Texture> textureCache;
-        private AssetCache<Material> materialCache;
+        private AssetCache assetCache;
 
         private ProjectSettings projectSettings;
         private EditorSettings editorSettings;
@@ -150,16 +143,7 @@ namespace Editor.Forms
 
         private void OnTextureManagerBtnClick(object sender, EventArgs e)
         {
-            if (textureManager == null || !textureManager.IsHandleCreated)
-            {
-                textureManager = new TextureManager();
-                textureManager.TextureView = textureView;
-                textureManager.Show();
-            }
-            else
-            {
-                textureManager.BringToFront();
-            }
+            
         }
 
         private void OnModelManagerBtnClick(object sender, EventArgs e)
@@ -169,16 +153,7 @@ namespace Editor.Forms
 
         private void OnMaterialManagerBtnClick(object sender, EventArgs e)
         {
-            if (materialManager == null || !materialManager.IsHandleCreated)
-            {
-                materialManager = new MaterialManager();
-                materialManager.MaterialView = materialView;
-                materialManager.Show();
-            }
-            else
-            {
-                materialManager.BringToFront();
-            }
+            
         }
 
         #endregion
@@ -248,20 +223,10 @@ namespace Editor.Forms
             RendererInterop.Initialize();
 
             tagManager = new TagManager();
+            assetCache = new AssetCache();
 
-            textureCache = new AssetCache<Texture>();
-            textureCache.BaseAssetPath = @"Assets\Textures\";
-
-            materialCache = new AssetCache<Material>();
-            materialCache.BaseAssetPath = @"Assets\Materials\";
-
-            textureView = new TextureView();
-            textureView.TextureCache = textureCache;
-            textureView.TagManager = tagManager;
-
-            materialView = new MaterialView(textureCache);
-            materialView.MaterialCache = materialCache;
-            materialView.TagManager = tagManager;
+            assetCache.RegisterLoader(new TextureLoader());
+            assetCache.RegisterLoader(new MaterialLoader());
 
             isDirty = false;
             currentLevelName = "";
@@ -289,8 +254,10 @@ namespace Editor.Forms
                 else if(result == DialogResult.Cancel)
                 {
                     e.Cancel = true;
+                    return;
                 }
             }
+            assetCache.ClearAll();
         }
 
         #endregion
@@ -299,10 +266,10 @@ namespace Editor.Forms
         {
             Directory.CreateDirectory(projectFolder + "/cache/");
             Directory.CreateDirectory(projectFolder + "/assets/");
-            Directory.CreateDirectory(projectFolder + "/assets/textures/");
-            Directory.CreateDirectory(projectFolder + "/assets/materials/");
-            Directory.CreateDirectory(projectFolder + "/assets/models/");
-            Directory.CreateDirectory(projectFolder + "/assets/sounds/");
+            //Directory.CreateDirectory(projectFolder + "/assets/textures/");
+            //Directory.CreateDirectory(projectFolder + "/assets/materials/");
+            //Directory.CreateDirectory(projectFolder + "/assets/models/");
+            //Directory.CreateDirectory(projectFolder + "/assets/sounds/");
             Directory.CreateDirectory(projectFolder + "/levels/");
         }
 
@@ -350,6 +317,9 @@ namespace Editor.Forms
                         projectSettings = JsonConvert.DeserializeObject<ProjectSettings>(serilizedSettings);
                     }
                     currentProjectPath = $"{folder}/";
+                    assetCache.AssetPath = $"{currentProjectPath}assets/";
+                    assetCache.ReloadAll();
+                    tagManager.ProjectPath = currentProjectPath;
                     EnableMenus();
                 }
             }

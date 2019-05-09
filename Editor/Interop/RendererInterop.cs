@@ -60,7 +60,7 @@ namespace Editor.Interop
         public static void RenderTexture(uint renderID, Texture texture)
         {
             DXTexture dxTex = new DXTexture();
-            dxTex.bytes = texture.TextureData;
+            //dxTex.bytes = texture.TextureData;
             dxTex.width = texture.Width;
             dxTex.height = texture.Height;
 

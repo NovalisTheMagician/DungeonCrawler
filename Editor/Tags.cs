@@ -46,6 +46,7 @@ namespace Editor
             {
                 tags[i] = new Tag() { Name = "NoTag", BitVal = (ulong)Math.Pow(2, i) };
             }
+            tagsChanged = false;
         }
 
         public void SetTag(string name, int position)
@@ -125,31 +126,31 @@ namespace Editor
 
     public class Tags
     {
-        private ulong tagBitfield;
+        public ulong Bitfield { get; private set; }
 
         public Tags()
         {
-            tagBitfield = 0;
+            Bitfield = 0;
         }
 
         public Tags(ulong bitfield)
         {
-            tagBitfield = bitfield;
+            Bitfield = bitfield;
         }
 
         public void AddTag(Tag tag)
         {
-            tagBitfield |= tag.BitVal;
+            Bitfield |= tag.BitVal;
         }
 
         public void RemoveTag(Tag tag)
         {
-            tagBitfield &= ~tag.BitVal;
+            Bitfield &= ~tag.BitVal;
         }
 
         public bool HasTag(Tag tag)
         {
-            return (tag.BitVal & tagBitfield) > 0;
+            return (tag.BitVal & Bitfield) > 0;
         }
     }
 }

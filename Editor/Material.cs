@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using Newtonsoft.Json;
 
 namespace Editor
 {
-    [Serializable]
     public class Material : AssetBase
     {
         public string Diffuse { get; set; }
@@ -29,7 +29,7 @@ namespace Editor
             return "";
         }
 
-        public override bool Construct(Stream stream)
+        public override bool Load(Stream stream)
         {
             JsonSerializer serializer = new JsonSerializer();
 
@@ -61,6 +61,11 @@ namespace Editor
         public override void Dispose()
         {
             
+        }
+
+        public override Bitmap GetPreviewImage()
+        {
+            throw new NotImplementedException();
         }
     }
 }

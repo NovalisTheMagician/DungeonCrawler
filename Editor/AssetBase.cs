@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Editor.Properties;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,14 +13,18 @@ namespace Editor
     {
         public Tags Tags { get; set; }
         public string Name { get; set; }
+        
+        public Bitmap PreviewImage { get; set; }
 
         public AssetBase()
         {
             Tags = new Tags();
+            PreviewImage = Resources.ErrorImage;
         }
 
-        public abstract bool Construct(Stream stream);
-        public abstract void Save(Stream stream);
+        public abstract Bitmap GetPreviewImage();
         public abstract void Dispose();
+        public abstract bool Load(Stream stream);
+        public abstract void Save(Stream stream);
     }
 }

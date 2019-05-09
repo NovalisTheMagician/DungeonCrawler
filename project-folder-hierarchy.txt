@@ -5,5 +5,5 @@ project/
 | |_materials/
 | |_models/
 |_levels/
-|_settings.ed
+|_settings.json
 |_tags.txt

@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using System.Drawing;
 
 namespace Editor
 {
     public interface IAsset : IDisposable
     {
-        bool Construct(Stream stream);
+        bool Load(Stream stream);
         void Save(Stream stream);
+        Bitmap GetPreviewImage();
     }
 }
