@@ -1,58 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor
 {
-    public class MaterialLoader : IAssetLoader
+    public class MaterialLoader : BaseAssetLoader
     {
-        public Type GetAssociatedAssetType()
-        {
-            return typeof(Material);
-        }
-
-        public string[] GetAssociatedExtensions()
+        public override string[] GetAssociatedExtensions()
         {
             return new[] { ".mat" };
         }
 
-        public IAsset LoadAsset(string file, AssetCache assetCache)
+        public override BaseAsset LoadAsset(string file, AssetCache assetCache)
         {
             Material material = new Material();
 
-            using (Stream stream = new FileStream(file, FileMode.Open))
-            {
-                if (!material.Load(stream))
-                    return null;
-            }
+            string materialJson = File.ReadAllText(file);
 
-            string tagFile = $"{file}.tags";
-            if (File.Exists(tagFile))
-            {
-                using (StreamReader tagStreamReader = File.OpenText(tagFile))
-                {
-                    ulong tagVal = ulong.Parse(tagStreamReader.ReadLine());
-                    material.Tags = new Tags(tagVal);
-                }
-            }
+            material = JsonSerializer.Parse<Material>(materialJson);
 
-            material.Name = Path.GetFileName(file);
-
-            return material;
+            return LoadTag(file, material);
         }
 
-        public void SaveAsset(string file, IAsset asset)
+        public override void SaveAsset(string file, BaseAsset asset)
         {
-            using (Stream stream = new FileStream(file, FileMode.Create))
-            {
-                asset.Save(stream);
-            }
+            string materialJson = JsonSerializer.ToString<Material>(asset as Material);
+            File.WriteAllText(file, materialJson);
 
-            string tagToSave = $"{(asset as Material).Tags.Bitfield}\n";
-            File.WriteAllText($"{file}.tags", tagToSave);
+            base.SaveAsset(file, asset);
         }
     }
 }

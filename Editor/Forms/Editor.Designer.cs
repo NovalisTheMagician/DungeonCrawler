@@ -52,11 +52,8 @@
             this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buildAndRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assetMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.textureManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.modelManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.materialManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.assetManagerBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.entitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tagsBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.standardViewBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +82,6 @@
             this.gitMenu,
             this.exportMenu,
             this.assetMenu,
-            this.tagsBtn,
             this.toolsMenu,
             this.viewMenu,
             this.helpMenu});
@@ -116,71 +112,71 @@
             // newProjectBtn
             // 
             this.newProjectBtn.Name = "newProjectBtn";
-            this.newProjectBtn.Size = new System.Drawing.Size(252, 30);
+            this.newProjectBtn.Size = new System.Drawing.Size(202, 30);
             this.newProjectBtn.Text = "New Project";
             this.newProjectBtn.Click += new System.EventHandler(this.OnNewProjectBtnClick);
             // 
             // openProjectBtn
             // 
             this.openProjectBtn.Name = "openProjectBtn";
-            this.openProjectBtn.Size = new System.Drawing.Size(252, 30);
+            this.openProjectBtn.Size = new System.Drawing.Size(202, 30);
             this.openProjectBtn.Text = "Open Project";
             this.openProjectBtn.Click += new System.EventHandler(this.OnOpenProjectBtnClick);
             // 
             // cloneProjectBtn
             // 
             this.cloneProjectBtn.Name = "cloneProjectBtn";
-            this.cloneProjectBtn.Size = new System.Drawing.Size(252, 30);
+            this.cloneProjectBtn.Size = new System.Drawing.Size(202, 30);
             this.cloneProjectBtn.Text = "Clone Project";
             this.cloneProjectBtn.Click += new System.EventHandler(this.OnCloneProjectBtnClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(249, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(199, 6);
             // 
             // newBtn
             // 
             this.newBtn.Name = "newBtn";
-            this.newBtn.Size = new System.Drawing.Size(252, 30);
+            this.newBtn.Size = new System.Drawing.Size(202, 30);
             this.newBtn.Text = "New Level";
             this.newBtn.Click += new System.EventHandler(this.OnNewBtnClick);
             // 
             // openBtn
             // 
             this.openBtn.Name = "openBtn";
-            this.openBtn.Size = new System.Drawing.Size(252, 30);
+            this.openBtn.Size = new System.Drawing.Size(202, 30);
             this.openBtn.Text = "Open Level";
             this.openBtn.Click += new System.EventHandler(this.OnOpenBtnClick);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(249, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(199, 6);
             // 
             // saveBtn
             // 
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(252, 30);
+            this.saveBtn.Size = new System.Drawing.Size(202, 30);
             this.saveBtn.Text = "Save Level";
             this.saveBtn.Click += new System.EventHandler(this.OnSaveBtnClick);
             // 
             // saveAsBtn
             // 
             this.saveAsBtn.Name = "saveAsBtn";
-            this.saveAsBtn.Size = new System.Drawing.Size(252, 30);
+            this.saveAsBtn.Size = new System.Drawing.Size(202, 30);
             this.saveAsBtn.Text = "Save Level As";
             this.saveAsBtn.Click += new System.EventHandler(this.OnSaveAsBtnClick);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(249, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(199, 6);
             // 
             // quitBtn
             // 
             this.quitBtn.Name = "quitBtn";
-            this.quitBtn.Size = new System.Drawing.Size(252, 30);
+            this.quitBtn.Size = new System.Drawing.Size(202, 30);
             this.quitBtn.Text = "Quit";
             this.quitBtn.Click += new System.EventHandler(this.OnQuitBtnClick);
             // 
@@ -255,47 +251,24 @@
             // assetMenu
             // 
             this.assetMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.textureManagerBtn,
-            this.modelManagerBtn,
-            this.materialManagerBtn,
+            this.assetManagerBtn,
             this.entitiesToolStripMenuItem});
             this.assetMenu.Name = "assetMenu";
             this.assetMenu.Size = new System.Drawing.Size(75, 29);
             this.assetMenu.Text = "Assets";
             // 
-            // textureManagerBtn
+            // assetManagerBtn
             // 
-            this.textureManagerBtn.Name = "textureManagerBtn";
-            this.textureManagerBtn.Size = new System.Drawing.Size(234, 30);
-            this.textureManagerBtn.Text = "Texture Manager";
-            this.textureManagerBtn.Click += new System.EventHandler(this.OnTextureManagerBtnClick);
-            // 
-            // modelManagerBtn
-            // 
-            this.modelManagerBtn.Name = "modelManagerBtn";
-            this.modelManagerBtn.Size = new System.Drawing.Size(234, 30);
-            this.modelManagerBtn.Text = "Model Manager";
-            this.modelManagerBtn.Click += new System.EventHandler(this.OnModelManagerBtnClick);
-            // 
-            // materialManagerBtn
-            // 
-            this.materialManagerBtn.Name = "materialManagerBtn";
-            this.materialManagerBtn.Size = new System.Drawing.Size(234, 30);
-            this.materialManagerBtn.Text = "Material Manager";
-            this.materialManagerBtn.Click += new System.EventHandler(this.OnMaterialManagerBtnClick);
+            this.assetManagerBtn.Name = "assetManagerBtn";
+            this.assetManagerBtn.Size = new System.Drawing.Size(209, 30);
+            this.assetManagerBtn.Text = "AssetManager";
+            this.assetManagerBtn.Click += new System.EventHandler(this.OnAssetManagerBtnClick);
             // 
             // entitiesToolStripMenuItem
             // 
             this.entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
-            this.entitiesToolStripMenuItem.Size = new System.Drawing.Size(234, 30);
+            this.entitiesToolStripMenuItem.Size = new System.Drawing.Size(209, 30);
             this.entitiesToolStripMenuItem.Text = "Entities";
-            // 
-            // tagsBtn
-            // 
-            this.tagsBtn.Name = "tagsBtn";
-            this.tagsBtn.Size = new System.Drawing.Size(59, 29);
-            this.tagsBtn.Text = "Tags";
-            this.tagsBtn.Click += new System.EventHandler(this.OnTagsBtnClick);
             // 
             // toolsMenu
             // 
@@ -338,14 +311,14 @@
             // settingsBtn
             // 
             this.settingsBtn.Name = "settingsBtn";
-            this.settingsBtn.Size = new System.Drawing.Size(252, 30);
+            this.settingsBtn.Size = new System.Drawing.Size(160, 30);
             this.settingsBtn.Text = "Settings";
             this.settingsBtn.Click += new System.EventHandler(this.OnSettingsBtnClick);
             // 
             // aboutBtn
             // 
             this.aboutBtn.Name = "aboutBtn";
-            this.aboutBtn.Size = new System.Drawing.Size(252, 30);
+            this.aboutBtn.Size = new System.Drawing.Size(160, 30);
             this.aboutBtn.Text = "About";
             this.aboutBtn.Click += new System.EventHandler(this.OnAboutBtnClick);
             // 
@@ -434,8 +407,8 @@
             // 
             // EditorForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1224, 806);
             this.Controls.Add(this.layout6Pane);
             this.Controls.Add(this.statusStrip1);
@@ -476,7 +449,7 @@
         private System.Windows.Forms.ToolStripMenuItem settingsBtn;
         private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem buildAndRunToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem textureManagerBtn;
+        private System.Windows.Forms.ToolStripMenuItem assetManagerBtn;
         private System.Windows.Forms.ToolStripMenuItem entitiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem standardViewBtn;
         private System.Windows.Forms.ToolStripMenuItem texturingViewBtn;
@@ -487,8 +460,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
-        private System.Windows.Forms.ToolStripMenuItem modelManagerBtn;
-        private System.Windows.Forms.ToolStripMenuItem materialManagerBtn;
         private System.Windows.Forms.ToolStripMenuItem gitMenu;
         private System.Windows.Forms.ToolStripMenuItem pullBtn;
         private System.Windows.Forms.ToolStripMenuItem viewChangesBtn;
@@ -500,7 +471,6 @@
         private System.Windows.Forms.ToolStripMenuItem newBtn;
         private System.Windows.Forms.ToolStripMenuItem openBtn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem tagsBtn;
     }
 }
 

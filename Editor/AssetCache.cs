@@ -7,21 +7,30 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
+    public enum FilterType
+    {
+        NONE = 0,
+        TEXTURES = 1,
+        MATERIALS = 2,
+        MODELS = 4,
+        ALL = 0xF,
+    }
+
     public class AssetCache
     {
         public delegate void AssetReloaded();
         public event AssetReloaded OnAssetReloaded;
 
-        public delegate void AssetAdded(string name, IAsset asset);
+        public delegate void AssetAdded(string name, BaseAsset asset);
         public event AssetAdded OnAssetAdded;
 
-        public delegate void AssetRemoved(string name, IAsset asset);
+        public delegate void AssetRemoved(string name, BaseAsset asset);
         public event AssetRemoved OnAssetRemoved;
 
-        public delegate void AssetChanged(string name, IAsset asset);
+        public delegate void AssetChanged(string name, BaseAsset asset);
         public event AssetChanged OnAssetChanged;
 
-        private IDictionary<Type, Dictionary<string, IAsset>> assets;
+        private IDictionary<string, BaseAsset> assets;
         private IDictionary<string, IAssetLoader> assetLoaders;
         private IDictionary<string, string> assetNameToPath;
         private IDictionary<string, DateTime> assetLastModified;
@@ -30,7 +39,7 @@ namespace Editor
 
         public AssetCache()
         {
-            assets = new Dictionary<Type, Dictionary<string, IAsset>>();
+            assets = new Dictionary<string, BaseAsset>();
             assetLoaders = new Dictionary<string, IAssetLoader>();
             assetNameToPath = new Dictionary<string, string>();
             assetLastModified = new Dictionary<string, DateTime>();
@@ -43,7 +52,6 @@ namespace Editor
             {
                 assetLoaders.Add(extension, loader);
             }
-            assets.Add(loader.GetAssociatedAssetType(), new Dictionary<string, IAsset>());
         }
 
         public void CheckChanges()
@@ -59,26 +67,23 @@ namespace Editor
                 IAssetLoader loader = assetLoaders[ext];
                 DateTime assetTime = File.GetLastWriteTime(file);
 
-                foreach (IDictionary<string, IAsset> assetEntry in assets.Values)
+                foreach(string assetName in assets.Keys)
                 {
-                    foreach(string assetName in assetEntry.Keys)
+                    if(name == assetName)
                     {
-                        if(name == assetName)
+                        if(assetTime != assetLastModified[name])
                         {
-                            if(assetTime != assetLastModified[name])
+                            //file changed!
+                            BaseAsset changedAsset = loader.LoadAsset(file, this);
+                            if(changedAsset != null)
                             {
-                                //file changed!
-                                IAsset changedAsset = loader.LoadAsset(file, this);
-                                if(changedAsset != null)
-                                {
-                                    assetEntry[name] = changedAsset;
-                                    assetLastModified[name] = assetTime;
+                                assets[name] = changedAsset;
+                                assetLastModified[name] = assetTime;
 
-                                    OnAssetChanged?.Invoke(name, changedAsset);
-                                }
-
-                                fileHandled = true;
+                                OnAssetChanged?.Invoke(name, changedAsset);
                             }
+
+                            fileHandled = true;
                         }
                     }
                 }
@@ -87,10 +92,10 @@ namespace Editor
                     continue;
 
                 //might be new file
-                IAsset asset = loader.LoadAsset(file, this);
+                BaseAsset asset = loader.LoadAsset(file, this);
                 if (asset != null)
                 {
-                    assets[loader.GetAssociatedAssetType()].Add(name, asset);
+                    assets.Add(name, asset);
                     assetNameToPath.Add(name, file);
                     assetLastModified.Add(name, assetTime);
 
@@ -101,23 +106,20 @@ namespace Editor
 
         public void ClearAll()
         {
-            foreach (Dictionary<string, IAsset> assetDict in assets.Values)
+            foreach (KeyValuePair<string, BaseAsset> assetEntry in assets)
             {
-                foreach (KeyValuePair<string, IAsset> assetEntry in assetDict)
-                {
-                    string name = assetEntry.Key;
-                    IAsset asset = assetEntry.Value;
+                string name = assetEntry.Key;
+                BaseAsset asset = assetEntry.Value;
 
-                    string ext = Path.GetExtension(name);
+                string ext = Path.GetExtension(name);
 
-                    IAssetLoader loader = assetLoaders[ext];
-                    loader.SaveAsset(assetNameToPath[name], asset);
+                IAssetLoader loader = assetLoaders[ext];
+                loader.SaveAsset(assetNameToPath[name], asset);
 
-                    asset.Dispose();
-                }
-
-                assetDict.Clear();
+                asset.Dispose();
             }
+
+            assets.Clear();
         }
 
         public void ReloadAll()
@@ -132,12 +134,12 @@ namespace Editor
                     string name = Path.GetFileName(file);
 
                     IAssetLoader loader = assetLoaders[ext];
-                    IAsset asset = loader.LoadAsset(file, this);
+                    BaseAsset asset = loader.LoadAsset(file, this);
                     if(asset != null)
                     {
                         DateTime time = File.GetLastWriteTime(file);
 
-                        assets[loader.GetAssociatedAssetType()].Add(name, asset);
+                        assets.Add(name, asset);
                         assetNameToPath.Add(name, file);
                         assetLastModified.Add(name, time);
                     }
@@ -147,28 +149,33 @@ namespace Editor
             OnAssetReloaded?.Invoke();
         }
 
-        public IList<IAsset> GetAllAssets()
+        public IList<BaseAsset> GetAssets(FilterType filter, string nameFilter, HashSet<string> tags)
         {
-            IList<IAsset> assetList = new List<IAsset>();
-            foreach(Dictionary<string, IAsset> assetDict in assets.Values)
-            {
-                foreach(IAsset asset in assetDict.Values)
-                {
-                    assetList.Add(asset);
-                }
-            }
-            return assetList;
+
+            IEnumerable<BaseAsset> assetsFound = from asset
+                                              in assets
+                                              where (asset.Value as BaseAsset).Name.Contains(nameFilter) &&
+                                                    (asset.Value as BaseAsset).Tags.Intersect(tags).Count() > 0 &&
+                                                    filter.HasFlag(FilterType.TEXTURES) ? asset.Value is Texture :
+                                                    filter.HasFlag(FilterType.MATERIALS) ? asset.Value is Material :
+                                                    true
+                                              select asset.Value;
+
+            return assetsFound.ToList();
         }
 
-        public T GetAsset<T>(string name) where T : IAsset
+        public IList<BaseAsset> GetAllAssets()
         {
-            Type type = typeof(T);
-            if(assets.ContainsKey(type))
+            return assets.Values.ToList();
+        }
+
+        public T GetAsset<T>(string name) where T : BaseAsset
+        {
+            if(assets.ContainsKey(name))
             {
-                if(assets[type].ContainsKey(name))
-                {
-                    return (T)assets[type][name];
-                }
+                BaseAsset asset = assets[name];
+                if (asset is T)
+                    return (T)asset;
             }
             return default(T);
         }

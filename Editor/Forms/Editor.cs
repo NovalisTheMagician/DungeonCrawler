@@ -1,24 +1,16 @@
 ﻿using Editor.Controls;
 using Editor.Interop;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Editor.Forms
 {
     public partial class EditorForm : Form
     {
-        private TagManager tagManager;
-
         private AssetCache assetCache;
 
         private ProjectSettings projectSettings;
@@ -141,29 +133,11 @@ namespace Editor.Forms
 
         #region AssetMenu
 
-        private void OnTextureManagerBtnClick(object sender, EventArgs e)
+        private void OnAssetManagerBtnClick(object sender, EventArgs e)
         {
-            
-        }
-
-        private void OnModelManagerBtnClick(object sender, EventArgs e)
-        {
-
-        }
-
-        private void OnMaterialManagerBtnClick(object sender, EventArgs e)
-        {
-            
-        }
-
-        #endregion
-
-        #region TagsMenu
-
-        private void OnTagsBtnClick(object sender, EventArgs e)
-        {
-            TagsForm tagsForm = new TagsForm();
-            tagsForm.ShowDialog();
+            AssetManager assetManager = new AssetManager();
+            assetManager.AssetCache = assetCache;
+            assetManager.Show();
         }
 
         #endregion
@@ -221,8 +195,7 @@ namespace Editor.Forms
         private void OnEditorLoading(object sender, EventArgs e)
         {
             RendererInterop.Initialize();
-
-            tagManager = new TagManager();
+            
             assetCache = new AssetCache();
 
             assetCache.RegisterLoader(new TextureLoader());
@@ -238,7 +211,6 @@ namespace Editor.Forms
         private void OnEditorClosed(object sender, FormClosedEventArgs e)
         {
             RendererInterop.Dispose();
-            tagManager.SaveTags();
         }
 
         private void OnEditorClosing(object sender, FormClosingEventArgs e)
@@ -302,8 +274,13 @@ namespace Editor.Forms
                         projectSettings.version = 1;
                         projectSettings.lastUpdated = DateTime.Now;
 
-                        string serializedSettings = JsonConvert.SerializeObject(projectSettings);
-                        File.AppendAllText(folder + "/settings.json", serializedSettings);
+                        JsonSerializerOptions options = new JsonSerializerOptions
+                        {
+                            WriteIndented = true
+                        };
+
+                        string serializedSettings = JsonSerializer.ToString<ProjectSettings>(projectSettings, options);
+                        File.WriteAllText(folder + "/settings.json", serializedSettings);
                     }
                     else
                     {
@@ -314,12 +291,11 @@ namespace Editor.Forms
                         }
 
                         string serilizedSettings = File.ReadAllText(folder + "/settings.json");
-                        projectSettings = JsonConvert.DeserializeObject<ProjectSettings>(serilizedSettings);
+                        projectSettings = JsonSerializer.Parse<ProjectSettings>(serilizedSettings);
                     }
                     currentProjectPath = $"{folder}/";
                     assetCache.AssetPath = $"{currentProjectPath}assets/";
                     assetCache.ReloadAll();
-                    tagManager.ProjectPath = currentProjectPath;
                     EnableMenus();
                 }
             }
@@ -405,7 +381,6 @@ namespace Editor.Forms
             gitMenu.Enabled = false;
             exportMenu.Enabled = false;
             assetMenu.Enabled = false;
-            tagsBtn.Enabled = false;
             toolsMenu.Enabled = false;
             viewMenu.Enabled = false;
 
@@ -420,7 +395,6 @@ namespace Editor.Forms
             gitMenu.Enabled = true;
             exportMenu.Enabled = true;
             assetMenu.Enabled = true;
-            tagsBtn.Enabled = true;
             toolsMenu.Enabled = true;
             viewMenu.Enabled = true;
 

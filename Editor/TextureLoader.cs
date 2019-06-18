@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,47 +8,37 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    public class TextureLoader : IAssetLoader
+    public class TextureLoader : BaseAssetLoader
     {
-        public Type GetAssociatedAssetType()
-        {
-            return typeof(Texture);
-        }
-
-        public string[] GetAssociatedExtensions()
+        public override string[] GetAssociatedExtensions()
         {
             return new[] { ".png", ".bmp" };
         }
 
-        public IAsset LoadAsset(string file, AssetCache assetCache)
+        public override BaseAsset LoadAsset(string file, AssetCache assetCache)
         {
-            Texture texture = new Texture();
+            Texture texture = null;
 
             using (Stream stream = new FileStream(file, FileMode.Open))
             {
-                if (!texture.Load(stream))
-                    return null;
-            }
-
-            string tagFile = $"{file}.tags";
-            if (File.Exists(tagFile))
-            {
-                using (StreamReader tagStreamReader = File.OpenText(tagFile))
+                try
                 {
-                    ulong tagVal = ulong.Parse(tagStreamReader.ReadLine());
-                    texture.Tags = new Tags(tagVal);
+                    Bitmap textureBitmap = new Bitmap(stream);
+                    texture = new Texture(textureBitmap);
+                }
+                catch (ArgumentException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return null;
                 }
             }
 
-            texture.Name = Path.GetFileName(file);
-
-            return texture;
+            return LoadTag(file, texture);
         }
 
-        public void SaveAsset(string file, IAsset asset)
+        public override void SaveAsset(string file, BaseAsset asset)
         {
-            string tagToSave = $"{(asset as Texture).Tags.Bitfield}\n";
-            File.WriteAllText($"{file}.tags", tagToSave);
+            base.SaveAsset(file, asset);
         }
     }
 }

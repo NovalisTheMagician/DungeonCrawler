@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Editor.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,37 +10,21 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    public class Texture : AssetBase
+    public class Texture : BaseAsset
     {
         public int Width { get { return TextureBitmap.Width; } }
-
         public int Height { get { return TextureBitmap.Height; } }
-        
+
         public Bitmap TextureBitmap { get; private set; }
 
-        public override Bitmap GetPreviewImage()
+        public Texture()
         {
-            return PreviewImage;
+            TextureBitmap = Resources.ErrorImage;
         }
 
-        public override bool Load(Stream stream)
+        public Texture(Bitmap textureBitmap)
         {
-            try
-            {
-                TextureBitmap = new Bitmap(stream);
-            }
-            catch(ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
-
-            return true;
-        }
-
-        public override void Save(Stream stream)
-        {
-            
+            TextureBitmap = textureBitmap;
         }
 
         public override void Dispose()
