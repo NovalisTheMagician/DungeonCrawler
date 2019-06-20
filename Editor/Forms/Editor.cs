@@ -238,10 +238,11 @@ namespace Editor.Forms
         {
             Directory.CreateDirectory(projectFolder + "/cache/");
             Directory.CreateDirectory(projectFolder + "/assets/");
-            //Directory.CreateDirectory(projectFolder + "/assets/textures/");
-            //Directory.CreateDirectory(projectFolder + "/assets/materials/");
-            //Directory.CreateDirectory(projectFolder + "/assets/models/");
-            //Directory.CreateDirectory(projectFolder + "/assets/sounds/");
+            Directory.CreateDirectory(projectFolder + "/assets/textures/");
+            Directory.CreateDirectory(projectFolder + "/assets/materials/");
+            Directory.CreateDirectory(projectFolder + "/assets/models/");
+            Directory.CreateDirectory(projectFolder + "/assets/sounds/");
+            Directory.CreateDirectory(projectFolder + "/assets/music/");
             Directory.CreateDirectory(projectFolder + "/levels/");
         }
 

@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
+    [Flags]
     public enum FilterType
     {
         NONE = 0,
         TEXTURES = 1,
         MATERIALS = 2,
-        MODELS = 4,
-        ALL = 0xF,
+        MODELS = 3,
+        SOUNDS = 4,
+        MUSIC = 5,
+        ALL = 0xFF
     }
 
     public class AssetCache
@@ -82,9 +85,9 @@ namespace Editor
 
                                 OnAssetChanged?.Invoke(name, changedAsset);
                             }
-
-                            fileHandled = true;
                         }
+
+                        fileHandled = true;
                     }
                 }
 
@@ -152,14 +155,14 @@ namespace Editor
         public IList<BaseAsset> GetAssets(FilterType filter, string nameFilter, HashSet<string> tags)
         {
 
-            IEnumerable<BaseAsset> assetsFound = from asset
-                                              in assets
-                                              where (asset.Value as BaseAsset).Name.Contains(nameFilter) &&
-                                                    (asset.Value as BaseAsset).Tags.Intersect(tags).Count() > 0 &&
-                                                    filter.HasFlag(FilterType.TEXTURES) ? asset.Value is Texture :
-                                                    filter.HasFlag(FilterType.MATERIALS) ? asset.Value is Material :
-                                                    true
-                                              select asset.Value;
+            IEnumerable<BaseAsset> assetsFound =  from asset
+                                                  in assets.Values
+                                                  where (asset as BaseAsset).Name.Contains(nameFilter) &&
+                                                        ((asset as BaseAsset).Tags.Intersect(tags).Count() > 0) || (tags.Count == 0) &&
+                                                        filter.HasFlag(FilterType.TEXTURES) ? asset is Texture :
+                                                        filter.HasFlag(FilterType.MATERIALS) ? asset is Material :
+                                                        true
+                                                  select asset;
 
             return assetsFound.ToList();
         }
