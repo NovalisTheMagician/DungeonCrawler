@@ -271,9 +271,9 @@ namespace Editor.Forms
                         CreateFolderHierarchy(folder);
 
                         projectSettings = new ProjectSettings();
-                        projectSettings.name = Path.GetFileNameWithoutExtension(folder);
-                        projectSettings.version = 1;
-                        projectSettings.lastUpdated = DateTime.Now;
+                        projectSettings.Name = Path.GetFileNameWithoutExtension(folder);
+                        projectSettings.Version = 1;
+                        projectSettings.LastUpdated = DateTime.Now;
 
                         JsonSerializerOptions options = new JsonSerializerOptions
                         {

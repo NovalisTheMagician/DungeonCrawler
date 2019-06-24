@@ -8,8 +8,8 @@ namespace Editor
 {
     public struct ProjectSettings
     {
-        public string name;
-        public int version;
-        public DateTime lastUpdated;
+        public string Name { get; set; }
+        public int Version { get; set; }
+        public DateTime LastUpdated { get; set; }
     }
 }

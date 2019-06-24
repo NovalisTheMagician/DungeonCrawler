@@ -13,9 +13,9 @@ namespace Editor
         NONE = 0,
         TEXTURES = 1,
         MATERIALS = 2,
-        MODELS = 3,
-        SOUNDS = 4,
-        MUSIC = 5,
+        MODELS = 4,
+        SOUNDS = 8,
+        MUSIC = 16,
         ALL = 0xFF
     }
 
@@ -129,7 +129,8 @@ namespace Editor
         {
             ClearAll();
             string[] files = Directory.GetFiles(AssetPath, "*.*", SearchOption.AllDirectories);
-            foreach(string file in files)
+            Array.Sort<string>(files, (a, b) => { if (a.Contains(".png") || a.Contains(".tga")) return 1; else return -1; });
+            foreach (string file in files)
             {
                 string ext = Path.GetExtension(file);
                 if(assetLoaders.ContainsKey(ext))
@@ -152,16 +153,20 @@ namespace Editor
             OnAssetReloaded?.Invoke();
         }
 
+        private FilterType AssetTypeToFlag(BaseAsset asset)
+        {
+            if (asset is Texture) return FilterType.TEXTURES;
+            if (asset is Material) return FilterType.MATERIALS;
+            return FilterType.NONE;
+        }
+
         public IList<BaseAsset> GetAssets(FilterType filter, string nameFilter, HashSet<string> tags)
         {
-
             IEnumerable<BaseAsset> assetsFound =  from asset
                                                   in assets.Values
-                                                  where (asset as BaseAsset).Name.Contains(nameFilter) &&
-                                                        ((asset as BaseAsset).Tags.Intersect(tags).Count() > 0) || (tags.Count == 0) &&
-                                                        filter.HasFlag(FilterType.TEXTURES) ? asset is Texture :
-                                                        filter.HasFlag(FilterType.MATERIALS) ? asset is Material :
-                                                        true
+                                                  where asset.Name.ToLower().Contains(nameFilter.ToLower()) &&
+                                                        ((asset.Tags.Intersect(tags).Count() > 0) || (tags.Count == 0)) &&
+                                                        filter.HasFlag(AssetTypeToFlag(asset))
                                                   select asset;
 
             return assetsFound.ToList();

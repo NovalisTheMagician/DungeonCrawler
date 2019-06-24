@@ -19,6 +19,24 @@ namespace Editor
 
             material = JsonSerializer.Parse<Material>(materialJson);
 
+            if(material.Diffuse != string.Empty)
+            {
+                Texture diffuse = assetCache.GetAsset<Texture>(material.Diffuse);
+                if (diffuse != null) material.DiffuseTexture = diffuse;
+            }
+
+            if (material.Normal != string.Empty)
+            {
+                Texture normal = assetCache.GetAsset<Texture>(material.Normal);
+                if (normal != null) material.NormalTexture = normal;
+            }
+
+            if (material.Specular != string.Empty)
+            {
+                Texture specular = assetCache.GetAsset<Texture>(material.Specular);
+                if (specular != null) material.SpecularTexture = specular;
+            }
+
             return LoadTag(file, material);
         }
 

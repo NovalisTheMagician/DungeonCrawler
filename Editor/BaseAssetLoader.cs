@@ -31,7 +31,7 @@ namespace Editor
 
         public virtual void SaveAsset(string file, BaseAsset asset)
         {
-            using (StreamWriter tagStreamWriter = File.CreateText(file))
+            using (StreamWriter tagStreamWriter = File.CreateText($"{file}.tags"))
             {
                 foreach(string tag in asset.Tags)
                 {

@@ -12,6 +12,8 @@ namespace Editor
 {
     public class Texture : BaseAsset
     {
+        public static Texture NO_TEXTURE = new Texture();
+
         public int Width { get { return TextureBitmap.Width; } }
         public int Height { get { return TextureBitmap.Height; } }
 
@@ -34,6 +36,11 @@ namespace Editor
                 TextureBitmap.Dispose();
                 TextureBitmap = null;
             }
+        }
+
+        public override Bitmap GetImage()
+        {
+            return TextureBitmap;
         }
     }
 }

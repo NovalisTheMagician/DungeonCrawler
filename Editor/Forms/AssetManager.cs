@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Editor.Forms
@@ -30,7 +31,8 @@ namespace Editor.Forms
                 HashSet<string> tags = new HashSet<string>();
                 foreach(string tag in tagsTextBox.Lines)
                 {
-                    tags.Add(tag);
+                    if(tag != string.Empty)
+                        tags.Add(tag);
                 }
                 return tags;
             }
@@ -67,7 +69,23 @@ namespace Editor.Forms
             string textFilter = filterTextBox.Text;
 
             IList<BaseAsset> assets = AssetCache.GetAssets(Filter, textFilter, Tags);
-            Console.WriteLine("Update!");
+            assetPanel.Controls.Clear();
+
+            foreach(BaseAsset asset in assets)
+            {
+                Panel item = new Panel();
+                item.BackColor = Color.PaleVioletRed;
+                item.Size = new Size(128, 128);
+                PictureBox image = new PictureBox();
+                image.Size = new Size(118, 118);
+                image.Image = asset.GetImage();
+                image.SizeMode = PictureBoxSizeMode.StretchImage;
+                image.Location = new Point(5, 5);
+                item.Controls.Add(image);
+                assetPanel.Controls.Add(item);
+            }
+
+            filteredAssetsLabel.Text = $"{assets.Count}";
         }
 
         private void OnAssetsReloaded()

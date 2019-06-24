@@ -1,16 +1,11 @@
-﻿using Editor.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Editor
 {
-    public abstract class BaseAsset
+    public abstract class BaseAsset : IDisposable
     {
         [JsonIgnore]
         public HashSet<string> Tags { get; }
@@ -25,6 +20,8 @@ namespace Editor
         {
             Tags = new HashSet<string>();
         }
+
+        public abstract Bitmap GetImage();
 
         public abstract void Dispose();
     }
