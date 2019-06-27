@@ -60,13 +60,11 @@ namespace Editor.Controls
         {
             if(e.Button == MouseButtons.Middle && !panning)
             {
-                panning = true;
-                startPanPos = e.Location;
+                StartPanning(e.Location);
             }
             else if(e.Button == MouseButtons.Left && Control.ModifierKeys == Keys.Control && !panning)
             {
-                panning = true;
-                startPanPos = e.Location;
+                StartPanning(e.Location);
             }
 
             base.OnMouseDown(e);
@@ -76,18 +74,32 @@ namespace Editor.Controls
         {
             if(e.Button == MouseButtons.Middle || e.Button == MouseButtons.Left)
             {
-                if (panning) panning = false;
+                if (panning)
+                    EndPanning();
             }
+
             base.OnMouseUp(e);
+        }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            if (Parent.Focused && !Focused) Focus();
+            base.OnMouseEnter(e);
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            if (Focused) Parent.Focus();
+            base.OnMouseLeave(e);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            ScaleFactor += 0.01f * e.Delta;
+            ScaleFactor += 0.01f * Math.Sign(e.Delta);
             if (ScaleFactor <= 0.01f)
                 ScaleFactor = 0.01f;
             Invalidate();
-
+            
             base.OnMouseWheel(e);
         }
 
@@ -95,10 +107,7 @@ namespace Editor.Controls
         {
             if(panning)
             {
-                int offsetX = e.X - startPanPos.X;
-                int offsetY = e.Y - startPanPos.Y;
-                startPanPos = e.Location;
-                PanOffset += new Vector2(offsetX, offsetY);
+                DoPanning(e.Location);
 
                 Invalidate();
             }
@@ -183,6 +192,27 @@ namespace Editor.Controls
             screenPos.X = (int)((worldPos.X - PanOffset.X) * ScaleFactor);
             screenPos.Y = (int)((worldPos.Y - PanOffset.Y) * ScaleFactor);
             return screenPos;
+        }
+
+        private void StartPanning(Point mousePos)
+        {
+            panning = true;
+            startPanPos = mousePos;
+            Cursor.Current = Cursors.NoMove2D;
+        }
+
+        private void DoPanning(Point mousePos)
+        {
+            int offsetX = mousePos.X - startPanPos.X;
+            int offsetY = mousePos.Y - startPanPos.Y;
+            startPanPos = mousePos;
+            PanOffset += new Vector2(offsetX, offsetY);
+        }
+
+        private void EndPanning()
+        {
+            panning = false;
+            Cursor.Current = Cursors.Default;
         }
     }
 }
