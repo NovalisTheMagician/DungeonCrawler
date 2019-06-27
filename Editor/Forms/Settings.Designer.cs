@@ -30,8 +30,9 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.generalTabPage = new System.Windows.Forms.TabPage();
-            this.controlsTabPage = new System.Windows.Forms.TabPage();
             this.graphicsTabPage = new System.Windows.Forms.TabPage();
+            this.controlsTabPage = new System.Windows.Forms.TabPage();
+            this.appearanceTabPage = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -40,6 +41,7 @@
             this.tabControl1.Controls.Add(this.generalTabPage);
             this.tabControl1.Controls.Add(this.graphicsTabPage);
             this.tabControl1.Controls.Add(this.controlsTabPage);
+            this.tabControl1.Controls.Add(this.appearanceTabPage);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -57,6 +59,15 @@
             this.generalTabPage.Text = "General";
             this.generalTabPage.UseVisualStyleBackColor = true;
             // 
+            // graphicsTabPage
+            // 
+            this.graphicsTabPage.Location = new System.Drawing.Point(4, 29);
+            this.graphicsTabPage.Name = "graphicsTabPage";
+            this.graphicsTabPage.Size = new System.Drawing.Size(792, 417);
+            this.graphicsTabPage.TabIndex = 2;
+            this.graphicsTabPage.Text = "Graphics";
+            this.graphicsTabPage.UseVisualStyleBackColor = true;
+            // 
             // controlsTabPage
             // 
             this.controlsTabPage.Location = new System.Drawing.Point(4, 29);
@@ -67,14 +78,14 @@
             this.controlsTabPage.Text = "Keybinds";
             this.controlsTabPage.UseVisualStyleBackColor = true;
             // 
-            // graphicsTabPage
+            // appearanceTabPage
             // 
-            this.graphicsTabPage.Location = new System.Drawing.Point(4, 29);
-            this.graphicsTabPage.Name = "graphicsTabPage";
-            this.graphicsTabPage.Size = new System.Drawing.Size(792, 417);
-            this.graphicsTabPage.TabIndex = 2;
-            this.graphicsTabPage.Text = "Graphics";
-            this.graphicsTabPage.UseVisualStyleBackColor = true;
+            this.appearanceTabPage.Location = new System.Drawing.Point(4, 29);
+            this.appearanceTabPage.Name = "appearanceTabPage";
+            this.appearanceTabPage.Size = new System.Drawing.Size(792, 417);
+            this.appearanceTabPage.TabIndex = 3;
+            this.appearanceTabPage.Text = "Appearance";
+            this.appearanceTabPage.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -95,5 +106,6 @@
         private System.Windows.Forms.TabPage generalTabPage;
         private System.Windows.Forms.TabPage graphicsTabPage;
         private System.Windows.Forms.TabPage controlsTabPage;
+        private System.Windows.Forms.TabPage appearanceTabPage;
     }
 }

@@ -109,27 +109,20 @@ namespace Editor
 
         public void ClearAll()
         {
-            foreach (KeyValuePair<string, BaseAsset> assetEntry in assets)
-            {
-                string name = assetEntry.Key;
-                BaseAsset asset = assetEntry.Value;
-
-                string ext = Path.GetExtension(name);
-
-                IAssetLoader loader = assetLoaders[ext];
-                loader.SaveAsset(assetNameToPath[name], asset);
-
-                asset.Dispose();
-            }
-
+            SaveAssets();
+            
             assets.Clear();
+            assetLastModified.Clear();
+            assetNameToPath.Clear();
         }
 
         public void ReloadAll()
         {
             ClearAll();
             string[] files = Directory.GetFiles(AssetPath, "*.*", SearchOption.AllDirectories);
+
             Array.Sort<string>(files, (a, b) => { if (a.Contains(".png") || a.Contains(".tga")) return 1; else return -1; });
+
             foreach (string file in files)
             {
                 string ext = Path.GetExtension(file);
@@ -162,8 +155,7 @@ namespace Editor
 
         public IList<BaseAsset> GetAssets(FilterType filter, string nameFilter, HashSet<string> tags)
         {
-            IEnumerable<BaseAsset> assetsFound =  from asset
-                                                  in assets.Values
+            IEnumerable<BaseAsset> assetsFound =  from asset in assets.Values
                                                   where asset.Name.ToLower().Contains(nameFilter.ToLower()) &&
                                                         ((asset.Tags.Intersect(tags).Count() > 0) || (tags.Count == 0)) &&
                                                         filter.HasFlag(AssetTypeToFlag(asset))
@@ -172,7 +164,7 @@ namespace Editor
             return assetsFound.ToList();
         }
 
-        public IList<BaseAsset> GetAllAssets()
+        public IList<BaseAsset> GetAssets()
         {
             return assets.Values.ToList();
         }
@@ -186,6 +178,67 @@ namespace Editor
                     return (T)asset;
             }
             return default(T);
+        }
+
+        public bool AddAsset(BaseAsset newAsset)
+        {
+            string name = newAsset.Name;
+            if (assets.ContainsKey(name))
+                return false;
+            IAssetLoader loader = GetLoader(newAsset);
+            if (loader == null)
+                return false;
+            assets.Add(name, newAsset);
+
+            OnAssetAdded?.Invoke(name, newAsset);
+
+            return true;
+        }
+
+        public void SaveAssets()
+        {
+            IEnumerable<BaseAsset> changedAssets =   from asset in assets.Values
+                                                     where asset.HasChanged
+                                                     select asset;
+
+            foreach(BaseAsset asset in changedAssets)
+            {
+                IAssetLoader loader = GetLoader(asset);
+                loader.SaveAsset(asset.Path, asset);
+            }
+        }
+
+        public void SaveAsset(string name)
+        {
+            if(assets.ContainsKey(name))
+            {
+                BaseAsset assetToSave = assets[name];
+                IAssetLoader loader = GetLoader(assetToSave);
+                loader.SaveAsset(assetToSave.Path, assetToSave);
+
+                DateTime time = File.GetLastWriteTime(assetToSave.Path);
+                assetLastModified.Add(assetToSave.Name, time);
+            }
+        }
+
+        public void SaveAsset(BaseAsset asset)
+        {
+            IAssetLoader loader = GetLoader(asset);
+            loader.SaveAsset(asset.Path, asset);
+
+            DateTime time = File.GetLastWriteTime(asset.Path);
+            assetLastModified.Add(asset.Name, time);
+        }
+
+        private IAssetLoader GetLoader(BaseAsset asset)
+        {
+            string ext = Path.GetExtension(asset.Path);
+            if(assetLoaders.ContainsKey(ext))
+            {
+                IAssetLoader loader = assetLoaders[ext];
+                return loader;
+            }
+            return null;
         }
     }
 }

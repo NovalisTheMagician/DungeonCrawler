@@ -8,6 +8,9 @@ namespace Editor
     public abstract class BaseAsset : IDisposable
     {
         [JsonIgnore]
+        public bool HasChanged { get; set; }
+
+        [JsonIgnore]
         public HashSet<string> Tags { get; }
 
         [JsonIgnore]
@@ -19,6 +22,7 @@ namespace Editor
         public BaseAsset()
         {
             Tags = new HashSet<string>();
+            HasChanged = false;
         }
 
         public abstract Bitmap GetImage();

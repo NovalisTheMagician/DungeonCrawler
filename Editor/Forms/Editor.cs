@@ -135,8 +135,7 @@ namespace Editor.Forms
 
         private void OnAssetManagerBtnClick(object sender, EventArgs e)
         {
-            AssetManager assetManager = new AssetManager();
-            assetManager.AssetCache = assetCache;
+            AssetManager assetManager = new AssetManager(assetCache);
             assetManager.Show();
         }
 
@@ -184,13 +183,13 @@ namespace Editor.Forms
 
         #endregion
 
-        #region ToolbarHandler
+        #region ToolbarHandlers
 
 
 
         #endregion
 
-        #region WindowEventsHandler
+        #region WindowEventHandlers
 
         private void OnEditorLoading(object sender, EventArgs e)
         {
@@ -211,6 +210,7 @@ namespace Editor.Forms
         private void OnEditorClosed(object sender, FormClosedEventArgs e)
         {
             RendererInterop.Dispose();
+            assetCache.SaveAssets();
         }
 
         private void OnEditorClosing(object sender, FormClosingEventArgs e)

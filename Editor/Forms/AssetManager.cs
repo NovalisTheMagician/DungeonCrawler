@@ -8,7 +8,7 @@ namespace Editor.Forms
 {
     public partial class AssetManager : Form
     {
-        public AssetCache AssetCache { get; set; }
+        private AssetCache assetCache;
 
         private FilterType Filter
         {
@@ -38,37 +38,38 @@ namespace Editor.Forms
             }
         }
 
-        public AssetManager()
+        public AssetManager(AssetCache assetCache)
         {
             InitializeComponent();
+            this.assetCache = assetCache;
         }
 
         private void OnLoad(object sender, EventArgs e)
         {
-            AssetCache.OnAssetAdded += OnAssetAdded;
-            AssetCache.OnAssetChanged += OnAssetChanged;
-            AssetCache.OnAssetReloaded += OnAssetsReloaded;
-            AssetCache.OnAssetRemoved += OnAssetRemoved;
+            assetCache.OnAssetAdded += OnAssetAdded;
+            assetCache.OnAssetChanged += OnAssetChanged;
+            assetCache.OnAssetReloaded += OnAssetsReloaded;
+            assetCache.OnAssetRemoved += OnAssetRemoved;
 
-            totalAssetsLabel.Text = $"{AssetCache.GetAllAssets().Count}";
+            totalAssetsLabel.Text = $"{assetCache.GetAssets().Count}";
 
             UpdateList(null, new EventArgs());
-            AssetCache.CheckChanges();
+            assetCache.CheckChanges();
         }
 
         private void OnClosing(object sender, FormClosingEventArgs e)
         {
-            AssetCache.OnAssetAdded -= OnAssetAdded;
-            AssetCache.OnAssetChanged -= OnAssetChanged;
-            AssetCache.OnAssetReloaded -= OnAssetsReloaded;
-            AssetCache.OnAssetRemoved -= OnAssetRemoved;
+            assetCache.OnAssetAdded -= OnAssetAdded;
+            assetCache.OnAssetChanged -= OnAssetChanged;
+            assetCache.OnAssetReloaded -= OnAssetsReloaded;
+            assetCache.OnAssetRemoved -= OnAssetRemoved;
         }
 
         private void UpdateList(object sender, EventArgs e)
         {
             string textFilter = filterTextBox.Text;
 
-            IList<BaseAsset> assets = AssetCache.GetAssets(Filter, textFilter, Tags);
+            IList<BaseAsset> assets = assetCache.GetAssets(Filter, textFilter, Tags);
             assetPanel.Controls.Clear();
 
             foreach(BaseAsset asset in assets)
@@ -110,7 +111,7 @@ namespace Editor.Forms
 
         private void OnRefreshBtnClick(object sender, EventArgs e)
         {
-            AssetCache.CheckChanges();
+            assetCache.CheckChanges();
         }
 
         private void OnNewMaterialBtnClick(object sender, EventArgs e)
