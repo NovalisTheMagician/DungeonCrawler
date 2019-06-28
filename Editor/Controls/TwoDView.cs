@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Numerics;
+using System.ComponentModel;
 
 namespace Editor.Controls
 {
@@ -16,27 +17,31 @@ namespace Editor.Controls
     {
         public Orientation Orientation { get; set; }
 
-        public float ScaleFactor { get; set; }
-        public int Zoom
+        [Browsable(false)]
+        public float ScaleFactor
         {
             get
             {
-                return (int)(ScaleFactor * 100);
-            }
-            set
-            {
-                ScaleFactor = value / 100.0f;
+                return Zoom / 100.0f;
             }
         }
 
+        [Browsable(false)]
+        public int Zoom { get; set; }
+
+        [Browsable(false)]
         public Vector2 PanOffset { get; set; }
 
+        [Browsable(false)]
         public int GridSize { get; set; }
 
         private bool panning;
         private Point startPanPos;
 
         private Font textFont;
+
+        private Vector2 mousePosBeforeZoom;
+        private Vector2 mousePosAfterZoom;
 
         public TwoDView()
         {
@@ -46,14 +51,20 @@ namespace Editor.Controls
 
             DoubleBuffered = true;
 
-            ScaleFactor = 1.0f;
-            PanOffset = Vector2.Zero;
+            Zoom = 100;
+            PanOffset = new Vector2((-Width / 2) / ScaleFactor, (-Height / 2) / ScaleFactor);
             Orientation = Orientation.TOP;
             GridSize = 64;
 
             textFont = new Font(FontFamily.GenericMonospace, 8);
 
             panning = false;
+        }
+
+        protected override void OnCreateControl()
+        {
+            PanOffset = new Vector2((-Width / 2) / ScaleFactor, (-Height / 2) / ScaleFactor);
+            base.OnCreateControl();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -65,6 +76,11 @@ namespace Editor.Controls
             else if(e.Button == MouseButtons.Left && Control.ModifierKeys == Keys.Control && !panning)
             {
                 StartPanning(e.Location);
+            }
+
+            if(e.Button == MouseButtons.Left)
+            {
+                Focus();
             }
 
             base.OnMouseDown(e);
@@ -95,9 +111,24 @@ namespace Editor.Controls
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            ScaleFactor += 0.01f * Math.Sign(e.Delta);
-            if (ScaleFactor <= 0.01f)
-                ScaleFactor = 0.01f;
+            mousePosBeforeZoom = ScreenToWorld(e.Location);
+
+            int factor = 5;
+            if (Control.ModifierKeys == Keys.Shift)
+                factor = 10;
+            else if (Control.ModifierKeys == Keys.Control)
+                factor = 1;
+
+            Zoom += factor * Math.Sign(e.Delta);
+            if (Zoom <= 1)
+                Zoom = 1;
+            if (Zoom >= 400)
+                Zoom = 400;
+
+            mousePosAfterZoom = ScreenToWorld(e.Location);
+
+            PanOffset += mousePosBeforeZoom - mousePosAfterZoom;
+
             Invalidate();
             
             base.OnMouseWheel(e);
@@ -137,28 +168,50 @@ namespace Editor.Controls
 
             DrawStats(g);
             DrawGrid(g);
+            DrawWorldAxis(g);
 
             base.OnPaint(pe);
         }
 
-        public void DrawStats(Graphics g)
+        private void DrawWorldAxis(Graphics g)
+        {
+            Point origin = WorldToScreen(Vector2.Zero);
+            if (origin.X >= 0 && origin.X < Width)
+                g.DrawLine(Pens.DarkGray, new Point(origin.X, 0), new Point(origin.X, Height - 1));
+            if (origin.Y >= 0 && origin.Y < Height)
+                g.DrawLine(Pens.DarkGray, new Point(0, origin.Y), new Point(Width - 1, origin.Y));
+        }
+
+        private void DrawStats(Graphics g)
         {
             Brush fontBrush = Brushes.GhostWhite;
             g.DrawString(Orientation.ToString(), textFont, fontBrush, new PointF(10, 10));
             g.DrawString($"Zoom: {Zoom}%", textFont, fontBrush, new PointF(10, Height - 30));
         }
 
-        public void DrawGrid(Graphics g)
+        private void DrawGrid(Graphics g)
         {
-            float[] dashPattern = { 2, 5, 5, 5 };
-            using (Pen dashedLines = new Pen(Color.DarkGray, 1))
-            {
-                dashedLines.DashPattern = dashPattern;
-                dashedLines.DashCap = System.Drawing.Drawing2D.DashCap.Round;
+            Vector2 worldTopLeft = ScreenToWorld(new Point(0, 0));
+            Vector2 worldBottomRight = ScreenToWorld(new Point(Width, Height));
 
-                int offsetX = (int)PanOffset.X % GridSize;
-                int offsetY = (int)PanOffset.Y % GridSize;
-                dashedLines.DashOffset = -offsetX;
+            worldTopLeft.X = (float)Math.Floor(worldTopLeft.X);
+            worldTopLeft.Y = (float)Math.Floor(worldTopLeft.Y);
+            worldBottomRight.X = (float)Math.Ceiling(worldBottomRight.X);
+            worldBottomRight.Y = (float)Math.Ceiling(worldBottomRight.Y);
+
+            using (Pen dashedLines = new Pen(Color.FromArgb(32, Color.DarkGray), 1))
+            {
+                for (float y = worldTopLeft.Y; y < worldBottomRight.Y; y += GridSize)
+                {
+                    for (float x = worldTopLeft.X; x < worldBottomRight.X; x += GridSize)
+                    {
+                        Point p = WorldToScreen(new Vector2(x, y));
+                        g.FillRectangle(Brushes.DarkGray, p.X, p.Y, 1, 1);
+                        //g.DrawLine(dashedLines, p, p);
+                    }
+                }
+
+                /*
                 for (int y = offsetY; y < Height; y += GridSize)
                 {
                     Point horLineStart = new Point(0, y);
@@ -166,8 +219,7 @@ namespace Editor.Controls
                 
                     g.DrawLine(dashedLines, horLineStart, horLineEnd);
                 }
-
-                dashedLines.DashOffset = -offsetY;
+                
                 for (int x = offsetX; x < Width; x += GridSize)
                 {
                     Point verLineStart = new Point(x, 0);
@@ -175,6 +227,7 @@ namespace Editor.Controls
                 
                     g.DrawLine(dashedLines, verLineStart, verLineEnd);
                 }
+                */
             }
         }
 
@@ -203,10 +256,10 @@ namespace Editor.Controls
 
         private void DoPanning(Point mousePos)
         {
-            int offsetX = mousePos.X - startPanPos.X;
-            int offsetY = mousePos.Y - startPanPos.Y;
+            float offsetX = (mousePos.X - startPanPos.X) / ScaleFactor;
+            float offsetY = (mousePos.Y - startPanPos.Y) / ScaleFactor;
             startPanPos = mousePos;
-            PanOffset += new Vector2(offsetX, offsetY);
+            PanOffset -= new Vector2(offsetX, offsetY);
         }
 
         private void EndPanning()

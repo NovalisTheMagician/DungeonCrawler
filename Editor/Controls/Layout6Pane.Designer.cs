@@ -122,15 +122,12 @@
             // 
             this.twoDView2.BackColor = System.Drawing.Color.DarkBlue;
             this.twoDView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.twoDView2.GridSize = 64;
             this.twoDView2.Location = new System.Drawing.Point(0, 0);
             this.twoDView2.Name = "twoDView2";
             this.twoDView2.Orientation = Editor.Controls.Orientation.SIDE;
-            this.twoDView2.ScaleFactor = 1F;
             this.twoDView2.Size = new System.Drawing.Size(337, 268);
             this.twoDView2.TabIndex = 0;
             this.twoDView2.Text = "twoDView2";
-            this.twoDView2.Zoom = 100;
             // 
             // splitContainer5
             // 
@@ -158,29 +155,23 @@
             // 
             this.twoDView1.BackColor = System.Drawing.Color.DarkBlue;
             this.twoDView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.twoDView1.GridSize = 64;
             this.twoDView1.Location = new System.Drawing.Point(0, 0);
             this.twoDView1.Name = "twoDView1";
             this.twoDView1.Orientation = Editor.Controls.Orientation.TOP;
-            this.twoDView1.ScaleFactor = 1F;
             this.twoDView1.Size = new System.Drawing.Size(359, 222);
             this.twoDView1.TabIndex = 0;
             this.twoDView1.Text = "twoDView1";
-            this.twoDView1.Zoom = 100;
             // 
             // twoDView3
             // 
             this.twoDView3.BackColor = System.Drawing.Color.DarkBlue;
             this.twoDView3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.twoDView3.GridSize = 64;
             this.twoDView3.Location = new System.Drawing.Point(0, 0);
             this.twoDView3.Name = "twoDView3";
             this.twoDView3.Orientation = Editor.Controls.Orientation.FRONT;
-            this.twoDView3.ScaleFactor = 1F;
             this.twoDView3.Size = new System.Drawing.Size(359, 268);
             this.twoDView3.TabIndex = 0;
             this.twoDView3.Text = "twoDView3";
-            this.twoDView3.Zoom = 100;
             // 
             // Layout6Pane
             // 
