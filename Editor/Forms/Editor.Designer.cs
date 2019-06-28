@@ -259,14 +259,14 @@
             // assetManagerBtn
             // 
             this.assetManagerBtn.Name = "assetManagerBtn";
-            this.assetManagerBtn.Size = new System.Drawing.Size(209, 30);
-            this.assetManagerBtn.Text = "AssetManager";
+            this.assetManagerBtn.Size = new System.Drawing.Size(252, 30);
+            this.assetManagerBtn.Text = "Asset Manager";
             this.assetManagerBtn.Click += new System.EventHandler(this.OnAssetManagerBtnClick);
             // 
             // entitiesToolStripMenuItem
             // 
             this.entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
-            this.entitiesToolStripMenuItem.Size = new System.Drawing.Size(209, 30);
+            this.entitiesToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
             this.entitiesToolStripMenuItem.Text = "Entities";
             // 
             // toolsMenu

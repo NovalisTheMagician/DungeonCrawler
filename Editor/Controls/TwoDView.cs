@@ -39,9 +39,11 @@ namespace Editor.Controls
         private Point startPanPos;
 
         private Font textFont;
+        
+        private Vector2 mousePosSnapped;
+        private Vector2 mousePos;
 
-        private Vector2 mousePosBeforeZoom;
-        private Vector2 mousePosAfterZoom;
+        private bool drawCursor;
 
         public TwoDView()
         {
@@ -57,6 +59,9 @@ namespace Editor.Controls
             GridSize = 64;
 
             textFont = new Font(FontFamily.GenericMonospace, 8);
+            mousePosSnapped = new Vector2();
+
+            drawCursor = false;
 
             panning = false;
         }
@@ -100,18 +105,24 @@ namespace Editor.Controls
         protected override void OnMouseEnter(EventArgs e)
         {
             if (Parent.Focused && !Focused) Focus();
+            drawCursor = true;
+
+            Invalidate();
             base.OnMouseEnter(e);
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
             if (Focused) Parent.Focus();
+            drawCursor = false;
+
+            Invalidate();
             base.OnMouseLeave(e);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            mousePosBeforeZoom = ScreenToWorld(e.Location);
+            Vector2 mousePosBeforeZoom = ScreenToWorld(e.Location);
 
             int factor = 5;
             if (Control.ModifierKeys == Keys.Shift)
@@ -120,12 +131,12 @@ namespace Editor.Controls
                 factor = 1;
 
             Zoom += factor * Math.Sign(e.Delta);
-            if (Zoom <= 1)
-                Zoom = 1;
-            if (Zoom >= 400)
+            if (Zoom < 10)
+                Zoom = 10;
+            if (Zoom > 400)
                 Zoom = 400;
 
-            mousePosAfterZoom = ScreenToWorld(e.Location);
+            Vector2 mousePosAfterZoom = ScreenToWorld(e.Location);
 
             PanOffset += mousePosBeforeZoom - mousePosAfterZoom;
 
@@ -139,9 +150,13 @@ namespace Editor.Controls
             if(panning)
             {
                 DoPanning(e.Location);
-
-                Invalidate();
             }
+
+            mousePos = ScreenToWorld(e.Location);
+            mousePosSnapped.X = (float)Math.Floor((mousePos.X + GridSize / 2) / GridSize) * GridSize;
+            mousePosSnapped.Y = (float)Math.Floor((mousePos.Y + GridSize / 2) / GridSize) * GridSize;
+
+            Invalidate();
 
             base.OnMouseMove(e);
         }
@@ -169,8 +184,17 @@ namespace Editor.Controls
             DrawStats(g);
             DrawGrid(g);
             DrawWorldAxis(g);
+            if(drawCursor)
+                DrawCursor(g);
 
             base.OnPaint(pe);
+        }
+
+        private void DrawCursor(Graphics g)
+        {
+            //snap to grid
+            Point screenSnapped = WorldToScreen(mousePosSnapped);
+            g.FillEllipse(Brushes.PaleVioletRed, screenSnapped.X - 5, screenSnapped.Y - 5, 10, 10);
         }
 
         private void DrawWorldAxis(Graphics g)
@@ -186,6 +210,14 @@ namespace Editor.Controls
         {
             Brush fontBrush = Brushes.GhostWhite;
             g.DrawString(Orientation.ToString(), textFont, fontBrush, new PointF(10, 10));
+            string coord1Label = "X", coord2Label = "Y";
+            switch(Orientation)
+            {
+                case Orientation.FRONT: break;
+                case Orientation.SIDE: coord1Label = "Z"; break;
+                case Orientation.TOP: coord2Label = "Z"; break;
+            }
+            g.DrawString($"{coord1Label}={mousePosSnapped.X} {coord2Label}={mousePosSnapped.Y}", textFont, fontBrush, new PointF(10, 30));
             g.DrawString($"Zoom: {Zoom}%", textFont, fontBrush, new PointF(10, Height - 30));
         }
 
@@ -199,43 +231,32 @@ namespace Editor.Controls
             worldBottomRight.X = (float)Math.Ceiling(worldBottomRight.X);
             worldBottomRight.Y = (float)Math.Ceiling(worldBottomRight.Y);
 
-            using (Pen dashedLines = new Pen(Color.FromArgb(32, Color.DarkGray), 1))
+            float offsetX = PanOffset.X % GridSize;
+            float offsetY = PanOffset.Y % GridSize;
+
+            using (Pen gridPen = new Pen(Color.FromArgb(64, Color.DarkGray), 1))
             {
-                for (float y = worldTopLeft.Y; y < worldBottomRight.Y; y += GridSize)
+                for (float y = worldTopLeft.Y - offsetY; y < worldBottomRight.Y; y += GridSize)
                 {
-                    for (float x = worldTopLeft.X; x < worldBottomRight.X; x += GridSize)
-                    {
-                        Point p = WorldToScreen(new Vector2(x, y));
-                        g.FillRectangle(Brushes.DarkGray, p.X, p.Y, 1, 1);
-                        //g.DrawLine(dashedLines, p, p);
-                    }
+                    Point start = WorldToScreen(new Vector2(worldTopLeft.X, y));
+                    Point end = WorldToScreen(new Vector2(worldBottomRight.X, y));
+                    g.DrawLine(gridPen, start, end);
                 }
 
-                /*
-                for (int y = offsetY; y < Height; y += GridSize)
+                for (float x = worldTopLeft.X - offsetX; x < worldBottomRight.X; x += GridSize)
                 {
-                    Point horLineStart = new Point(0, y);
-                    Point horLineEnd = new Point(Width - 1, y);
-                
-                    g.DrawLine(dashedLines, horLineStart, horLineEnd);
+                    Point start = WorldToScreen(new Vector2(x, worldTopLeft.Y));
+                    Point end = WorldToScreen(new Vector2(x, worldBottomRight.Y));
+                    g.DrawLine(gridPen, start, end);
                 }
-                
-                for (int x = offsetX; x < Width; x += GridSize)
-                {
-                    Point verLineStart = new Point(x, 0);
-                    Point verLineEnd = new Point(x, Height - 1);
-                
-                    g.DrawLine(dashedLines, verLineStart, verLineEnd);
-                }
-                */
             }
         }
 
         private Vector2 ScreenToWorld(Point screenPos)
         {
             Vector2 worldPos = new Vector2();
-            worldPos.X = (screenPos.X + PanOffset.X) / ScaleFactor;
-            worldPos.Y = (screenPos.Y + PanOffset.Y) / ScaleFactor;
+            worldPos.X = (screenPos.X / ScaleFactor) + PanOffset.X;
+            worldPos.Y = (screenPos.Y / ScaleFactor) + PanOffset.Y;
             return worldPos;
         }
 

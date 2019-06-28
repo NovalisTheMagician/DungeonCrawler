@@ -97,12 +97,10 @@
             // 
             // splitContainer4.Panel1
             // 
-            this.splitContainer4.Panel1.BackColor = System.Drawing.Color.Lime;
             this.splitContainer4.Panel1.Controls.Add(this.threeDView1);
             // 
             // splitContainer4.Panel2
             // 
-            this.splitContainer4.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.splitContainer4.Panel2.Controls.Add(this.twoDView2);
             this.splitContainer4.Size = new System.Drawing.Size(341, 504);
             this.splitContainer4.SplitterDistance = 226;
@@ -120,7 +118,6 @@
             // 
             // twoDView2
             // 
-            this.twoDView2.BackColor = System.Drawing.Color.DarkBlue;
             this.twoDView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.twoDView2.Location = new System.Drawing.Point(0, 0);
             this.twoDView2.Name = "twoDView2";
@@ -139,12 +136,10 @@
             // 
             // splitContainer5.Panel1
             // 
-            this.splitContainer5.Panel1.BackColor = System.Drawing.Color.Yellow;
             this.splitContainer5.Panel1.Controls.Add(this.twoDView1);
             // 
             // splitContainer5.Panel2
             // 
-            this.splitContainer5.Panel2.BackColor = System.Drawing.Color.Aqua;
             this.splitContainer5.Panel2.Controls.Add(this.twoDView3);
             this.splitContainer5.Size = new System.Drawing.Size(363, 504);
             this.splitContainer5.SplitterDistance = 226;
@@ -153,7 +148,6 @@
             // 
             // twoDView1
             // 
-            this.twoDView1.BackColor = System.Drawing.Color.DarkBlue;
             this.twoDView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.twoDView1.Location = new System.Drawing.Point(0, 0);
             this.twoDView1.Name = "twoDView1";
@@ -164,7 +158,6 @@
             // 
             // twoDView3
             // 
-            this.twoDView3.BackColor = System.Drawing.Color.DarkBlue;
             this.twoDView3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.twoDView3.Location = new System.Drawing.Point(0, 0);
             this.twoDView3.Name = "twoDView3";

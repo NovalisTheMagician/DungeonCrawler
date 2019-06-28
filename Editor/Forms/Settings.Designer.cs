@@ -33,6 +33,7 @@
             this.graphicsTabPage = new System.Windows.Forms.TabPage();
             this.controlsTabPage = new System.Windows.Forms.TabPage();
             this.appearanceTabPage = new System.Windows.Forms.TabPage();
+            this.themesTabPage = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,6 +43,7 @@
             this.tabControl1.Controls.Add(this.graphicsTabPage);
             this.tabControl1.Controls.Add(this.controlsTabPage);
             this.tabControl1.Controls.Add(this.appearanceTabPage);
+            this.tabControl1.Controls.Add(this.themesTabPage);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -87,6 +89,15 @@
             this.appearanceTabPage.Text = "Appearance";
             this.appearanceTabPage.UseVisualStyleBackColor = true;
             // 
+            // themesTabPage
+            // 
+            this.themesTabPage.Location = new System.Drawing.Point(4, 29);
+            this.themesTabPage.Name = "themesTabPage";
+            this.themesTabPage.Size = new System.Drawing.Size(792, 417);
+            this.themesTabPage.TabIndex = 4;
+            this.themesTabPage.Text = "Themes";
+            this.themesTabPage.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -107,5 +118,6 @@
         private System.Windows.Forms.TabPage graphicsTabPage;
         private System.Windows.Forms.TabPage controlsTabPage;
         private System.Windows.Forms.TabPage appearanceTabPage;
+        private System.Windows.Forms.TabPage themesTabPage;
     }
 }

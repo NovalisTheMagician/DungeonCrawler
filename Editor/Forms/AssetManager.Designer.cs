@@ -191,6 +191,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.assetPanel);
             this.splitContainer1.Size = new System.Drawing.Size(912, 519);
             this.splitContainer1.SplitterDistance = 150;
@@ -356,6 +357,7 @@
             // 
             // assetPanel
             // 
+            this.assetPanel.AutoScroll = true;
             this.assetPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.assetPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.assetPanel.Location = new System.Drawing.Point(0, 0);
