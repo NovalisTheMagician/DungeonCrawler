@@ -20,6 +20,8 @@ namespace Editor.Forms
         private string currentLevelName;
         private string currentProjectPath;
 
+        private MouseWheelFilter mouseWheelFilter;
+
         public EditorForm()
         {
             InitializeComponent();
@@ -193,6 +195,9 @@ namespace Editor.Forms
 
         private void OnEditorLoading(object sender, EventArgs e)
         {
+            mouseWheelFilter = new MouseWheelFilter();
+            Application.AddMessageFilter(mouseWheelFilter);
+
             if(!RendererInterop.Initialize())
             {
                 MessageBox.Show("Couldn't initialize Direct3D 11. Exiting editor!", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -234,6 +239,7 @@ namespace Editor.Forms
                 }
             }
             assetCache.ClearAll();
+            Application.RemoveMessageFilter(mouseWheelFilter);
         }
 
         #endregion

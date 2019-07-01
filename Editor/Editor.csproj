@@ -192,6 +192,7 @@
     <Compile Include="Interop\RendererInterop.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="MaterialLoader.cs" />
+    <Compile Include="MouseWheelFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

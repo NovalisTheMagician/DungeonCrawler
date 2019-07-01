@@ -1,9 +1,0 @@
-project/
-|_cache/
-|_assets/
-| |_textures/
-| |_materials/
-| |_models/
-|_levels/
-|_settings.json
-|_tags.txt

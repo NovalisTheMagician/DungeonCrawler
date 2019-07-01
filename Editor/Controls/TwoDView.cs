@@ -76,6 +76,7 @@ namespace Editor.Controls
             Zoom = 100;
             PanOffset = new Vector2((-Width / 2) / ScaleFactor, (-Height / 2) / ScaleFactor);
             GridSize = 64;
+
             base.OnCreateControl();
         }
 
@@ -85,12 +86,10 @@ namespace Editor.Controls
             {
                 StartPanning(e.Location);
             }
-            else if(e.Button == MouseButtons.Left && Control.ModifierKeys == Keys.Control && !panning)
+            else if(e.Button == MouseButtons.Left && ModifierKeys == Keys.Control && !panning)
             {
                 StartPanning(e.Location);
             }
-
-            Focus();
 
             base.OnMouseDown(e);
         }
