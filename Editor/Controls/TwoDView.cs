@@ -63,11 +63,6 @@ namespace Editor.Controls
 
             DoubleBuffered = true;
 
-            Zoom = 100;
-            PanOffset = new Vector2((-Width / 2) / ScaleFactor, (-Height / 2) / ScaleFactor);
-            Orientation = Orientation.TOP;
-            GridSize = 64;
-
             textFont = new Font(FontFamily.GenericMonospace, 8);
             mousePosSnapped = new Vector2();
 
@@ -78,7 +73,9 @@ namespace Editor.Controls
 
         protected override void OnCreateControl()
         {
+            Zoom = 100;
             PanOffset = new Vector2((-Width / 2) / ScaleFactor, (-Height / 2) / ScaleFactor);
+            GridSize = 64;
             base.OnCreateControl();
         }
 

@@ -1,20 +1,77 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 using System.Windows.Forms;
 
 namespace Editor.Controls
 {
     public partial class ThreeDView : Control
     {
+        public Vector3 CameraPosition { get; set; }
+
+
+        public Vector3 CameraDirection { get; set; }
+
+
+        public float Fov { get; set; }
+
         public ThreeDView()
         {
             InitializeComponent();
+        }
+
+        protected override void OnCreateControl()
+        {
+            base.OnCreateControl();
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            IntPtr handle = Handle;
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            base.OnHandleDestroyed(e);
+
+
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+        }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
         }
 
         protected override void OnClientSizeChanged(EventArgs e)
@@ -24,7 +81,20 @@ namespace Editor.Controls
 
         protected override void OnPaint(PaintEventArgs pe)
         {
-            base.OnPaint(pe);
+            Graphics g = pe.Graphics;
+
+            Draw3D();
+            Draw2D(g);
+        }
+
+        private void Draw3D()
+        {
+
+        }
+
+        private void Draw2D(Graphics g)
+        {
+
         }
     }
 }

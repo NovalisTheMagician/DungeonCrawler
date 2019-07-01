@@ -26,11 +26,7 @@ extern "C"
 {
 	bool Initialize()
 	{
-		//MessageBoxA(nullptr, "Test", "Test", MB_OK);
-
-		renderer.InitD3D();
-
-		return true;
+		return renderer.InitD3D();
 	}
 
 	void Dispose()
@@ -43,24 +39,34 @@ extern "C"
 		return -1;
 	}
 
-	void DetachRenderbuffer(uint32_t renderID)
+	void DetachRenderbuffer(uint32_t bufferId)
 	{
-		assert(renderID >= 0);
+		assert(bufferId >= 0);
 	}
 
-	void ResizeRenderbuffer(uint32_t renderID, uint32_t width, uint32_t height)
+	void ResizeRenderbuffer(uint32_t bufferId, uint32_t width, uint32_t height)
 	{
-		assert(renderID >= 0);
+		assert(bufferId >= 0);
 	}
 
-	void SetRenderbufferMode(uint32_t renderID, uint32_t mode)
+	void SetRenderBuffer(uint32_t bufferId)
 	{
-		assert(renderID >= 0);
+		assert(bufferId >= 0);
 	}
 
-	void RenderTexture(uint32_t renderID, DXTexture texture)
+	uint32_t GetPreviewBufferId()
 	{
-		assert(renderID >= 0);
+		return -1;
+	}
+
+	void SetRenderbufferMode(uint32_t bufferId, uint32_t mode)
+	{
+		assert(bufferId >= 0);
+	}
+
+	void RenderTexture(uint32_t bufferId, DXTexture texture)
+	{
+		assert(bufferId >= 0);
 
 		std::stringstream str;
 		str << texture.width;
@@ -68,9 +74,9 @@ extern "C"
 		MessageBoxA(nullptr, str.str().c_str(), "OH BOY!!!", MB_OK);
 	}
 
-	void RenderMaterial(uint32_t renderID, DXMaterial material)
+	void RenderMaterial(uint32_t bufferId, DXMaterial material)
 	{
-		assert(renderID >= 0);
+		assert(bufferId >= 0);
 	}
 
 	DXTexture *RenderModelPreview(DXModel *model)

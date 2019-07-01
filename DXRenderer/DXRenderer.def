@@ -5,6 +5,8 @@ EXPORTS
 	AttachRenderbuffer
 	DetachRenderbuffer
 	ResizeRenderbuffer
+	GetPreviewBufferId
+	SetRenderBuffer
 	SetRenderbufferMode
 	RenderTexture
 	RenderMaterial

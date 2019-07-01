@@ -193,7 +193,11 @@ namespace Editor.Forms
 
         private void OnEditorLoading(object sender, EventArgs e)
         {
-            RendererInterop.Initialize();
+            if(!RendererInterop.Initialize())
+            {
+                MessageBox.Show("Couldn't initialize Direct3D 11. Exiting editor!", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+            }
             
             assetCache = new AssetCache();
 
@@ -238,7 +242,7 @@ namespace Editor.Forms
         {
             ToolStripMenuItem btn = sender as ToolStripMenuItem;
             int gridSize = int.Parse((string)btn.Tag);
-            gridSizeLabel.Text = $"{gridSize}";
+            gridBtn.Text = $"{gridSize}";
             layout6Pane.GridSize = gridSize;
         }
 
