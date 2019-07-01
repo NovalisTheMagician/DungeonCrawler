@@ -234,6 +234,14 @@ namespace Editor.Forms
 
         #endregion
 
+        private void OnGridBtnClick(object sender, EventArgs e)
+        {
+            ToolStripMenuItem btn = sender as ToolStripMenuItem;
+            int gridSize = int.Parse((string)btn.Tag);
+            gridSizeLabel.Text = $"{gridSize}";
+            layout6Pane.GridSize = gridSize;
+        }
+
         private void CreateFolderHierarchy(string projectFolder)
         {
             Directory.CreateDirectory(projectFolder + "/cache/");

@@ -26,8 +26,18 @@ namespace Editor.Controls
             }
         }
 
+        private int zoom;
         [Browsable(false)]
-        public int Zoom { get; set; }
+        public int Zoom
+        {
+            get { return zoom; }
+            set
+            {
+                zoom = value;
+                if (zoom < 10) zoom = 10;
+                if (zoom > 400) zoom = 400;
+            }
+        }
 
         [Browsable(false)]
         public Vector2 PanOffset { get; set; }
@@ -83,10 +93,7 @@ namespace Editor.Controls
                 StartPanning(e.Location);
             }
 
-            if(e.Button == MouseButtons.Left)
-            {
-                Focus();
-            }
+            Focus();
 
             base.OnMouseDown(e);
         }
@@ -104,7 +111,6 @@ namespace Editor.Controls
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (Parent.Focused && !Focused) Focus();
             drawCursor = true;
 
             Invalidate();
@@ -113,7 +119,7 @@ namespace Editor.Controls
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (Focused) Parent.Focus();
+            if(Focused) Parent.Focus();
             drawCursor = false;
 
             Invalidate();
@@ -131,10 +137,6 @@ namespace Editor.Controls
                 factor = 1;
 
             Zoom += factor * Math.Sign(e.Delta);
-            if (Zoom < 10)
-                Zoom = 10;
-            if (Zoom > 400)
-                Zoom = 400;
 
             Vector2 mousePosAfterZoom = ScreenToWorld(e.Location);
 
@@ -181,11 +183,11 @@ namespace Editor.Controls
             Graphics g = pe.Graphics;
             g.Clear(Color.DarkBlue);
 
-            DrawStats(g);
             DrawGrid(g);
             DrawWorldAxis(g);
             if(drawCursor)
                 DrawCursor(g);
+            DrawStats(g);
 
             base.OnPaint(pe);
         }

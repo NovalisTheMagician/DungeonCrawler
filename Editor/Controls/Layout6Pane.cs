@@ -12,6 +12,17 @@ namespace Editor.Controls
 {
     public partial class Layout6Pane : UserControl
     {
+        public int GridSize
+        {
+            get { return twoDView1.GridSize; }
+            set
+            {
+                twoDView1.GridSize = value; twoDView1.Invalidate();
+                twoDView2.GridSize = value; twoDView2.Invalidate();
+                twoDView3.GridSize = value; twoDView3.Invalidate();
+            }
+        }
+
         public Layout6Pane()
         {
             InitializeComponent();
