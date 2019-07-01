@@ -59,4 +59,6 @@ void Renderer::ShutdownD3D()
 	ReleaseResources();
 	ReleaseBuffersAndSwapChains();
 	ReleaseDevice();
+
+	initialized = false;
 }

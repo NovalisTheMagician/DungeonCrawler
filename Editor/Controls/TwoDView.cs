@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using System.Numerics;
 using System.ComponentModel;
 
+using WinBrush = System.Drawing.Brush;
+
 namespace Editor.Controls
 {
     public enum Orientation
@@ -115,7 +117,7 @@ namespace Editor.Controls
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if(Focused) Parent.Focus();
+            //if(Focused) Parent.Focus();
             drawCursor = false;
 
             Invalidate();
@@ -190,7 +192,6 @@ namespace Editor.Controls
 
         private void DrawCursor(Graphics g)
         {
-            //snap to grid
             Point screenSnapped = WorldToScreen(mousePosSnapped);
             g.FillEllipse(Brushes.PaleVioletRed, screenSnapped.X - 5, screenSnapped.Y - 5, 10, 10);
         }
@@ -206,7 +207,7 @@ namespace Editor.Controls
 
         private void DrawStats(Graphics g)
         {
-            Brush fontBrush = Brushes.GhostWhite;
+            WinBrush fontBrush = Brushes.GhostWhite;
             g.DrawString(Orientation.ToString(), textFont, fontBrush, new PointF(10, 10));
             string coord1Label = "X", coord2Label = "Y";
             switch(Orientation)

@@ -146,6 +146,9 @@
     <Compile Include="BaseAsset.cs" />
     <Compile Include="AssetCache.cs" />
     <Compile Include="BaseAssetLoader.cs" />
+    <Compile Include="Brush\Brush.cs" />
+    <Compile Include="Brush\Mesh.cs" />
+    <Compile Include="Brush\World.cs" />
     <Compile Include="Controls\ThreeDView.cs">
       <SubType>Component</SubType>
     </Compile>
