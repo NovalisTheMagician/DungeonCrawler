@@ -40,24 +40,24 @@ namespace Editor.Interop
         public static extern void Dispose();
 
         [DllImport(RENDERER_LIB, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern uint AttachRenderbuffer(IntPtr hWnd);
+        public static extern int AttachRenderbuffer(IntPtr hWnd);
 
         [DllImport(RENDERER_LIB, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern void DetachRenderbuffer(uint renderID);
+        public static extern void DetachRenderbuffer(int renderID);
 
         [DllImport(RENDERER_LIB, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern void ResizeRenderbuffer(uint renderID, uint width, uint height);
+        public static extern void ResizeRenderbuffer(int renderID, uint width, uint height);
 
         [DllImport(RENDERER_LIB, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern void SetRenderbufferMode(uint renderID, uint mode);
+        public static extern void SetRenderbufferMode(int renderID, uint mode);
 
         [DllImport(RENDERER_LIB, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern void RenderTexture(uint renderID, DXTexture texture);
+        public static extern void RenderTexture(int renderID, DXTexture texture);
 
         [DllImport(RENDERER_LIB, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern void RenderMaterial(uint renderID, DXMaterial material);
+        public static extern void RenderMaterial(int renderID, DXMaterial material);
 
-        public static void RenderTexture(uint renderID, Texture texture)
+        public static void RenderTexture(int renderID, Texture texture)
         {
             DXTexture dxTex = new DXTexture();
             //dxTex.bytes = texture.TextureData;

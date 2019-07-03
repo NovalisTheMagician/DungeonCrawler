@@ -15,6 +15,8 @@ namespace Editor.Controls
 
         public float Fov { get; set; }
 
+        private int bufferId;
+
         public ThreeDView()
         {
             InitializeComponent();
@@ -29,7 +31,12 @@ namespace Editor.Controls
         {
             base.OnHandleCreated(e);
 
-            IntPtr handle = Handle;
+            bufferId = Interop.RendererInterop.AttachRenderbuffer(Handle);
+            if(bufferId < 0)
+            {
+                MessageBox.Show("Couldn't attach Control to Dx");
+                Application.Exit();
+            }
         }
 
         protected override void OnHandleDestroyed(EventArgs e)

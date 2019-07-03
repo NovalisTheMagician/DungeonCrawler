@@ -34,37 +34,40 @@ extern "C"
 		renderer.ShutdownD3D();
 	}
 
-	uint32_t AttachRenderbuffer(HWND hWnd)
+	int32_t AttachRenderbuffer(HWND hWnd)
 	{
-		return -1;
+		MessageBox(nullptr, L"Attachbuffer", L"Attachbuffer", MB_OK);
+		return renderer.CreateRenderBuffer(hWnd);
 	}
 
-	void DetachRenderbuffer(uint32_t bufferId)
-	{
-		assert(bufferId >= 0);
-	}
-
-	void ResizeRenderbuffer(uint32_t bufferId, uint32_t width, uint32_t height)
+	void DetachRenderbuffer(int32_t bufferId)
 	{
 		assert(bufferId >= 0);
+		renderer.DestroyRenderBuffer(bufferId);
 	}
 
-	void SetRenderBuffer(uint32_t bufferId)
+	void ResizeRenderbuffer(int32_t bufferId, uint32_t width, uint32_t height)
+	{
+		assert(bufferId >= 0);
+		renderer.Resize(bufferId, width, height);
+	}
+
+	void SetRenderBuffer(int32_t bufferId)
 	{
 		assert(bufferId >= 0);
 	}
 
 	uint32_t GetPreviewBufferId()
 	{
-		return -1;
+		return renderer.GetPreviewBufferId();
 	}
 
-	void SetRenderbufferMode(uint32_t bufferId, uint32_t mode)
+	void SetRenderbufferMode(int32_t bufferId, uint32_t mode)
 	{
 		assert(bufferId >= 0);
 	}
 
-	void RenderTexture(uint32_t bufferId, DXTexture texture)
+	void RenderTexture(int32_t bufferId, DXTexture texture)
 	{
 		assert(bufferId >= 0);
 
@@ -74,7 +77,7 @@ extern "C"
 		MessageBoxA(nullptr, str.str().c_str(), "OH BOY!!!", MB_OK);
 	}
 
-	void RenderMaterial(uint32_t bufferId, DXMaterial material)
+	void RenderMaterial(int32_t bufferId, DXMaterial material)
 	{
 		assert(bufferId >= 0);
 	}
