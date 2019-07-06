@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+using D3DRenderer = Editor.Renderer.Renderer;
+
 namespace Editor.Forms
 {
     public partial class EditorForm : Form
@@ -15,6 +17,8 @@ namespace Editor.Forms
 
         private ProjectSettings projectSettings;
         private EditorSettings editorSettings;
+
+        private D3DRenderer renderer;
 
         private bool isDirty;
         private string currentLevelName;
@@ -198,11 +202,18 @@ namespace Editor.Forms
             mouseWheelFilter = new MouseWheelFilter();
             Application.AddMessageFilter(mouseWheelFilter);
 
+            renderer = new D3DRenderer();
+            renderer.Initialize();
+
+            layout6Pane.ThreeDView.Renderer = renderer;
+
+            /*
             if(!RendererInterop.Initialize())
             {
                 MessageBox.Show("Couldn't initialize Direct3D 11. Exiting editor!", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
             }
+            */
             
             assetCache = new AssetCache();
 
@@ -218,7 +229,7 @@ namespace Editor.Forms
 
         private void OnEditorClosed(object sender, FormClosedEventArgs e)
         {
-            RendererInterop.Dispose();
+            renderer.Destroy();
             assetCache.SaveAssets();
         }
 

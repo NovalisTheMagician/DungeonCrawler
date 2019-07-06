@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{4D6A55E4-B72B-4760-89D9-1EE1C9CC858D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6A4FD488-A1E6-4641-9028-3DB969874C75} = {6A4FD488-A1E6-4641-9028-3DB969874C75}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DXRenderer", "DXRenderer\DXRenderer.vcxproj", "{6A4FD488-A1E6-4641-9028-3DB969874C75}"
 EndProject

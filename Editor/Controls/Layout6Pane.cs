@@ -23,6 +23,8 @@ namespace Editor.Controls
             }
         }
 
+        public ThreeDView ThreeDView { get { return threeDView1; } }
+
         public Layout6Pane()
         {
             InitializeComponent();
