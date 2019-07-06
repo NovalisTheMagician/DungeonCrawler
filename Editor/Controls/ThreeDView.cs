@@ -106,7 +106,7 @@ namespace Editor.Controls
         {
             Graphics g = pe.Graphics;
 
-            Renderer?.BeginDraw(bufferId);
+            Renderer?.BeginDraw(bufferId, SharpDX.Color.BurlyWood);
             Draw3D();
             Renderer?.EndDraw(bufferId);
 

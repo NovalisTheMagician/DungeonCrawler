@@ -10,6 +10,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
+using Color = SharpDX.Color;
 using D3DDevice = SharpDX.Direct3D11.Device;
 using DXGIDevice = SharpDX.DXGI.Device;
 using DXGIFactory = SharpDX.DXGI.Factory1;
@@ -140,10 +141,11 @@ namespace Editor.Renderer
 
                 buffer.Viewport = new Viewport(0, 0, width, height, 0, 1);
                 buffer.Ready = true;
+                renderBuffers[id] = buffer;
             }
         }
 
-        public void BeginDraw(int id)
+        public void BeginDraw(int id, Color clearColor)
         {
             if (!initialized) return;
             if (renderBuffers.ContainsKey(id))
@@ -153,7 +155,7 @@ namespace Editor.Renderer
                 {
                     deviceContext.Rasterizer.SetViewport(buffer.Viewport);
                     deviceContext.OutputMerger.SetRenderTargets(buffer.RenderTargetView);
-                    deviceContext.ClearRenderTargetView(buffer.RenderTargetView, new Color4(1, 0, 0, 1));
+                    deviceContext.ClearRenderTargetView(buffer.RenderTargetView, clearColor);
                 }
             }
         }
