@@ -9,5 +9,10 @@ namespace Editor.Brush
     public class World
     {
         private List<Brush> brushes;
+
+        public World()
+        {
+
+        }
     }
 }

@@ -287,6 +287,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Shader\" />
     <Folder Include="Utility\" />
   </ItemGroup>
   <ItemGroup>
@@ -301,5 +302,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\LibGit2Sharp.NativeBinaries.2.0.267\build\net46\LibGit2Sharp.NativeBinaries.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.HLSL.CSharpVB.1.0.1\build\Microsoft.HLSL.CSharpVB.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.HLSL.CSharpVB.1.0.1\build\Microsoft.HLSL.CSharpVB.targets'))" />
   </Target>
+  <Import Project="..\packages\Microsoft.HLSL.CSharpVB.1.0.1\build\Microsoft.HLSL.CSharpVB.targets" Condition="Exists('..\packages\Microsoft.HLSL.CSharpVB.1.0.1\build\Microsoft.HLSL.CSharpVB.targets')" />
 </Project>

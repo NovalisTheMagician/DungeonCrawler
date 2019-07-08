@@ -216,7 +216,7 @@ namespace Editor.Controls
                 case Orientation.SIDE: coord1Label = "Z"; break;
                 case Orientation.TOP: coord2Label = "Z"; break;
             }
-            g.DrawString($"{coord1Label}={mousePosSnapped.X} {coord2Label}={mousePosSnapped.Y}", textFont, fontBrush, new PointF(10, 30));
+            g.DrawString($"{coord1Label}={mousePosSnapped.X} {coord2Label}={mousePosSnapped.Y * -1}", textFont, fontBrush, new PointF(10, 30));
             g.DrawString($"Zoom: {Zoom}%", textFont, fontBrush, new PointF(10, Height - 30));
         }
 
@@ -271,7 +271,7 @@ namespace Editor.Controls
         {
             panning = true;
             startPanPos = mousePos;
-            Cursor.Current = Cursors.NoMove2D;
+            Cursor.Current = Cursors.SizeAll;
         }
 
         private void DoPanning(Point mousePos)

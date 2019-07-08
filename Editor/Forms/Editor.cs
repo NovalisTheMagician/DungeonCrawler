@@ -203,17 +203,13 @@ namespace Editor.Forms
             Application.AddMessageFilter(mouseWheelFilter);
 
             renderer = new D3DRenderer();
-            renderer.Initialize();
+            if(!renderer.Initialize())
+            {
+                MessageBox.Show("Something went wrong during Initialization of the 3D View! Exiting now...", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
 
             layout6Pane.ThreeDView.Renderer = renderer;
-
-            /*
-            if(!RendererInterop.Initialize())
-            {
-                MessageBox.Show("Couldn't initialize Direct3D 11. Exiting editor!", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
-            }
-            */
             
             assetCache = new AssetCache();
 

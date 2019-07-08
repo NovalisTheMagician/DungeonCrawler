@@ -4,12 +4,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
 
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
+
 using Color = SharpDX.Color;
 using D3DDevice = SharpDX.Direct3D11.Device;
 using DXGIDevice = SharpDX.DXGI.Device;
@@ -21,6 +22,7 @@ namespace Editor.Renderer
     {
         public SwapChain SwapChain { get; set; }
         public RenderTargetView RenderTargetView { get; set; }
+        public DepthStencilView DepthStencilView { get; set; }
         public Viewport Viewport { get; set; }
         public bool Ready { get; set; }
     }
@@ -49,10 +51,18 @@ namespace Editor.Renderer
 #if DEBUG
             flags |= DeviceCreationFlags.Debug;
 #endif
-            device = new D3DDevice(DriverType.Hardware, flags);
-            deviceContext = device.ImmediateContext;
+            try
+            {
+                device = new D3DDevice(DriverType.Hardware, flags);
+                deviceContext = device.ImmediateContext;
 
-            factory = new DXGIFactory();
+                factory = new DXGIFactory();
+            }
+            catch(SharpDXException e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
 
             currentId = 1;
             initialized = true;
@@ -64,10 +74,11 @@ namespace Editor.Renderer
         {
             if(initialized)
             {
-                foreach(RenderBuffer buffer in renderBuffers.Values)
+                foreach(int id in renderBuffers.Keys)
                 {
-                    buffer.SwapChain.Dispose();
+                    DetachWindow(id);
                 }
+                renderBuffers.Clear();
 
                 deviceContext.Dispose();
                 device.Dispose();
@@ -86,28 +97,36 @@ namespace Editor.Renderer
             int assignedId = currentId;
             currentId++;
 
-            SwapChainDescription swapChainDescription = new SwapChainDescription()
+            try
             {
-                IsWindowed = true,
-                BufferCount = 2,
-                OutputHandle = hWnd,
-                SwapEffect = SwapEffect.Discard,
-                Usage = Usage.RenderTargetOutput,
-                Flags = SwapChainFlags.GdiCompatible,
-                ModeDescription = new ModeDescription(0, 0, new Rational(0, 1), Format.B8G8R8A8_UNorm),
-                SampleDescription = new SampleDescription(1, 0)
-            };
+                SwapChainDescription swapChainDescription = new SwapChainDescription()
+                {
+                    IsWindowed = true,
+                    BufferCount = 1,
+                    OutputHandle = hWnd,
+                    SwapEffect = SwapEffect.Discard,
+                    Usage = Usage.RenderTargetOutput,
+                    Flags = SwapChainFlags.GdiCompatible,
+                    ModeDescription = new ModeDescription(0, 0, new Rational(0, 1), Format.B8G8R8A8_UNorm),
+                    SampleDescription = new SampleDescription(1, 0)
+                };
 
-            buffer.SwapChain = new SwapChain(factory, device, swapChainDescription);
+                buffer.SwapChain = new SwapChain(factory, device, swapChainDescription);
 
-            using (Texture2D backbuffer = Texture2D.FromSwapChain<Texture2D>(buffer.SwapChain, 0))
-            {
-                buffer.RenderTargetView = new RenderTargetView(device, backbuffer);
+                using (Texture2D backbuffer = Texture2D.FromSwapChain<Texture2D>(buffer.SwapChain, 0))
+                {
+                    buffer.RenderTargetView = new RenderTargetView(device, backbuffer);
+                }
+
+                renderBuffers.Add(assignedId, buffer);
+
+                return assignedId;
             }
-
-            renderBuffers.Add(assignedId, buffer);
-
-            return assignedId;
+            catch(SharpDXException e)
+            {
+                Console.WriteLine(e.Message);
+                return -1;
+            }
         }
 
         public void DetachWindow(int id)
@@ -119,6 +138,7 @@ namespace Editor.Renderer
                 RenderBuffer buffer = renderBuffers[id];
                 buffer.RenderTargetView.Dispose();
                 buffer.SwapChain.Dispose();
+                buffer.DepthStencilView.Dispose();
                 renderBuffers.Remove(id);
             }
         }
@@ -133,11 +153,34 @@ namespace Editor.Renderer
 
                 deviceContext.ClearState();
                 buffer.RenderTargetView.Dispose();
+                if(buffer.DepthStencilView != null)
+                {
+                    buffer.DepthStencilView.Dispose();
+                }
+
                 buffer.SwapChain.ResizeBuffers(0, 0, 0, Format.Unknown, SwapChainFlags.GdiCompatible);
                 using (Texture2D backbuffer = Texture2D.FromSwapChain<Texture2D>(buffer.SwapChain, 0))
                 {
                     buffer.RenderTargetView = new RenderTargetView(device, backbuffer);
                 }
+
+                Texture2DDescription texture2DDescription = new Texture2DDescription()
+                {
+                    ArraySize = 1,
+                    Format = Format.D24_UNorm_S8_UInt,
+                    CpuAccessFlags = CpuAccessFlags.None,
+                    SampleDescription = new SampleDescription(1, 0),
+                    BindFlags = BindFlags.DepthStencil,
+                    MipLevels = 1,
+                    Usage = ResourceUsage.Default,
+                    OptionFlags = ResourceOptionFlags.None,
+                    Width = width,
+                    Height = height
+                };
+                using (Texture2D depthStencilTexture = new Texture2D(device, texture2DDescription))
+                {
+                    buffer.DepthStencilView = new DepthStencilView(device, depthStencilTexture);
+                } 
 
                 buffer.Viewport = new Viewport(0, 0, width, height, 0, 1);
                 buffer.Ready = true;
@@ -145,7 +188,7 @@ namespace Editor.Renderer
             }
         }
 
-        public void BeginDraw(int id, Color clearColor)
+        public void BeginDraw(int id, Matrix4x4 view, Matrix4x4 projection, Color clearColor)
         {
             if (!initialized) return;
             if (renderBuffers.ContainsKey(id))
@@ -154,8 +197,9 @@ namespace Editor.Renderer
                 if(buffer.Ready)
                 {
                     deviceContext.Rasterizer.SetViewport(buffer.Viewport);
-                    deviceContext.OutputMerger.SetRenderTargets(buffer.RenderTargetView);
+                    deviceContext.OutputMerger.SetRenderTargets(buffer.DepthStencilView, buffer.RenderTargetView);
                     deviceContext.ClearRenderTargetView(buffer.RenderTargetView, clearColor);
+                    deviceContext.ClearDepthStencilView(buffer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
                 }
             }
         }
@@ -171,6 +215,11 @@ namespace Editor.Renderer
                     buffer.SwapChain.Present(0, PresentFlags.None);
                 }
             }
+        }
+
+        public void DrawModel(/*Model model*/)
+        {
+
         }
 
         public Bitmap RenderPreview(/*Model model*/)

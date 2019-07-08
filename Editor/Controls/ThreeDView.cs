@@ -5,6 +5,8 @@ using System.Windows.Forms;
 
 using D3DRenderer = Editor.Renderer.Renderer;
 
+using DXColor = SharpDX.Color;
+
 namespace Editor.Controls
 {
     public partial class ThreeDView : Control
@@ -26,21 +28,24 @@ namespace Editor.Controls
         
         public float Fov { get; set; }
 
+        private Matrix4x4 view, projection;
+
         private int bufferId;
+
+        private bool mouseLooking;
+        private Point mouseStart;
 
         public ThreeDView()
         {
             InitializeComponent();
+            //DoubleBuffered = true;
+
+            mouseLooking = false;
         }
 
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-        }
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
         }
 
         private void OnRendererSet()
@@ -63,6 +68,12 @@ namespace Editor.Controls
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            if(e.Button == MouseButtons.Right && !mouseLooking)
+            {
+                mouseLooking = true;
+
+            }
+
             base.OnMouseDown(e);
         }
 
@@ -100,13 +111,17 @@ namespace Editor.Controls
         {
             base.OnClientSizeChanged(e);
             Renderer?.Resize(bufferId, Width, Height);
+            Invalidate();
         }
 
         protected override void OnPaint(PaintEventArgs pe)
         {
             Graphics g = pe.Graphics;
 
-            Renderer?.BeginDraw(bufferId, SharpDX.Color.BurlyWood);
+            view = Matrix4x4.CreateLookAt(CameraPosition, CameraPosition + CameraDirection, Vector3.UnitY);
+            projection = Matrix4x4.CreatePerspectiveFieldOfView(Fov, (float)Width / Height, 0.1f, 100.0f);
+
+            Renderer?.BeginDraw(bufferId, view, projection, DXColor.Black);
             Draw3D();
             Renderer?.EndDraw(bufferId);
 
@@ -120,7 +135,7 @@ namespace Editor.Controls
 
         private void Draw2D(Graphics g)
         {
-
+            g.DrawString("Test", new Font(FontFamily.GenericMonospace, 8, FontStyle.Regular), Brushes.AntiqueWhite, new PointF(10, 10));
         }
     }
 }
