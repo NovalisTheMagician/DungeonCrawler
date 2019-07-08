@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Editor.Renderer;
+using System;
 using System.Drawing;
 using System.Numerics;
 using System.Windows.Forms;
@@ -38,9 +39,13 @@ namespace Editor.Controls
         public ThreeDView()
         {
             InitializeComponent();
-            //DoubleBuffered = true;
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
             mouseLooking = false;
+            Fov = 90.0f;
+            CameraPosition = new Vector3(32, 32, 32);
+            CameraDirection = Vector3.Normalize(Vector3.Zero - CameraPosition);
         }
 
         protected override void OnCreateControl()
@@ -71,7 +76,7 @@ namespace Editor.Controls
             if(e.Button == MouseButtons.Right && !mouseLooking)
             {
                 mouseLooking = true;
-
+                mouseStart = e.Location;
             }
 
             base.OnMouseDown(e);
@@ -79,12 +84,29 @@ namespace Editor.Controls
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            if(e.Button == MouseButtons.Right)
+            {
+                if(mouseLooking)
+                {
+                    mouseLooking = false;
+                }
+            }
+
             base.OnMouseUp(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            if(mouseLooking)
+            {
+                Point currMousePos = e.Location;
+                int dx = currMousePos.X - mouseStart.X;
+                int dy = currMousePos.Y - mouseStart.Y;
+                mouseStart = currMousePos;
+            }
+
             base.OnMouseMove(e);
+            Invalidate();
         }
 
         protected override void OnMouseEnter(EventArgs e)
@@ -116,16 +138,28 @@ namespace Editor.Controls
 
         protected override void OnPaint(PaintEventArgs pe)
         {
-            Graphics g = pe.Graphics;
+            if (Renderer == null) return;
 
             view = Matrix4x4.CreateLookAt(CameraPosition, CameraPosition + CameraDirection, Vector3.UnitY);
-            projection = Matrix4x4.CreatePerspectiveFieldOfView(Fov, (float)Width / Height, 0.1f, 100.0f);
+            projection = Matrix4x4.CreatePerspectiveFieldOfView(Fov.ToRadians(), (float)Width / Height, 0.1f, 100.0f);
 
-            Renderer?.BeginDraw(bufferId, view, projection, DXColor.Black);
+            Renderer.BeginDraw(bufferId, view, projection, DXColor.Green);
             Draw3D();
-            Renderer?.EndDraw(bufferId);
 
-            Draw2D(g);
+            GDIDevice device = new GDIDevice();
+
+            if (renderer.GetGDIDevice(bufferId, ref device))
+            {
+                Draw2D(device.Graphics);
+                renderer.ReleaseGDIDevice(ref device);
+            }
+            
+            Renderer.EndDraw(bufferId);
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs pe)
+        {
+            
         }
 
         private void Draw3D()
@@ -135,7 +169,9 @@ namespace Editor.Controls
 
         private void Draw2D(Graphics g)
         {
-            g.DrawString("Test", new Font(FontFamily.GenericMonospace, 8, FontStyle.Regular), Brushes.AntiqueWhite, new PointF(10, 10));
+            g.FillRectangle(Brushes.CornflowerBlue, new Rectangle(100, 100, 100, 200));
+            Font font = new Font(FontFamily.GenericMonospace, 8, FontStyle.Regular);
+            TextRenderer.DrawText(g, "Test", font, new Point(10, 10), Color.AntiqueWhite);
         }
     }
 }

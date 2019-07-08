@@ -12,6 +12,7 @@ namespace Editor.Controls
 {
     public partial class Layout6Pane : UserControl
     {
+        [Browsable(false)]
         public int GridSize
         {
             get { return twoDView1.GridSize; }
@@ -23,18 +24,23 @@ namespace Editor.Controls
             }
         }
 
+        [Browsable(false)]
+        public int AltGridSize
+        {
+            get { return twoDView1.AltGridSize; }
+            set
+            {
+                twoDView1.AltGridSize = value;
+                twoDView2.AltGridSize = value;
+                twoDView3.AltGridSize = value;
+            }
+        }
+
         public ThreeDView ThreeDView { get { return threeDView1; } }
 
         public Layout6Pane()
         {
             InitializeComponent();
-
-            //int width = (int)(splitContainer3.Width * 2000);
-            //int height = (int)(splitContainer3.Height);
-
-            //splitContainer3.SplitterDistance = Width / 2;
-            //splitContainer4.SplitterDistance = Height / 2;
-            //splitContainer5.SplitterDistance = Height / 2;
         }
     }
 }

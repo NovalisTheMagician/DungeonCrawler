@@ -10,7 +10,9 @@ namespace Editor.Brush
 {
     public class Brush
     {
-        private List<Plane> Planes { get; set; }
+        public List<Plane> Planes { get; private set; }
+
+        private BoundingBox boundingBox;
 
         [JsonIgnore]
         public bool IsValid { get; private set; }
@@ -19,14 +21,57 @@ namespace Editor.Brush
         public Mesh Mesh { get; private set; }
 
         public Brush()
-            : this(64, 64, 64)
+        {
+            Planes = new List<Plane>();
+        }
+
+        public Brush(float size)
+            : this(size, size, size)
         {
 
         }
 
-        public Brush(int width, int height, int depth)
+        public Brush(float width, float height, float depth)
         {
             Planes = new List<Plane>();
+            float halfWidth = width / 2;
+            float halfHeight = height / 2;
+            float halfDepth = depth / 2;
+
+            Plane front = new Plane(-Vector3.UnitZ, halfDepth);
+            Plane back = new Plane(Vector3.UnitZ, halfDepth);
+
+            Plane left = new Plane(-Vector3.UnitX, halfWidth);
+            Plane right = new Plane(Vector3.UnitX, halfWidth);
+
+            Plane bottom = new Plane(-Vector3.UnitY, halfHeight);
+            Plane top = new Plane(Vector3.UnitY, halfHeight);
+
+            Planes.AddRange(new Plane[] 
+            {
+                front, back, left, right, bottom, top
+            });
+        }
+
+        public void AddPlane(Plane p)
+        {
+            Planes.Add(p);
+        }
+
+        public void CalcBoundingBox()
+        {
+
+        }
+
+        public static void Sub(Brush a, Brush b, out List<Brush> result)
+        {
+            result = null;
+        }
+
+        public static void Clip(Brush toClip, Plane clippingPlane, out Brush a, out Brush b)
+        {
+            a = null;
+            b = null;
         }
 
         public Mesh CreateMesh()

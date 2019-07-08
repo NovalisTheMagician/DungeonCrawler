@@ -47,6 +47,9 @@ namespace Editor.Controls
         [Browsable(false)]
         public int GridSize { get; set; }
 
+        [Browsable(false)]
+        public int AltGridSize { get; set; }
+
         private bool panning;
         private Point startPanPos;
 
@@ -78,6 +81,7 @@ namespace Editor.Controls
             Zoom = 100;
             PanOffset = new Vector2((-Width / 2) / ScaleFactor, (-Height / 2) / ScaleFactor);
             GridSize = 64;
+            AltGridSize = 32;
 
             base.OnCreateControl();
         }
@@ -88,7 +92,7 @@ namespace Editor.Controls
             {
                 StartPanning(e.Location);
             }
-            else if(e.Button == MouseButtons.Left && ModifierKeys == Keys.Control && !panning)
+            else if(e.Button == MouseButtons.Right && ModifierKeys == Keys.Control && !panning)
             {
                 StartPanning(e.Location);
             }
@@ -98,7 +102,7 @@ namespace Editor.Controls
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Middle || e.Button == MouseButtons.Left)
+            if(e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right)
             {
                 if (panning)
                     EndPanning();
@@ -153,8 +157,20 @@ namespace Editor.Controls
             }
 
             mousePos = ScreenToWorld(e.Location);
+            
             mousePosSnapped.X = (float)Math.Floor((mousePos.X + GridSize / 2) / GridSize) * GridSize;
             mousePosSnapped.Y = (float)Math.Floor((mousePos.Y + GridSize / 2) / GridSize) * GridSize;
+
+            if(Control.ModifierKeys == Keys.Control)
+            {
+                mousePosSnapped.X = (float)Math.Floor((mousePos.X + AltGridSize / 2) / AltGridSize) * AltGridSize;
+                mousePosSnapped.Y = (float)Math.Floor((mousePos.Y + AltGridSize / 2) / AltGridSize) * AltGridSize;
+            }
+            else if(Control.ModifierKeys == Keys.Shift)
+            {
+                mousePosSnapped.X = mousePos.X;
+                mousePosSnapped.Y = mousePos.Y;
+            }
 
             Invalidate();
 
@@ -207,8 +223,7 @@ namespace Editor.Controls
 
         private void DrawStats(Graphics g)
         {
-            WinBrush fontBrush = Brushes.GhostWhite;
-            g.DrawString(Orientation.ToString(), textFont, fontBrush, new PointF(10, 10));
+            TextRenderer.DrawText(g, Orientation.ToString(), textFont, new Point(10, 10), Color.GhostWhite);
             string coord1Label = "X", coord2Label = "Y";
             switch(Orientation)
             {
@@ -216,8 +231,9 @@ namespace Editor.Controls
                 case Orientation.SIDE: coord1Label = "Z"; break;
                 case Orientation.TOP: coord2Label = "Z"; break;
             }
-            g.DrawString($"{coord1Label}={mousePosSnapped.X} {coord2Label}={mousePosSnapped.Y * -1}", textFont, fontBrush, new PointF(10, 30));
-            g.DrawString($"Zoom: {Zoom}%", textFont, fontBrush, new PointF(10, Height - 30));
+
+            TextRenderer.DrawText(g, $"{coord1Label}={mousePosSnapped.X} {coord2Label}={mousePosSnapped.Y * -1}", textFont, new Point(10, 30), Color.GhostWhite);
+            TextRenderer.DrawText(g, $"Zoom: {Zoom}%", textFont, new Point(10, Height - 30), Color.GhostWhite);
         }
 
         private void DrawGrid(Graphics g)

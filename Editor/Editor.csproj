@@ -164,6 +164,7 @@
     <Compile Include="BaseAsset.cs" />
     <Compile Include="AssetCache.cs" />
     <Compile Include="BaseAssetLoader.cs" />
+    <Compile Include="Brush\BoundingBox.cs" />
     <Compile Include="Brush\Brush.cs" />
     <Compile Include="Brush\Mesh.cs" />
     <Compile Include="Brush\World.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Material.cs" />
     <Compile Include="MaterialLoader.cs" />
     <Compile Include="MouseWheelFilter.cs" />
+    <Compile Include="NumericExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

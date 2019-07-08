@@ -20,7 +20,7 @@ namespace Editor.Brush
 
         public Mesh()
         {
-
+            vertices = new List<Vertex>();
         }
     }
 }

@@ -251,6 +251,8 @@ namespace Editor.Forms
 
         #endregion
 
+        #region StatusbarHandlers
+
         private void OnGridBtnClick(object sender, EventArgs e)
         {
             ToolStripMenuItem btn = sender as ToolStripMenuItem;
@@ -258,6 +260,16 @@ namespace Editor.Forms
             gridBtn.Text = $"{gridSize}";
             layout6Pane.GridSize = gridSize;
         }
+
+        private void OnAltGridBtnClick(object sender, EventArgs e)
+        {
+            ToolStripMenuItem btn = sender as ToolStripMenuItem;
+            int gridSize = int.Parse((string)btn.Tag);
+            altGridBtn.Text = $"{gridSize}";
+            layout6Pane.AltGridSize = gridSize;
+        }
+
+        #endregion
 
         private void CreateFolderHierarchy(string projectFolder)
         {

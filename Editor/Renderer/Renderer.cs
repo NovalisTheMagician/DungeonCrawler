@@ -27,6 +27,12 @@ namespace Editor.Renderer
         public bool Ready { get; set; }
     }
 
+    public struct GDIDevice
+    {
+        public Surface1 Surface { get; set; }
+        public Graphics Graphics { get; set; }
+    }
+
     public class Renderer
     {
         private D3DDevice device;
@@ -102,7 +108,7 @@ namespace Editor.Renderer
                 SwapChainDescription swapChainDescription = new SwapChainDescription()
                 {
                     IsWindowed = true,
-                    BufferCount = 1,
+                    BufferCount = 2,
                     OutputHandle = hWnd,
                     SwapEffect = SwapEffect.Discard,
                     Usage = Usage.RenderTargetOutput,
@@ -112,11 +118,6 @@ namespace Editor.Renderer
                 };
 
                 buffer.SwapChain = new SwapChain(factory, device, swapChainDescription);
-
-                using (Texture2D backbuffer = Texture2D.FromSwapChain<Texture2D>(buffer.SwapChain, 0))
-                {
-                    buffer.RenderTargetView = new RenderTargetView(device, backbuffer);
-                }
 
                 renderBuffers.Add(assignedId, buffer);
 
@@ -152,7 +153,10 @@ namespace Editor.Renderer
                 RenderBuffer buffer = renderBuffers[id];
 
                 deviceContext.ClearState();
-                buffer.RenderTargetView.Dispose();
+                if(buffer.RenderTargetView != null)
+                {
+                    buffer.RenderTargetView.Dispose();
+                }
                 if(buffer.DepthStencilView != null)
                 {
                     buffer.DepthStencilView.Dispose();
@@ -180,7 +184,7 @@ namespace Editor.Renderer
                 using (Texture2D depthStencilTexture = new Texture2D(device, texture2DDescription))
                 {
                     buffer.DepthStencilView = new DepthStencilView(device, depthStencilTexture);
-                } 
+                }
 
                 buffer.Viewport = new Viewport(0, 0, width, height, 0, 1);
                 buffer.Ready = true;
@@ -215,6 +219,29 @@ namespace Editor.Renderer
                     buffer.SwapChain.Present(0, PresentFlags.None);
                 }
             }
+        }
+
+        public bool GetGDIDevice(int id, ref GDIDevice gdiDevice)
+        {
+            if (!initialized) return false;
+            if (renderBuffers.ContainsKey(id))
+            {
+                RenderBuffer buffer = renderBuffers[id];
+                if(buffer.Ready)
+                {
+                    gdiDevice.Surface = buffer.SwapChain.GetBackBuffer<Surface1>(0);
+                    gdiDevice.Graphics = Graphics.FromHdc(gdiDevice.Surface.GetDC(false));
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void ReleaseGDIDevice(ref GDIDevice device)
+        {
+            device.Graphics.Dispose();
+            device.Surface.ReleaseDC();
+            device.Surface.Dispose();
         }
 
         public void DrawModel(/*Model model*/)
