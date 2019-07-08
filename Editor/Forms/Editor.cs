@@ -227,6 +227,8 @@ namespace Editor.Forms
         {
             renderer.Destroy();
             assetCache.SaveAssets();
+            assetCache.ClearAll();
+            Application.RemoveMessageFilter(mouseWheelFilter);
         }
 
         private void OnEditorClosing(object sender, FormClosingEventArgs e)
@@ -245,8 +247,6 @@ namespace Editor.Forms
                     return;
                 }
             }
-            assetCache.ClearAll();
-            Application.RemoveMessageFilter(mouseWheelFilter);
         }
 
         #endregion
@@ -426,6 +426,8 @@ namespace Editor.Forms
             openBtn.Enabled = false;
             saveBtn.Enabled = false;
             saveAsBtn.Enabled = false;
+
+            layout6Pane.Enabled = false;
         }
 
         private void EnableMenus()
@@ -440,6 +442,8 @@ namespace Editor.Forms
             openBtn.Enabled = true;
             saveBtn.Enabled = true;
             saveAsBtn.Enabled = true;
+
+            layout6Pane.Enabled = true;
         }
     }
 }

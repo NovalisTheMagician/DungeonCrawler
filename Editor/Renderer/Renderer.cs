@@ -18,7 +18,7 @@ using DXGIFactory = SharpDX.DXGI.Factory1;
 
 namespace Editor.Renderer
 {
-    public struct RenderBuffer
+    public class RenderBuffer
     {
         public SwapChain SwapChain { get; set; }
         public RenderTargetView RenderTargetView { get; set; }
@@ -80,7 +80,8 @@ namespace Editor.Renderer
         {
             if(initialized)
             {
-                foreach(int id in renderBuffers.Keys)
+                int[] keys = renderBuffers.Keys.ToArray();
+                foreach(int id in keys)
                 {
                     DetachWindow(id);
                 }
@@ -188,7 +189,7 @@ namespace Editor.Renderer
 
                 buffer.Viewport = new Viewport(0, 0, width, height, 0, 1);
                 buffer.Ready = true;
-                renderBuffers[id] = buffer;
+                //renderBuffers[id] = buffer;
             }
         }
 

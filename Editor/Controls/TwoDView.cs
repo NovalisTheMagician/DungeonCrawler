@@ -195,6 +195,12 @@ namespace Editor.Controls
         protected override void OnPaint(PaintEventArgs pe)
         {
             Graphics g = pe.Graphics;
+            if(!Enabled)
+            {
+                g.Clear(Color.LightGray);
+                return;
+            }
+
             g.Clear(Color.DarkBlue);
 
             DrawGrid(g);

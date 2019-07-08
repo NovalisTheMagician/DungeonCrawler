@@ -138,6 +138,12 @@ namespace Editor.Controls
 
         protected override void OnPaint(PaintEventArgs pe)
         {
+            if(!Enabled)
+            {
+                pe.Graphics.Clear(Color.LightGray);
+                return;
+            }
+
             if (Renderer == null) return;
 
             view = Matrix4x4.CreateLookAt(CameraPosition, CameraPosition + CameraDirection, Vector3.UnitY);
@@ -159,7 +165,10 @@ namespace Editor.Controls
 
         protected override void OnPaintBackground(PaintEventArgs pe)
         {
-            
+            if(DesignMode)
+            {
+                pe.Graphics.Clear(Color.CornflowerBlue);
+            }
         }
 
         private void Draw3D()

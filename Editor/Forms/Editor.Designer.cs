@@ -87,14 +87,14 @@
             this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.altGridBtn = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.layout6Pane = new Editor.Controls.Layout6Pane();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -495,7 +495,7 @@
             // toolStripMenuItem20
             // 
             this.toolStripMenuItem20.Name = "toolStripMenuItem20";
-            this.toolStripMenuItem20.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem20.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem20.Tag = "512";
             this.toolStripMenuItem20.Text = "512";
             this.toolStripMenuItem20.Click += new System.EventHandler(this.OnGridBtnClick);
@@ -503,7 +503,7 @@
             // toolStripMenuItem19
             // 
             this.toolStripMenuItem19.Name = "toolStripMenuItem19";
-            this.toolStripMenuItem19.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem19.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem19.Tag = "256";
             this.toolStripMenuItem19.Text = "256";
             this.toolStripMenuItem19.Click += new System.EventHandler(this.OnGridBtnClick);
@@ -511,7 +511,7 @@
             // toolStripMenuItem18
             // 
             this.toolStripMenuItem18.Name = "toolStripMenuItem18";
-            this.toolStripMenuItem18.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem18.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem18.Tag = "128";
             this.toolStripMenuItem18.Text = "128";
             this.toolStripMenuItem18.Click += new System.EventHandler(this.OnGridBtnClick);
@@ -519,7 +519,7 @@
             // toolStripMenuItem17
             // 
             this.toolStripMenuItem17.Name = "toolStripMenuItem17";
-            this.toolStripMenuItem17.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem17.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem17.Tag = "64";
             this.toolStripMenuItem17.Text = "64";
             this.toolStripMenuItem17.Click += new System.EventHandler(this.OnGridBtnClick);
@@ -527,7 +527,7 @@
             // toolStripMenuItem16
             // 
             this.toolStripMenuItem16.Name = "toolStripMenuItem16";
-            this.toolStripMenuItem16.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem16.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem16.Tag = "32";
             this.toolStripMenuItem16.Text = "32";
             this.toolStripMenuItem16.Click += new System.EventHandler(this.OnGridBtnClick);
@@ -535,7 +535,7 @@
             // toolStripMenuItem15
             // 
             this.toolStripMenuItem15.Name = "toolStripMenuItem15";
-            this.toolStripMenuItem15.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem15.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem15.Tag = "16";
             this.toolStripMenuItem15.Text = "16";
             this.toolStripMenuItem15.Click += new System.EventHandler(this.OnGridBtnClick);
@@ -543,7 +543,7 @@
             // toolStripMenuItem14
             // 
             this.toolStripMenuItem14.Name = "toolStripMenuItem14";
-            this.toolStripMenuItem14.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem14.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem14.Tag = "8";
             this.toolStripMenuItem14.Text = "8";
             this.toolStripMenuItem14.Click += new System.EventHandler(this.OnGridBtnClick);
@@ -551,7 +551,7 @@
             // toolStripMenuItem13
             // 
             this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-            this.toolStripMenuItem13.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem13.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem13.Tag = "4";
             this.toolStripMenuItem13.Text = "4";
             this.toolStripMenuItem13.Click += new System.EventHandler(this.OnGridBtnClick);
@@ -559,8 +559,8 @@
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(108, 26);
-            this.toolStripStatusLabel2.Text = "Alt Grid Size";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(112, 26);
+            this.toolStripStatusLabel2.Text = "Alt Grid Size:";
             // 
             // altGridBtn
             // 
@@ -581,69 +581,69 @@
             this.altGridBtn.Text = "32";
             this.altGridBtn.ToolTipText = "Alternative Grid Size";
             // 
-            // toolStripMenuItem2
+            // toolStripMenuItem9
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(252, 30);
-            this.toolStripMenuItem2.Tag = "4";
-            this.toolStripMenuItem2.Text = "4";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.OnAltGridBtnClick);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(252, 30);
-            this.toolStripMenuItem3.Tag = "8";
-            this.toolStripMenuItem3.Text = "8";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnAltGridBtnClick);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(252, 30);
-            this.toolStripMenuItem4.Tag = "16";
-            this.toolStripMenuItem4.Text = "16";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.OnAltGridBtnClick);
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(252, 30);
-            this.toolStripMenuItem5.Tag = "32";
-            this.toolStripMenuItem5.Text = "32";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.OnAltGridBtnClick);
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(252, 30);
-            this.toolStripMenuItem6.Tag = "64";
-            this.toolStripMenuItem6.Text = "64";
-            this.toolStripMenuItem6.Click += new System.EventHandler(this.OnAltGridBtnClick);
-            // 
-            // toolStripMenuItem7
-            // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(252, 30);
-            this.toolStripMenuItem7.Tag = "128";
-            this.toolStripMenuItem7.Text = "128";
-            this.toolStripMenuItem7.Click += new System.EventHandler(this.OnAltGridBtnClick);
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(126, 30);
+            this.toolStripMenuItem9.Tag = "512";
+            this.toolStripMenuItem9.Text = "512";
+            this.toolStripMenuItem9.Click += new System.EventHandler(this.OnAltGridBtnClick);
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(252, 30);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(126, 30);
             this.toolStripMenuItem8.Tag = "256";
             this.toolStripMenuItem8.Text = "256";
             this.toolStripMenuItem8.Click += new System.EventHandler(this.OnAltGridBtnClick);
             // 
-            // toolStripMenuItem9
+            // toolStripMenuItem7
             // 
-            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(252, 30);
-            this.toolStripMenuItem9.Tag = "512";
-            this.toolStripMenuItem9.Text = "512";
-            this.toolStripMenuItem9.Click += new System.EventHandler(this.OnAltGridBtnClick);
+            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(126, 30);
+            this.toolStripMenuItem7.Tag = "128";
+            this.toolStripMenuItem7.Text = "128";
+            this.toolStripMenuItem7.Click += new System.EventHandler(this.OnAltGridBtnClick);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(126, 30);
+            this.toolStripMenuItem6.Tag = "64";
+            this.toolStripMenuItem6.Text = "64";
+            this.toolStripMenuItem6.Click += new System.EventHandler(this.OnAltGridBtnClick);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(126, 30);
+            this.toolStripMenuItem5.Tag = "32";
+            this.toolStripMenuItem5.Text = "32";
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.OnAltGridBtnClick);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(126, 30);
+            this.toolStripMenuItem4.Tag = "16";
+            this.toolStripMenuItem4.Text = "16";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.OnAltGridBtnClick);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(126, 30);
+            this.toolStripMenuItem3.Tag = "8";
+            this.toolStripMenuItem3.Text = "8";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnAltGridBtnClick);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(126, 30);
+            this.toolStripMenuItem2.Tag = "4";
+            this.toolStripMenuItem2.Text = "4";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.OnAltGridBtnClick);
             // 
             // layout6Pane
             // 
@@ -669,6 +669,7 @@
             this.Name = "EditorForm";
             this.Text = "Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnEditorClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnEditorClosed);
             this.Load += new System.EventHandler(this.OnEditorLoading);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
