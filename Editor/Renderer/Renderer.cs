@@ -189,7 +189,6 @@ namespace Editor.Renderer
 
                 buffer.Viewport = new Viewport(0, 0, width, height, 0, 1);
                 buffer.Ready = true;
-                //renderBuffers[id] = buffer;
             }
         }
 

@@ -10,6 +10,8 @@ namespace Editor.Brush
     {
         private List<Brush> brushes;
 
+        public Brush SelectedBrush { get; set; }
+
         public World()
         {
 
