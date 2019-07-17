@@ -60,41 +60,37 @@ namespace Editor
         public void CheckChanges()
         {
             string[] files = Directory.GetFiles(AssetPath, "*.*", SearchOption.AllDirectories);
+            HashSet<string> cachedNames = new HashSet<string>(assets.Keys.ToArray());
+
             foreach (string file in files)
             {
                 string name = Path.GetFileName(file);
-                bool fileHandled = false;
                 string ext = Path.GetExtension(file);
                 if (!assetLoaders.ContainsKey(ext))
                     continue;
                 IAssetLoader loader = assetLoaders[ext];
                 DateTime assetTime = File.GetLastWriteTime(file);
 
-                foreach(string assetName in assets.Keys)
+                if(cachedNames.Contains(name))
                 {
-                    if(name == assetName)
+                    if (assetTime != assetLastModified[name])
                     {
-                        if(assetTime != assetLastModified[name])
+                        //file changed!
+                        BaseAsset changedAsset = loader.LoadAsset(file, this);
+                        if (changedAsset != null)
                         {
-                            //file changed!
-                            BaseAsset changedAsset = loader.LoadAsset(file, this);
-                            if(changedAsset != null)
-                            {
-                                assets[name] = changedAsset;
-                                assetLastModified[name] = assetTime;
+                            assets[name] = changedAsset;
+                            assetLastModified[name] = assetTime;
 
-                                OnAssetChanged?.Invoke(name, changedAsset);
-                            }
+                            OnAssetChanged?.Invoke(name, changedAsset);
                         }
-
-                        fileHandled = true;
                     }
+
+                    cachedNames.Remove(name);
+                    continue;
                 }
 
-                if (fileHandled)
-                    continue;
-
-                //might be new file
+                //it's a new file!
                 BaseAsset asset = loader.LoadAsset(file, this);
                 if (asset != null)
                 {
@@ -104,6 +100,15 @@ namespace Editor
 
                     OnAssetAdded?.Invoke(name, asset);
                 }
+            }
+
+            //all other files in cachedNames must've been removed or renamed on disk
+            foreach (string name in cachedNames)
+            {
+                BaseAsset asset = assets[name];
+                OnAssetRemoved?.Invoke(name, asset);
+                asset.Dispose();
+                assets.Remove(name);
             }
         }
 
