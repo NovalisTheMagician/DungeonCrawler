@@ -39,6 +39,12 @@ namespace Editor.Renderer
         private DeviceContext deviceContext;
         private DXGIFactory factory;
 
+        private VertexShader unliteVertexShader;
+        private PixelShader unlitPixelShader;
+
+        private VertexShader litVertexShader;
+        private PixelShader litPixelShader;
+
         private Dictionary<int, RenderBuffer> renderBuffers;
 
         private int currentId;

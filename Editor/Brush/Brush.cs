@@ -10,7 +10,32 @@ namespace Editor.Brush
 {
     public class Brush
     {
-        public List<Plane> Planes { get; private set; }
+        private struct PlaneVertices
+        {
+            public Vector3 A { get; set; }
+            public Vector3 B { get; set; }
+            public Vector3 C { get; set; }
+        }
+
+        private Dictionary<Plane, PlaneVertices> PlaneVerts { get; set; }
+
+        [JsonIgnore]
+        public List<Plane> Planes
+        {
+            get
+            {
+                return PlaneVerts.Keys.ToList();
+            }
+        }
+
+        [JsonIgnore]
+        public int PlaneCount
+        {
+            get
+            {
+                return PlaneVerts.Count;
+            }
+        }
 
         private BoundingBox boundingBox;
 
@@ -22,45 +47,48 @@ namespace Editor.Brush
 
         public Brush()
         {
-            Planes = new List<Plane>();
+            PlaneVerts = new Dictionary<Plane, PlaneVertices>();
+            boundingBox = new BoundingBox();
         }
 
-        public Brush(float size)
-            : this(size, size, size)
+        public void AddPlane(Vector3 a, Vector3 b, Vector3 c)
         {
-
-        }
-
-        public Brush(float width, float height, float depth)
-        {
-            Planes = new List<Plane>();
-            float halfWidth = width / 2;
-            float halfHeight = height / 2;
-            float halfDepth = depth / 2;
-
-            Plane front = new Plane(-Vector3.UnitZ, halfDepth);
-            Plane back = new Plane(Vector3.UnitZ, halfDepth);
-
-            Plane left = new Plane(-Vector3.UnitX, halfWidth);
-            Plane right = new Plane(Vector3.UnitX, halfWidth);
-
-            Plane bottom = new Plane(-Vector3.UnitY, halfHeight);
-            Plane top = new Plane(Vector3.UnitY, halfHeight);
-
-            Planes.AddRange(new Plane[] 
+            PlaneVertices planeVert = new PlaneVertices()
             {
-                front, back, left, right, bottom, top
-            });
-        }
+                A = a,
+                B = b,
+                C = c
+            };
 
-        public void AddPlane(Plane p)
-        {
-            Planes.Add(p);
+            Plane p = Plane.CreateFromVertices(a, b, c);
+            PlaneVerts.Add(p, planeVert);
+
+            //CalcBoundingBox();
         }
 
         public void CalcBoundingBox()
         {
+            if (PlaneCount < 3)
+            {
+                IsValid = false;
+                return;
+            }
 
+            Vector3 min = new Vector3(float.MaxValue);
+            Vector3 max = new Vector3(float.MinValue);
+            foreach(PlaneVertices vertices in PlaneVerts.Values)
+            {
+                min = Vector3.Min(min, vertices.A);
+                min = Vector3.Min(min, vertices.B);
+                min = Vector3.Min(min, vertices.C);
+
+                max = Vector3.Max(max, vertices.A);
+                max = Vector3.Max(max, vertices.B);
+                max = Vector3.Max(max, vertices.C);
+            }
+
+            boundingBox.Min = min;
+            boundingBox.Max = max;
         }
 
         public static void Sub(Brush a, Brush b, out List<Brush> result)
@@ -76,7 +104,45 @@ namespace Editor.Brush
 
         public Mesh CreateMesh()
         {
-            return null;
+            Mesh mesh = new Mesh();
+            List<Vertex> vertices = mesh.Vertices;
+
+            int planeCount = PlaneCount;
+
+            for(int i = 0; i < planeCount; ++i)
+            {
+                Plane a = Planes[i];
+                Vector3 an = a.Normal;
+                for(int j = 0; j < planeCount; ++j)
+                {
+                    if (j == i) continue;
+                    Plane b = Planes[j % planeCount];
+                    Vector3 bn = b.Normal;
+                    Plane c = Planes[(j + 1) % planeCount];
+                    Vector3 cn = c.Normal;
+
+                    Vector3 cross = Vector3.Cross(bn, cn);
+                    float denom = Vector3.Dot(an, cross);
+                    if (Math.Abs(denom) > 0.001f)
+                    {
+                        Vector3 ab = Vector3.Cross(an, bn);
+                        Vector3 bc = Vector3.Cross(bn, cn);
+                        Vector3 ca = Vector3.Cross(cn, an);
+
+                        Vector3 point = -a.D * bc - b.D * Vector3.Cross(cn, an) - c.D * Vector3.Cross(an, bn);
+                        point /= denom;
+                        if (boundingBox.PointInBox(point))
+                        {
+                            Vertex v = new Vertex();
+                            v.Position = point;
+                            vertices.Add(v);
+                        }
+                    }
+                }
+            }
+
+            Mesh = mesh;
+            return mesh;
         }
     }
 }

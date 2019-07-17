@@ -167,6 +167,7 @@
     <Compile Include="Brush\BoundingBox.cs" />
     <Compile Include="Brush\Brush.cs" />
     <Compile Include="Brush\Mesh.cs" />
+    <Compile Include="Brush\VectorMathExtensions.cs" />
     <Compile Include="Brush\World.cs" />
     <Compile Include="Controls\ThreeDView.cs">
       <SubType>Component</SubType>
@@ -289,7 +290,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Shader\" />
     <Folder Include="Utility\" />
   </ItemGroup>
   <ItemGroup>
@@ -297,6 +297,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\grid_icn.png" />
+    <Content Include="Shader\BrushVertex.hlsl" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

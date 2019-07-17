@@ -16,11 +16,11 @@ namespace Editor.Brush
 
     public class Mesh
     {
-        private List<Vertex> vertices;
+        public List<Vertex> Vertices { get; set; }
 
         public Mesh()
         {
-            vertices = new List<Vertex>();
+            Vertices = new List<Vertex>();
         }
     }
 }

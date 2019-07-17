@@ -144,6 +144,11 @@ namespace Editor.Controls
                 return;
             }
 
+            if(DesignMode)
+            {
+                pe.Graphics.Clear(Color.CornflowerBlue);
+            }
+
             if (Renderer == null) return;
 
             view = Matrix4x4.CreateLookAt(CameraPosition, CameraPosition + CameraDirection, Vector3.UnitY);
