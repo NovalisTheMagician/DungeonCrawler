@@ -6,11 +6,10 @@ namespace DunCraw
 	class IWindow
 	{
 	public:
-		virtual bool Open() = 0;
+		virtual bool Open(const std::wstring &titleText) = 0;
 		virtual void Close() = 0;
 
-		virtual void SetIcon(const std::wstring &iconFile) = 0;
-		virtual void SetTitle(const std::wstring &titleText) = 0;
+		virtual const void* Handle() = 0;
 
 	};
 }

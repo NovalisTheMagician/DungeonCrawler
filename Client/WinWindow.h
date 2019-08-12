@@ -15,16 +15,17 @@ namespace DunCraw
 		WinWindow(Config &config, HINSTANCE hInstance);
 		~WinWindow();
 
-		bool Open() override;
+		bool Open(const std::wstring &titleText) override;
 		void Close() override;
 
-		void SetIcon(const std::wstring &iconFile) override;
-		void SetTitle(const std::wstring &titleText) override;
+		const void* Handle() override;
 
 	private:
 		HWND hWnd;
 		HINSTANCE hInstance;
 
 		Config &config;
+
+		static const std::wstring CLASS_NAME;
 	};
 }

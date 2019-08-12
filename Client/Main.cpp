@@ -21,18 +21,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	if (!config.Open(L"config.txt"))
 		Log::Error("Couldn't find config File");
 
-	Log::Info("Hello World!");
-	Log::Info(config.GetString("window_width", "error"));
-	Log::Info(config.GetString("fullscreen", "error"));
-	Log::Warning("Again!");
-	Log::Error("All your bases are belong to us!");
+	IWindow *window = new WinWindow(config, hInstance);
+	window->Open(L"DungeonCrawler");
 
-	config.SetValue("fullscreen", 0);
-	config.SetValue("debug", 1);
-	config.SetValue("truth", false);
+	MessageBox((HWND)window->Handle(), nullptr, nullptr, 0);
 
-	MessageBox(nullptr, L"Hello World!", L"", MB_OK);
-
+	window->Close();
+	delete window;
 	config.Close();
 	Log::Close();
 	return 0;

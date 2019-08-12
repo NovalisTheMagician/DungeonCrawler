@@ -49,7 +49,7 @@ namespace DunCraw
 
 	void Log::PutTime(ofstream &stream)
 	{
-		auto time = std::time(nullptr);
+		time_t time = std::time(nullptr);
 		auto tm = std::localtime(&time);
 		stream << "[" << std::put_time(tm, "%d-%m-%Y %H-%M-%S") << "]";
 	}
