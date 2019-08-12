@@ -1,5 +1,4 @@
 ﻿using Editor.Controls;
-using Editor.Interop;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Text.Json.Serialization;
 using System;
@@ -157,7 +156,7 @@ namespace Editor.Forms
 
         private void OnStandardViewBtnClick(object sender, EventArgs e)
         {
-            Interop.RendererInterop.Initialize();
+            
         }
 
         private void OnTexturingViewBtnClick(object sender, EventArgs e)
