@@ -19,6 +19,7 @@ namespace DunCraw
 
 	WinWindow::~WinWindow()
 	{
+		Close();
 	}
 
 	bool WinWindow::Open(const std::wstring &titleText)
@@ -36,9 +37,9 @@ namespace DunCraw
 
 		RegisterClassEx(&wnd);
 
-		int width = config.GetInt("window_width", 800);
-		int height = config.GetInt("window_height", 600);
-		int fullscreen = config.GetInt("fullscreen", 0);
+		int width = config.GetInt("r_width", 800);
+		int height = config.GetInt("r_height", 600);
+		int fullscreen = config.GetInt("r_fullscreen", 0);
 
 		DWORD windowStyle = WS_OVERLAPPEDWINDOW;
 		RECT rect = { 0, 0, width, height };
@@ -59,22 +60,21 @@ namespace DunCraw
 		{
 			rect.right = GetSystemMetrics(SM_CXSCREEN);
 			rect.bottom = GetSystemMetrics(SM_CYSCREEN);
+			width = rect.right;
+			height = rect.bottom;
 			windowStyle = WS_POPUP;
 			x = 0;
 			y = 0;
 			Log::Info("Creating window in borderlessfullscreen mode");
 		}
 
-		width = rect.right - rect.left;
-		height = rect.bottom - rect.top;
-
 		hWnd = CreateWindowEx(	0, 
 								CLASS_NAME.c_str(), 
 								titleText.c_str(), 
 								windowStyle, 
 								x, y, 
-								width, 
-								height, 
+								rect.right - rect.left,
+								rect.bottom - rect.top,
 								nullptr, nullptr, 
 								hInstance, nullptr);
 
@@ -98,7 +98,7 @@ namespace DunCraw
 		PostQuitMessage(0);
 	}
 
-	const void* WinWindow::Handle()
+	void* WinWindow::Handle()
 	{
 		return hWnd;
 	}
@@ -124,6 +124,8 @@ namespace DunCraw
 	{
 		switch (uMsg)
 		{
+		case WM_SIZE:
+			break;
 		case WM_CLOSE:
 			DestroyWindow(hWnd);
 			break;

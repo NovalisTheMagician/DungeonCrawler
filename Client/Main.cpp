@@ -63,7 +63,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	Config config;
 	if (!config.Open(configFile.wstring()))
 	{
-		Log::Error("Couldn't find config File: " + wstringToString(configFile.wstring()) + " Exiting...");
+		Log::Error("Couldn't find config File: " + wstringToString(configFile.wstring()) + " \tExiting...");
 		Log::Close();
 		return -1;
 	}

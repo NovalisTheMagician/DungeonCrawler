@@ -20,7 +20,7 @@ namespace DunCraw
 		bool Open(const std::wstring &titleText) override;
 		void Close() override;
 
-		const void* Handle() override;
+		void* Handle() override;
 
 		bool DoEvents(int &exitCode) override;
 
