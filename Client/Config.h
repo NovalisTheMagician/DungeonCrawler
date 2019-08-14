@@ -11,9 +11,11 @@ namespace DunCraw
 	public:
 		Config();
 		~Config();
+		Config(const Config&) = delete;
+		Config& operator=(const Config&) = delete;
 
 		bool Open(const std::wstring &configPath);
-		void Close();
+		void Close(const std::wstring &forceConfigPath = L"");
 
 		const std::string& GetString(const std::string &key, const std::string &def) const;
 		int GetInt(const std::string &key, const int &def) const;

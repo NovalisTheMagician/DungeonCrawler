@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <locale>
 #include <cwctype>
+#include <codecvt>
 
 //from:
 // https://stackoverflow.com/questions/25829143/trim-whitespace-from-a-string/25829178
@@ -41,4 +42,17 @@ namespace DunCraw
 		std::transform(str.begin(), str.end(), str.begin(), std::towlower);
 		return str;
 	}
+
+#pragma warning(push)
+#pragma warning(disable:4996)
+	inline std::string wstringToString(const std::wstring &str)
+	{
+		return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(str);
+	}
+
+	inline std::wstring stringToWString(const std::string &str)
+	{
+		return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(str);
+	}
+#pragma warning(pop)
 }

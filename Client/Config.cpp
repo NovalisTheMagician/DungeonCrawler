@@ -50,11 +50,16 @@ namespace DunCraw
 		return true;
 	}
 
-	void Config::Close()
+	void Config::Close(const std::wstring &forceConfigPath)
 	{
-		if (open)
+		if (open || !forceConfigPath.empty())
 		{
-			ofstream outputStream(configPath);
+			ofstream outputStream;
+			if (!forceConfigPath.empty())
+				outputStream.open(forceConfigPath);
+			else
+				outputStream.open(configPath);
+
 			if (outputStream)
 			{
 				for (auto const&[key, val] : configMap)

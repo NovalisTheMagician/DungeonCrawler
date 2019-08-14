@@ -18,7 +18,6 @@ namespace DunCraw
 	{
 		wstringstream ss(cmdLine);
 		wstring flag;
-		wstring parm;
 		vector<wstring> parameters;
 
 		ss >> flag;
@@ -28,7 +27,12 @@ namespace DunCraw
 
 		while (ss)
 		{
+			wstring parm;
 			ss >> parm;
+			if (parm.empty())
+			{
+				continue;
+			}
 			if (parm[0] != '-')
 			{
 				parameters.push_back(parm);
@@ -65,7 +69,7 @@ namespace DunCraw
 
 	const std::wstring& Args::GetParameter(const std::wstring &flag) const
 	{
-		if (IsSet(flag))
+		if (NumParameters(flag) > 0)
 		{
 			return args.at(flag)[0];
 		}

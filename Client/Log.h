@@ -16,8 +16,10 @@ namespace DunCraw
 		static void Error(const std::string &msg);
 
 	private:
-		Log();
-		~Log();
+		Log() = delete;
+		~Log() = delete;
+		Log(const Log&) = delete;
+		Log& operator=(const Log&) = delete;
 
 		static void PutTime(std::ofstream &stream);
 

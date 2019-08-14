@@ -2,6 +2,8 @@
 
 #include "resource.h"
 
+#include "Log.h"
+
 using std::wstring;
 
 namespace DunCraw
@@ -26,29 +28,67 @@ namespace DunCraw
 		wnd.lpszClassName = CLASS_NAME.c_str();
 		wnd.hInstance = hInstance;
 		wnd.lpfnWndProc = WndProc;
+		wnd.hbrBackground = (HBRUSH)GetStockObject(COLOR_WINDOW + 1);
+		wnd.hCursor = LoadCursor(hInstance, IDC_ARROW);
 		wnd.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+		wnd.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
 		wnd.style = CS_VREDRAW | CS_OWNDC | CS_HREDRAW;
 
 		RegisterClassEx(&wnd);
 
 		int width = config.GetInt("window_width", 800);
 		int height = config.GetInt("window_height", 600);
+		int fullscreen = config.GetInt("fullscreen", 0);
+
+		DWORD windowStyle = WS_OVERLAPPEDWINDOW;
+		RECT rect = { 0, 0, width, height };
+		int x = CW_USEDEFAULT, y = CW_USEDEFAULT;
+
+		if (fullscreen == 0) // windowed
+		{
+			AdjustWindowRectEx(&rect, windowStyle, false, 0);
+			Log::Info("Creating window in windowed mode");
+		}
+		if (fullscreen == 1) // fullscreen
+		{
+			//TODO implement normal fullscreen mode
+			Log::Warning("Normal fullscreen mode not yet implemented. Defaulting to borderlessfullscreen");
+			fullscreen = 2;
+		}
+		if (fullscreen == 2) // borderlessfullscreen
+		{
+			rect.right = GetSystemMetrics(SM_CXSCREEN);
+			rect.bottom = GetSystemMetrics(SM_CYSCREEN);
+			windowStyle = WS_POPUP;
+			x = 0;
+			y = 0;
+			Log::Info("Creating window in borderlessfullscreen mode");
+		}
+
+		width = rect.right - rect.left;
+		height = rect.bottom - rect.top;
 
 		hWnd = CreateWindowEx(	0, 
 								CLASS_NAME.c_str(), 
-								titleText.c_str(),
-								WS_OVERLAPPEDWINDOW, 
-								CW_USEDEFAULT, CW_USEDEFAULT, 
-								width, height, 
+								titleText.c_str(), 
+								windowStyle, 
+								x, y, 
+								width, 
+								height, 
 								nullptr, nullptr, 
 								hInstance, nullptr);
 
 		if (!hWnd)
 		{
+			Log::Error("Couldn't create window!");
 			return false;
 		}
 
 		ShowWindow(hWnd, SW_SHOW);
+
+		Log::Info("Window created with dimensions " + std::to_string(width) + "x" + std::to_string(height));
+
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
 		return true;
 	}
@@ -63,9 +103,43 @@ namespace DunCraw
 		return hWnd;
 	}
 
-	static LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	bool WinWindow::DoEvents(int &exitCode)
 	{
-		return DefWindowProc(hwnd, uMsg, wParam, lParam);
+		MSG msg;
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		if (msg.message == WM_QUIT)
+		{
+			exitCode = static_cast<int>(msg.wParam);
+			return true;
+		}
+		return false;
+	}
+
+	LRESULT WinWindow::EventHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_CLOSE:
+			DestroyWindow(hWnd);
+			break;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
+		default: 
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		}
+		return 0;
+	}
+
+	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		WinWindow *window = reinterpret_cast<WinWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		return window->EventHandler(hWnd, uMsg, wParam, lParam);
 	}
 }
 

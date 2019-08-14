@@ -14,11 +14,17 @@ namespace DunCraw
 	public:
 		WinWindow(Config &config, HINSTANCE hInstance);
 		~WinWindow();
+		WinWindow(const WinWindow&) = delete;
+		WinWindow& operator=(const WinWindow&) = delete;
 
 		bool Open(const std::wstring &titleText) override;
 		void Close() override;
 
 		const void* Handle() override;
+
+		bool DoEvents(int &exitCode) override;
+
+		LRESULT EventHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);		
 
 	private:
 		HWND hWnd;

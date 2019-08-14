@@ -11,14 +11,6 @@ namespace DunCraw
 {
 	ofstream Log::logFile(L"");
 
-	Log::Log()
-	{
-	}
-
-	Log::~Log()
-	{
-	}
-
 	void Log::Open(const wstring &logFilePath)
 	{
 		logFile.open(logFilePath);
@@ -50,7 +42,8 @@ namespace DunCraw
 	void Log::PutTime(ofstream &stream)
 	{
 		time_t time = std::time(nullptr);
-		auto tm = std::localtime(&time);
-		stream << "[" << std::put_time(tm, "%d-%m-%Y %H-%M-%S") << "]";
+		struct tm timeinfo;
+		localtime_s(&timeinfo, &time);
+		stream << "[" << std::put_time(&timeinfo, "%d-%m-%Y %H-%M-%S") << "]";
 	}
 }

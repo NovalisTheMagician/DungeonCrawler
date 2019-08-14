@@ -1,34 +1,81 @@
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
 #include <Windows.h>
 #include <iostream>
+#include <string>
+
+#include <ShlObj.h>
+#include <filesystem>
 
 #include "Args.h"
 #include "Log.h"
 #include "Config.h"
-#include "IWindow.h"
-#include "WinWindow.h"
+#include "StringSupport.h"
+
+#include "GameLoop.h"
 
 using namespace DunCraw;
+
+using std::wstring;
+using std::filesystem::path;
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	Log::Open(L"session.log");
 
+	Log::Info("Comandline Parameters: " + wstringToString(lpCmdLine));
+
+	path configFile;
+
 	Args args(lpCmdLine);
-	if (args.IsSet(L"-debug"))
-		Log::Info("Debugmode activated");
+	if (args.NumParameters(L"-config") == 1)
+	{
+		configFile = args.GetParameter(L"-config");
+	}
+	else
+	{
+		wchar_t *path;
+		HRESULT hr = SHGetKnownFolderPath(FOLDERID_Documents, 0, nullptr, &path);
+		if (SUCCEEDED(hr))
+		{
+			configFile = path;
+			configFile /= L"FraylinBoons";
+			configFile /= L"DungeonCrawler";
+			configFile /= L"config.txt";
+
+			CoTaskMemFree(path);
+		}
+	}
+
+	if (args.IsSet(L"-recreateconfig"))
+	{
+		Log::Info("Regenerating config file with default values...");
+
+		//TODO implement config recreation
+		Config config;
+
+		config.Close(configFile);
+		return 0;
+	}
+
+	Log::Info("Using config file: " + wstringToString(configFile.wstring()));
 
 	Config config;
-	if (!config.Open(L"config.txt"))
-		Log::Error("Couldn't find config File");
+	if (!config.Open(configFile.wstring()))
+	{
+		Log::Error("Couldn't find config File: " + wstringToString(configFile.wstring()) + " Exiting...");
+		Log::Close();
+		return -1;
+	}
 
-	IWindow *window = new WinWindow(config, hInstance);
-	window->Open(L"DungeonCrawler");
+	Log::Info("Successfully loaded config");
 
-	MessageBox((HWND)window->Handle(), nullptr, nullptr, 0);
+	GameLoop loop(config);
+	int exitCode = loop.Start();
 
-	window->Close();
-	delete window;
+	Log::Info("Closing game with code " + std::to_string(exitCode));
+
 	config.Close();
 	Log::Close();
-	return 0;
+	return exitCode;
 }
