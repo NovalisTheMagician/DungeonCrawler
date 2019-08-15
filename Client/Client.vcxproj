@@ -181,6 +181,7 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DXAudioEngine.cpp" />
     <ClCompile Include="DXRenderer.cpp" />
+    <ClCompile Include="EventEngine.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="DXAudioEngine.h" />
     <ClInclude Include="DXRenderer.h" />
+    <ClInclude Include="EventEngine.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="IAudioEngine.h" />
     <ClInclude Include="IRenderer.h" />
@@ -207,6 +209,11 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="dun_gate.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="config.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

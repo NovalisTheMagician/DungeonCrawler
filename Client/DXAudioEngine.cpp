@@ -6,8 +6,8 @@ using Microsoft::WRL::ComPtr;
 
 namespace DunCraw
 {
-	DXAudioEngine::DXAudioEngine(Config &config)
-		: config(config), initiallized(false)
+	DXAudioEngine::DXAudioEngine(Config &config, EventEngine &eventEngine)
+		: config(config), eventEngine(eventEngine), initiallized(false)
 	{
 
 	}

@@ -5,6 +5,7 @@
 #include "Log.h"
 
 using std::wstring;
+using std::placeholders::_1;
 
 namespace DunCraw
 {
@@ -12,8 +13,8 @@ namespace DunCraw
 
 	const wstring WinWindow::CLASS_NAME = L"DungeonCrawlerWindow";
 
-	WinWindow::WinWindow(Config &config, HINSTANCE hInstance)
-		: config(config), hWnd(nullptr), hInstance(hInstance)
+	WinWindow::WinWindow(Config &config, EventEngine &eventEngine, HINSTANCE hInstance)
+		: config(config), eventEngine(eventEngine), hInstance(hInstance)
 	{
 	}
 
@@ -90,6 +91,8 @@ namespace DunCraw
 
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
+		eventEngine.RegisterCallback(EV_EXIT, std::bind(&WinWindow::OnExit, this, _1));
+
 		return true;
 	}
 
@@ -106,25 +109,43 @@ namespace DunCraw
 	bool WinWindow::DoEvents(int &exitCode)
 	{
 		MSG msg;
+		bool quit = false;
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			if (msg.message == WM_QUIT) 
+			{
+				exitCode = static_cast<int>(msg.wParam);
+				quit = true;
+				break;
+			}
 		}
 
-		if (msg.message == WM_QUIT)
-		{
-			exitCode = static_cast<int>(msg.wParam);
-			return true;
-		}
-		return false;
+		return quit;
 	}
 
-	LRESULT WinWindow::EventHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	void WinWindow::OnExit(EventData data)
+	{
+		Close();
+	}
+
+	LRESULT WinWindow::EventHandler(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
 		case WM_SIZE:
+			{
+				EventData data =
+				{
+					LOWORD(lParam),
+					HIWORD(lParam),
+					0,
+					nullptr
+				};
+				eventEngine.SendEvent(EV_RESIZE, data, true);
+			}
 			break;
 		case WM_CLOSE:
 			DestroyWindow(hWnd);
@@ -141,7 +162,9 @@ namespace DunCraw
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		WinWindow *window = reinterpret_cast<WinWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-		return window->EventHandler(hWnd, uMsg, wParam, lParam);
+		if (!window)
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		return window->EventHandler(uMsg, wParam, lParam);
 	}
 }
 

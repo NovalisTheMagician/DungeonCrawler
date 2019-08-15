@@ -10,14 +10,13 @@
 
 using Microsoft::WRL::ComPtr;
 
+using std::placeholders::_1;
+
 namespace DunCraw
 {
-	DXRenderer::DXRenderer(Config &config, const HWND hWnd)
-		: device(), context(), config(config), hWnd(hWnd),
-			renderTargetView(), depthStencilView(), swapchain(),
-			initialized(false)
+	DXRenderer::DXRenderer(Config &config, EventEngine &eventEngine, const HWND hWnd)
+		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false)
 	{
-
 	}
 
 	DXRenderer::~DXRenderer()
@@ -27,9 +26,12 @@ namespace DunCraw
 
 	bool DXRenderer::Init()
 	{
+		int width = config.GetInt("r_width", 800);
+		int height = config.GetInt("r_height", 600);
+
 		DXGI_SWAP_CHAIN_DESC swapchainDesc = { 0 };
-		swapchainDesc.BufferDesc.Width = 0;
-		swapchainDesc.BufferDesc.Height = 0;
+		swapchainDesc.BufferDesc.Width = width;
+		swapchainDesc.BufferDesc.Height = height;
 		swapchainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swapchainDesc.BufferDesc.RefreshRate.Numerator = 60;
 		swapchainDesc.BufferDesc.RefreshRate.Denominator = 1;
@@ -55,7 +57,9 @@ namespace DunCraw
 			return false;
 		}
 
-		Resize();
+		OnResize({ width, height, 0, nullptr });
+
+		eventEngine.RegisterCallback(EV_RESIZE, std::bind(&DXRenderer::OnResize, this, _1));
 
 		initialized = true;
 		return true;
@@ -94,16 +98,16 @@ namespace DunCraw
 		swapchain->Present(1, 0);
 	}
 
-	void DXRenderer::Resize()
+	void DXRenderer::OnResize(EventData data)
 	{
-		int width = config.GetInt("r_width", 800);
-		int height = config.GetInt("r_height", 600);
+		int width = data.A;
+		int height = data.B;
 
 		context->ClearState();
 		depthStencilView.Reset();
 		renderTargetView.Reset();
 
-		swapchain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+		swapchain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
 		ComPtr<ID3D11Texture2D> backbuffer;
 		swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backbuffer.GetAddressOf()));
 		device->CreateRenderTargetView(backbuffer.Get(), nullptr, renderTargetView.GetAddressOf());

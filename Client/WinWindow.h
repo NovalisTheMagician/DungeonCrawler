@@ -6,13 +6,14 @@
 #include <string>
 
 #include "Config.h"
+#include "EventEngine.h"
 
 namespace DunCraw
 {
 	class WinWindow : public IWindow
 	{
 	public:
-		WinWindow(Config &config, HINSTANCE hInstance);
+		WinWindow(Config &config, EventEngine &eventEngine, HINSTANCE hInstance);
 		~WinWindow();
 		WinWindow(const WinWindow&) = delete;
 		WinWindow& operator=(const WinWindow&) = delete;
@@ -24,13 +25,17 @@ namespace DunCraw
 
 		bool DoEvents(int &exitCode) override;
 
-		LRESULT EventHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);		
+		LRESULT EventHandler(UINT uMsg, WPARAM wParam, LPARAM lParam);		
+
+	private:
+		void OnExit(EventData data);
 
 	private:
 		HWND hWnd;
 		HINSTANCE hInstance;
 
 		Config &config;
+		EventEngine &eventEngine;
 
 		static const std::wstring CLASS_NAME;
 	};

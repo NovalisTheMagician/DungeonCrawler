@@ -8,6 +8,7 @@
 
 #include "Config.h"
 #include "Timer.h"
+#include "EventEngine.h"
 
 namespace DunCraw
 {
@@ -25,6 +26,9 @@ namespace DunCraw
 
 	private:
 		bool Initialize();
+		bool InitSubsystems();
+
+		void FixedUpdate(const Timer &timer);
 		void Update(const Timer &timer);
 		void Draw();
 		void Destroy();
@@ -35,6 +39,9 @@ namespace DunCraw
 		std::unique_ptr<IAudioEngine> audioEngine;
 
 		Config &config;
+		EventEngine eventEngine;
+
+		static const float TARGET_DELTA;
 
 	};
 }

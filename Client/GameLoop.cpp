@@ -9,8 +9,10 @@
 
 namespace DunCraw
 {
+	const float GameLoop::TARGET_DELTA = 1.0f / 60.0f;
+
 	GameLoop::GameLoop(Config &config)
-		: window(), renderer(), audioEngine(), config(config)
+		: config(config), eventEngine(config)
 	{
 
 	}
@@ -27,10 +29,19 @@ namespace DunCraw
 
 		Timer timer;
 		int exitCode;
+
+		float accum = 0;
 		while (!window->DoEvents(exitCode))
 		{
 			timer.Update();
+			eventEngine.ProcessQueue();
 			Update(timer);
+			accum += timer.Delta();
+			while (accum >= TARGET_DELTA)
+			{
+				FixedUpdate(timer);
+				accum -= TARGET_DELTA;
+			}
 			Draw();
 		}
 
@@ -41,15 +52,23 @@ namespace DunCraw
 
 	bool GameLoop::Initialize()
 	{
+		if (!InitSubsystems())
+			return false;
+
+		return true;
+	}
+
+	bool GameLoop::InitSubsystems()
+	{
 		HINSTANCE hInstance = GetModuleHandle(nullptr);
-		window.reset(new WinWindow(config, hInstance));
-		if (!window->Open(L"DungeonCrawler"))
+		window.reset(new WinWindow(config, eventEngine, hInstance));
+		if (!window->Open(L"Dungeon Crawler"))
 		{
 			Log::Error("Window creation failed! Cancelling Game...");
 			return false;
 		}
 
-		renderer.reset(new DXRenderer(config, reinterpret_cast<HWND>(window->Handle())));
+		renderer.reset(new DXRenderer(config, eventEngine, reinterpret_cast<HWND>(window->Handle())));
 		if (!renderer->Init())
 		{
 			Log::Error("Renderer creation failed! Cancelling Game...");
@@ -64,6 +83,11 @@ namespace DunCraw
 		}
 
 		return true;
+	}
+
+	void GameLoop::FixedUpdate(const Timer &timer)
+	{
+
 	}
 
 	void GameLoop::Update(const Timer &timer)
@@ -82,8 +106,8 @@ namespace DunCraw
 
 	void GameLoop::Destroy()
 	{
-		window->Close();
 		renderer->Destroy();
 		audioEngine->Destroy();
+		window->Close();
 	}
 }

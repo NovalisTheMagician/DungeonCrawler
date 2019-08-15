@@ -4,6 +4,8 @@
 
 #include "Config.h"
 
+#include "EventEngine.h"
+
 #include <Windows.h>
 
 #include <C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\comdecl.h>
@@ -24,7 +26,7 @@ namespace DunCraw
 	class DXAudioEngine : public IAudioEngine
 	{
 	public:
-		DXAudioEngine(Config &config);
+		DXAudioEngine(Config &config, EventEngine &eventEngine);
 		~DXAudioEngine();
 		DXAudioEngine(const DXAudioEngine &ae) = delete;
 		DXAudioEngine& operator=(const DXAudioEngine &ae) = delete;
@@ -42,6 +44,7 @@ namespace DunCraw
 		bool initiallized;
 
 		Config &config;
+		EventEngine &eventEngine;
 
 	};
 }

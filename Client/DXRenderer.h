@@ -7,6 +7,7 @@
 #include <dxgi.h>
 
 #include "Config.h"
+#include "EventEngine.h"
 #include "IRenderer.h"
 
 namespace DunCraw
@@ -14,7 +15,7 @@ namespace DunCraw
 	class DXRenderer : public IRenderer
 	{
 	public:
-		DXRenderer(Config &config, const HWND hWnd);
+		DXRenderer(Config &config, EventEngine &eventEngine, const HWND hWnd);
 		~DXRenderer();
 
 		bool Init() override;
@@ -24,7 +25,7 @@ namespace DunCraw
 		void Present() override;
 
 	private:
-		void Resize();
+		void OnResize(EventData data);
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Device> device;
@@ -38,6 +39,7 @@ namespace DunCraw
 
 		bool initialized;
 		Config &config;
+		EventEngine &eventEngine;
 
 	};
 }
