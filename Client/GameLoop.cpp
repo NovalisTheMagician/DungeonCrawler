@@ -75,7 +75,7 @@ namespace DunCraw
 			return false;
 		}
 
-		audioEngine.reset(new DXAudioEngine(config));
+		audioEngine.reset(new DXAudioEngine(config, eventEngine));
 		if (!audioEngine->Init())
 		{
 			Log::Error("AudioEngine creation failed! Cancelling Game...");

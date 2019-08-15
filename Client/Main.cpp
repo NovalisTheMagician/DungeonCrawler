@@ -6,8 +6,6 @@
 
 #include <ShlObj.h>
 #include <filesystem>
-#include <ShellScalingApi.h>
-#pragma comment(lib, "Shcore.lib")
 
 #include "Args.h"
 #include "Log.h"
@@ -23,8 +21,6 @@ using std::filesystem::path;
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
-	SetProcessDpiAwareness(PROCESS_SYSTEM_DPI_AWARE);
-
 	Log::Open(L"session.log");
 
 	Log::Info("Comandline Parameters: " + wstringToString(lpCmdLine));

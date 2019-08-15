@@ -104,8 +104,13 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="config.txt">
+    <Content Include="config.txt">
       <Filter>Misc</Filter>
-    </Text>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app.manifest">
+      <Filter>Misc</Filter>
+    </Manifest>
   </ItemGroup>
 </Project>

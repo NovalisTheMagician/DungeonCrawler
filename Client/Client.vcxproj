@@ -211,9 +211,13 @@
     <Image Include="dun_gate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="config.txt">
+    <CopyFileToFolders Include="config.txt">
       <DeploymentContent>true</DeploymentContent>
-    </Text>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
