@@ -1,21 +1,21 @@
 #pragma once
 
-#include <memory>
+#include "DunCraw.h"
 
 #include "IWindow.h"
 #include "IRenderer.h"
 #include "IAudioEngine.h"
+#include "IResourceManager.h"
+#include "UIEngine.h"
 
-#include "Config.h"
-#include "Timer.h"
-#include "EventEngine.h"
+#include "Args.h"
 
 namespace DunCraw
 {
 	class GameLoop
 	{
 	public:
-		GameLoop(Config &config);
+		GameLoop(Config &config, const Args &args);
 		~GameLoop();
 		GameLoop(const GameLoop&) = delete;
 		GameLoop& operator=(const GameLoop&) = delete;
@@ -37,11 +37,18 @@ namespace DunCraw
 		std::unique_ptr<IWindow> window;
 		std::unique_ptr<IRenderer> renderer;
 		std::unique_ptr<IAudioEngine> audioEngine;
+		std::unique_ptr<IResourceManager> resourceManager;
+		std::unique_ptr<UIEngine> uiEngine;
 
 		Config &config;
 		EventEngine eventEngine;
 
+		const Args &args;
+
 		static const float TARGET_DELTA;
+
+		static const std::string &MAIN_ARCHIVE_FILE;
+		static const std::string &ASSET_FILESYSTEM_PATH;
 
 	};
 }

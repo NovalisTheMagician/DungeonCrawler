@@ -48,6 +48,12 @@
     <ClCompile Include="EventEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ZipResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IWindow.h">
@@ -92,6 +98,21 @@
     <ClInclude Include="EventEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DunCraw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZipResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -104,13 +125,11 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.txt">
-      <Filter>Misc</Filter>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Manifest Include="app.manifest">
       <Filter>Misc</Filter>
     </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="config.txt" />
   </ItemGroup>
 </Project>

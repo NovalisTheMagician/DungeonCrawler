@@ -2,9 +2,7 @@
 
 #include "IAudioEngine.h"
 
-#include "Config.h"
-
-#include "EventEngine.h"
+#include "DunCraw.h"
 
 #include <Windows.h>
 

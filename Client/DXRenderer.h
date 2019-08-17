@@ -6,8 +6,7 @@
 #include <d3d11.h>
 #include <dxgi.h>
 
-#include "Config.h"
-#include "EventEngine.h"
+#include "DunCraw.h"
 #include "IRenderer.h"
 
 namespace DunCraw

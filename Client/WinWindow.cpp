@@ -2,8 +2,6 @@
 
 #include "resource.h"
 
-#include "Log.h"
-
 using std::wstring;
 using std::placeholders::_1;
 

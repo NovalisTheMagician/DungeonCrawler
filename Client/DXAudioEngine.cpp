@@ -1,7 +1,5 @@
 #include "DXAudioEngine.h"
 
-#include "Log.h"
-
 using Microsoft::WRL::ComPtr;
 
 namespace DunCraw

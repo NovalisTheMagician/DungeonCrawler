@@ -1,18 +1,22 @@
 #include "GameLoop.h"
 
-#include "Timer.h"
-#include "Log.h"
-
 #include "WinWindow.h"
 #include "DXRenderer.h"
 #include "DXAudioEngine.h"
+#include "ZipResourceManager.h"
+
+#include "StringSupport.h"
+
+using std::string;
+using std::wstring;
 
 namespace DunCraw
 {
 	const float GameLoop::TARGET_DELTA = 1.0f / 60.0f;
+	const string &GameLoop::MAIN_ARCHIVE_FILE = "campagne.zip";
 
-	GameLoop::GameLoop(Config &config)
-		: config(config), eventEngine(config)
+	GameLoop::GameLoop(Config &config, const Args &args)
+		: config(config), eventEngine(config), args(args)
 	{
 
 	}
@@ -68,6 +72,35 @@ namespace DunCraw
 			return false;
 		}
 
+		string filesystemPath = "";
+		if (args.IsSet(L"-debug"))
+		{
+			filesystemPath = ASSET_FILESYSTEM_PATH;
+		}
+
+		string mainArchive = MAIN_ARCHIVE_FILE;
+		if (args.IsSet(L"-main"))
+		{
+			mainArchive = wstringToString(args.GetParameter(L"-main"));
+		}
+
+		resourceManager.reset(new ZipResourceManager(config, eventEngine, filesystemPath));
+		if (!resourceManager->Init(mainArchive))
+		{
+			Log::Error("ResourceManager creation failed! Cancelling Game...");
+			return false;
+		}
+
+		bool strictPatch = args.IsSet(L"-strict");
+		for (wstring patchFile : args.GetParameters(L"-file"))
+		{
+			if (!resourceManager->AddPatchFile(wstringToString(patchFile)) && strictPatch)
+			{
+				Log::Error("Exiting due to the -strict flag...");
+				return false;
+			}
+		}
+
 		renderer.reset(new DXRenderer(config, eventEngine, reinterpret_cast<HWND>(window->Handle())));
 		if (!renderer->Init())
 		{
@@ -79,6 +112,13 @@ namespace DunCraw
 		if (!audioEngine->Init())
 		{
 			Log::Error("AudioEngine creation failed! Cancelling Game...");
+			return false;
+		}
+
+		uiEngine.reset(new UIEngine(config, eventEngine, *(renderer.get())));
+		if (!uiEngine->Init())
+		{
+			Log::Error("UIEngine creation failed! Cancelling Game...");
 			return false;
 		}
 
@@ -99,15 +139,17 @@ namespace DunCraw
 	{
 		renderer->Clear();
 
-
+		uiEngine->Draw();
 
 		renderer->Present();
 	}
 
 	void GameLoop::Destroy()
 	{
+		uiEngine->Destroy();
 		renderer->Destroy();
 		audioEngine->Destroy();
+		resourceManager->Destroy();
 		window->Close();
 	}
 }

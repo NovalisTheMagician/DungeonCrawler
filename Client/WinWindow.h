@@ -3,10 +3,7 @@
 #include "IWindow.h"
 #include <Windows.h>
 
-#include <string>
-
-#include "Config.h"
-#include "EventEngine.h"
+#include "DunCraw.h"
 
 namespace DunCraw
 {

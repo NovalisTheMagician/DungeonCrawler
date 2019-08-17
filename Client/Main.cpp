@@ -70,7 +70,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	Log::Info("Successfully loaded config");
 
-	GameLoop loop(config);
+	GameLoop loop(config, args);
 	int exitCode = loop.Start();
 
 	Log::Info("Closing game with code " + std::to_string(exitCode));
