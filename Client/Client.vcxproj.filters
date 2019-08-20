@@ -113,6 +113,9 @@
     <ClInclude Include="UIEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SystemLocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">

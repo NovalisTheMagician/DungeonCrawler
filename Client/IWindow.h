@@ -6,6 +6,8 @@ namespace DunCraw
 	class IWindow
 	{
 	public:
+		virtual ~IWindow() {}
+
 		virtual bool Open(const std::wstring &titleText) = 0;
 		virtual void Close() = 0;
 

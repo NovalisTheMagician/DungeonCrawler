@@ -202,6 +202,7 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StringSupport.h" />
+    <ClInclude Include="SystemLocator.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIEngine.h" />
     <ClInclude Include="WinWindow.h" />
