@@ -24,7 +24,7 @@ namespace DunCraw
 	class DXAudioEngine : public IAudioEngine
 	{
 	public:
-		DXAudioEngine(Config &config, EventEngine &eventEngine);
+		DXAudioEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator);
 		~DXAudioEngine();
 		DXAudioEngine(const DXAudioEngine &ae) = delete;
 		DXAudioEngine& operator=(const DXAudioEngine &ae) = delete;
@@ -43,6 +43,6 @@ namespace DunCraw
 
 		Config &config;
 		EventEngine &eventEngine;
-
+		const SystemLocator &systems;
 	};
 }

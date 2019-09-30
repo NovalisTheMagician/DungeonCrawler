@@ -14,7 +14,7 @@ namespace DunCraw
 	class DXRenderer : public IRenderer
 	{
 	public:
-		DXRenderer(Config &config, EventEngine &eventEngine, const HWND hWnd);
+		DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd);
 		~DXRenderer();
 
 		bool Init() override;
@@ -39,6 +39,8 @@ namespace DunCraw
 		bool initialized;
 		Config &config;
 		EventEngine &eventEngine;
+
+		const SystemLocator &systems;
 
 	};
 }

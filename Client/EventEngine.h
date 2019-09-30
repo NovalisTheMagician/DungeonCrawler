@@ -17,17 +17,6 @@ namespace DunCraw
 		void *Extra;
 	};
 
-	enum LoadResourceType
-	{
-		RT_TEXTURE,
-		RT_SOUND,
-		RT_MODEL,
-		RT_TEXT,
-		RT_LAYOUT,
-		RT_SCRIPT,
-		RT_CUSTOM
-	};
-
 	enum EventType
 	{
 		//window/renderer stuff
@@ -37,8 +26,11 @@ namespace DunCraw
 		//input stuff
 		EV_KEYDOWN,
 		EV_KEYUP,
-		EV_MOUSEMOVE,
+		EV_MOUSEMOVEABS,
+		EV_MOUSEMOVEREL,
 		EV_MOUSEWHEEL,
+		EV_MOUSEDOWN,
+		EV_MOUSEUP,
 		EV_CHAR,
 
 		//audio stuff
@@ -46,9 +38,6 @@ namespace DunCraw
 		EV_STOPSOUND,
 		EV_PLAYMUSIC,
 		EV_STOPMUSIC,
-
-		//resource stuff
-		EV_LOADRESOURCE,
 
 		//scripting stuff
 

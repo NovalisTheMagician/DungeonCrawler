@@ -11,3 +11,5 @@
 #include "Config.h"
 #include "Timer.h"
 #include "EventEngine.h"
+
+#include "SystemLocator.h"

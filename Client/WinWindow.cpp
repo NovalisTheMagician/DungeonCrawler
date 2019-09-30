@@ -2,6 +2,8 @@
 
 #include "resource.h"
 
+#include <windowsx.h>
+
 using std::wstring;
 using std::placeholders::_1;
 
@@ -11,14 +13,15 @@ namespace DunCraw
 
 	const wstring WinWindow::CLASS_NAME = L"DungeonCrawlerWindow";
 
-	WinWindow::WinWindow(Config &config, EventEngine &eventEngine, HINSTANCE hInstance)
-		: config(config), eventEngine(eventEngine), hInstance(hInstance)
+	WinWindow::WinWindow(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, HINSTANCE hInstance)
+		: config(config), eventEngine(eventEngine), hInstance(hInstance), systems(systemLocator)
 	{
 	}
 
 	WinWindow::~WinWindow()
 	{
 		Close();
+		UnregisterClass(CLASS_NAME.c_str(), hInstance);
 	}
 
 	bool WinWindow::Open(const std::wstring &titleText)
@@ -91,6 +94,22 @@ namespace DunCraw
 
 		eventEngine.RegisterCallback(EV_EXIT, std::bind(&WinWindow::OnExit, this, _1));
 
+		RAWINPUTDEVICE dev;
+		dev.usUsagePage = 1;
+		dev.usUsage = 2;
+		dev.dwFlags = 0;
+		dev.hwndTarget = hWnd;
+		if (!RegisterRawInputDevices(&dev, 1, sizeof dev))
+		{
+			Log::Error("Couldn't register raw mouse input. Not receiving any relative mouse movment...");
+		}
+		else
+		{
+			Log::Info("Registered RAWMOUSE input");
+		}
+
+		ShowCursor(false);
+
 		return true;
 	}
 
@@ -149,7 +168,142 @@ namespace DunCraw
 			DestroyWindow(hWnd);
 			break;
 		case WM_DESTROY:
-			PostQuitMessage(0);
+			{
+				RAWINPUTDEVICE dev;
+				dev.usUsagePage = 1;
+				dev.usUsage = 2;
+				dev.dwFlags = RIDEV_REMOVE;
+				dev.hwndTarget = hWnd;
+				RegisterRawInputDevices(&dev, 1, sizeof dev);
+				PostQuitMessage(0);
+			}
+			break;
+		case WM_KEYUP:
+			{
+				EventData data =
+				{
+					static_cast<int>(wParam),
+					0,
+					0,
+					nullptr
+				};
+				eventEngine.SendEvent(EV_KEYUP, data);
+			}
+			break;
+		case WM_KEYDOWN:
+			{
+				EventData data =
+				{
+					static_cast<int>(wParam),
+					0,
+					0,
+					nullptr
+				};
+				eventEngine.SendEvent(EV_KEYDOWN, data);
+			}
+			break;
+		case WM_CHAR:
+			{
+				EventData data =
+				{
+					static_cast<int>(wParam),
+					0,
+					0,
+					nullptr
+				};
+				eventEngine.SendEvent(EV_CHAR, data);
+			}
+			break;
+		case WM_LBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_XBUTTONDOWN:
+			{
+				EventData data =
+				{
+					static_cast<int>(wParam),
+					0,
+					0,
+					nullptr
+				};
+				eventEngine.SendEvent(EV_MOUSEDOWN, data);
+			}
+			break;
+		case WM_LBUTTONUP:
+		case WM_RBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_XBUTTONUP:
+			{
+				EventData data =
+				{
+					static_cast<int>(wParam),
+					0,
+					0,
+					nullptr
+				};
+				eventEngine.SendEvent(EV_MOUSEUP, data);
+			}
+			break;
+		case WM_MOUSEMOVE:
+			{
+				short x = GET_X_LPARAM(lParam);
+				short y = GET_Y_LPARAM(lParam);
+				EventData data =
+				{
+					static_cast<int>(x),
+					static_cast<int>(y),
+					0,
+					nullptr
+				};
+				eventEngine.SendEvent(EV_MOUSEMOVEABS, data);
+			}
+			break;
+		case WM_MOUSEWHEEL:
+			{
+				short wheelVal = GET_WHEEL_DELTA_WPARAM(wParam);
+				EventData data =
+				{
+					static_cast<int>(wheelVal / WHEEL_DELTA),
+					static_cast<int>(wheelVal),
+					static_cast<int>(WHEEL_DELTA),
+					nullptr
+				};
+				eventEngine.SendEvent(EV_MOUSEWHEEL, data);
+			}
+			break;
+		case WM_INPUT:
+			{
+				UINT dwSize;
+				GetRawInputData((HRAWINPUT)lParam, RID_INPUT, nullptr, &dwSize, sizeof(RAWINPUTHEADER));
+				BYTE *dataPtr = new BYTE[dwSize];
+				if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, dataPtr, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize)
+				{
+					Log::Warning("GetRawInputData does not return correct size !");
+				}
+
+				RAWINPUT *rawData = reinterpret_cast<RAWINPUT*>(dataPtr);
+				if (rawData->header.dwType == RIM_TYPEMOUSE)
+				{
+					LONG x = rawData->data.mouse.lLastX;
+					LONG y = rawData->data.mouse.lLastY;
+
+					EventData data =
+					{
+						static_cast<int>(x),
+						static_cast<int>(y),
+						0,
+						nullptr
+					};
+					eventEngine.SendEvent(EV_MOUSEMOVEREL, data);
+				}
+
+				delete[] dataPtr;
+			}
+			break;
+		case WM_SETFOCUS:
+			//SetCursor(nullptr);
+			break;
+		case WM_KILLFOCUS:
 			break;
 		default: 
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);

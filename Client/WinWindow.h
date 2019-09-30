@@ -10,7 +10,7 @@ namespace DunCraw
 	class WinWindow : public IWindow
 	{
 	public:
-		WinWindow(Config &config, EventEngine &eventEngine, HINSTANCE hInstance);
+		WinWindow(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, HINSTANCE hInstance);
 		~WinWindow();
 		WinWindow(const WinWindow&) = delete;
 		WinWindow& operator=(const WinWindow&) = delete;
@@ -33,6 +33,7 @@ namespace DunCraw
 
 		Config &config;
 		EventEngine &eventEngine;
+		const SystemLocator &systems;
 
 		static const std::wstring CLASS_NAME;
 	};

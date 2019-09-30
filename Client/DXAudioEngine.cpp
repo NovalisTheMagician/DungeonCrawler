@@ -4,8 +4,8 @@ using Microsoft::WRL::ComPtr;
 
 namespace DunCraw
 {
-	DXAudioEngine::DXAudioEngine(Config &config, EventEngine &eventEngine)
-		: config(config), eventEngine(eventEngine), initiallized(false)
+	DXAudioEngine::DXAudioEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator)
+		: config(config), eventEngine(eventEngine), initiallized(false), systems(systemLocator)
 	{
 
 	}

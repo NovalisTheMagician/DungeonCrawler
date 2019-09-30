@@ -2,9 +2,13 @@
 
 #include <DirectXColors.h>
 #include <DirectXMath.h>
+#include "DDSTextureLoader.h"
+
+#include <dxgi.h>
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxguid.lib")
 
 #include "Log.h"
 
@@ -14,8 +18,8 @@ using std::placeholders::_1;
 
 namespace DunCraw
 {
-	DXRenderer::DXRenderer(Config &config, EventEngine &eventEngine, const HWND hWnd)
-		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false)
+	DXRenderer::DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd)
+		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator)
 	{
 	}
 
@@ -55,6 +59,26 @@ namespace DunCraw
 		{
 			Log::Error("Failed to create D3D11 device!");
 			return false;
+		}
+
+		bool successRemoveAE = false;
+		ComPtr<IDXGIDevice1> dxgiDevice;
+		if (SUCCEEDED(device.As(&dxgiDevice)))
+		{
+			ComPtr<IDXGIAdapter> dxgiAdapter;
+			if (SUCCEEDED(dxgiDevice->GetAdapter(dxgiAdapter.GetAddressOf())))
+			{
+				ComPtr<IDXGIFactory1> dxgiFactory;
+				if (SUCCEEDED(dxgiAdapter->GetParent(__uuidof(IDXGIFactory1), &dxgiFactory)))
+				{
+					if (SUCCEEDED(dxgiFactory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER)))
+						successRemoveAE = true;
+				}
+			}
+		}
+		if (!successRemoveAE)
+		{
+			Log::Warning("Failed to remove Alt-Enter window association! Alt-Enter may result in unexpected outcome");
 		}
 
 		OnResize({ width, height, 0, nullptr });

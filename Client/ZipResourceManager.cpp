@@ -5,10 +5,9 @@ using std::placeholders::_1;
 
 namespace DunCraw
 {
-	ZipResourceManager::ZipResourceManager(Config &config, EventEngine &eventEngine, const string &filesystemPath)
-		: config(config), eventEngine(eventEngine), filesystemPath(filesystemPath), useFilesystem(!filesystemPath.empty())
+	ZipResourceManager::ZipResourceManager(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, const string &filesystemPath)
+		: config(config), eventEngine(eventEngine), filesystemPath(filesystemPath), useFilesystem(!filesystemPath.empty()), systems(systemLocator)
 	{
-
 	}
 
 	ZipResourceManager::~ZipResourceManager()
@@ -21,7 +20,7 @@ namespace DunCraw
 		try
 		{
 			libzip::archive mainZip(mainFile);
-			archives.push_back(mainZip);
+			archives.emplace_back(std::move(mainZip));
 		}
 		catch (std::runtime_error er)
 		{
@@ -36,8 +35,6 @@ namespace DunCraw
 			}
 		}
 
-		eventEngine.RegisterCallback(EV_LOADRESOURCE, std::bind(&ZipResourceManager::OnLoadFile, this, _1));
-
 		return true;
 	}
 
@@ -46,7 +43,7 @@ namespace DunCraw
 		try
 		{
 			libzip::archive patchZip(patchFile);
-			archives.push_back(patchZip);
+			archives.emplace_back(std::move(patchZip));
 		}
 		catch (std::runtime_error er)
 		{
@@ -55,51 +52,6 @@ namespace DunCraw
 		}
 
 		return true;
-	}
-
-	void ZipResourceManager::OnLoadFile(EventData eventData)
-	{
-		string file = reinterpret_cast<char*>(eventData.Extra);
-
-		LoadResourceType type = static_cast<LoadResourceType>(eventData.A);
-		switch (type)
-		{
-		RT_TEXTURE:
-			{
-
-			}
-			break;
-		RT_SOUND:
-			{
-
-			}
-			break;
-		RT_MODEL:
-			{
-
-			}
-			break;
-		RT_TEXT:
-			{
-
-			}
-			break;
-		RT_LAYOUT:
-			{
-
-			}
-			break;
-		RT_SCRIPT:
-			{
-
-			}
-			break;
-		RT_CUSTOM:
-			{
-
-			}
-			break;
-		}
 	}
 
 	void ZipResourceManager::Destroy()

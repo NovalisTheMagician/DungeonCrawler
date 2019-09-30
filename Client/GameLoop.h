@@ -7,8 +7,11 @@
 #include "IAudioEngine.h"
 #include "IResourceManager.h"
 #include "UIEngine.h"
+#include "IScriptEngine.h"
 
 #include "Args.h"
+
+#include "SystemLocator.h"
 
 namespace DunCraw
 {
@@ -39,9 +42,12 @@ namespace DunCraw
 		std::unique_ptr<IAudioEngine> audioEngine;
 		std::unique_ptr<IResourceManager> resourceManager;
 		std::unique_ptr<UIEngine> uiEngine;
+		std::unique_ptr<IScriptEngine> scriptEngine;
 
 		Config &config;
 		EventEngine eventEngine;
+
+		SystemLocator locator;
 
 		const Args &args;
 
