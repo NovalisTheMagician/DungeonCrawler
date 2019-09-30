@@ -18,7 +18,9 @@ namespace DunCraw
 		void Close(const std::wstring &forceConfigPath = L"");
 
 		const std::string& GetString(const std::string &key, const std::string &def) const;
+		const std::string& GetString(const std::string &key, const std::string &def);
 		int GetInt(const std::string &key, const int &def) const;
+		int GetInt(const std::string &key, const int &def);
 
 		template<typename T>
 		void SetValue(const std::string &key, const T &value);

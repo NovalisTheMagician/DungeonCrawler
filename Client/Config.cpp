@@ -83,6 +83,16 @@ namespace DunCraw
 		return def;
 	}
 
+	const string& Config::GetString(const string &key, const string &def)
+	{
+		if (configMap.count(key) > 0)
+		{
+			return configMap.at(key);
+		}
+		configMap[key] = def;
+		return def;
+	}
+
 	int Config::GetInt(const string &key, const int &def) const
 	{
 		if (configMap.count(key) > 0)
@@ -92,6 +102,19 @@ namespace DunCraw
 			ss >> val;
 			return val;
 		}
+		return def;
+	}
+
+	int Config::GetInt(const string &key, const int &def)
+	{
+		if (configMap.count(key) > 0)
+		{
+			stringstream ss(configMap.at(key));
+			int val;
+			ss >> val;
+			return val;
+		}
+		configMap[key] = std::to_string(def);
 		return def;
 	}
 }
