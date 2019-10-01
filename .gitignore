@@ -23,7 +23,8 @@ bld/
 [Ll]og/
 [Mm]edia/
 [Bb]uild/
-![Ll]ibs/
+![Ll]ibs/*/x64/
+![Ll]ibs/*/x86/
 
 # Visual Studio 2015 cache/options directory
 .vs/
