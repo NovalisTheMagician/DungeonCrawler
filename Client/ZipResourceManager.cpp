@@ -12,7 +12,8 @@ using std::fstream;
 namespace DunCraw
 {
 	ZipResourceManager::ZipResourceManager(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, const string &filesystemPath)
-		: config(config), eventEngine(eventEngine), filesystemPath(filesystemPath), useFilesystem(!filesystemPath.empty()), systems(systemLocator)
+		: config(config), eventEngine(eventEngine), filesystemPath(filesystemPath), useFilesystem(!filesystemPath.empty()), systems(systemLocator),
+			currentIndex(0), loaded(), cache()
 	{
 	}
 
@@ -70,18 +71,28 @@ namespace DunCraw
 	{
 		bool found = false;
 		uint8_t *data = nullptr;
+		size_t size = 0;
 
-		path p = GetDirectoryByType(type);
-		p /= file;
+		path assetPath = GetDirectoryByType(type);
+		assetPath /= file;
+
+		if (cache.count(assetPath.string()) > 0)
+		{
+			int index = cache.at(assetPath.string());
+			if (loaded.at(index) == static_cast<AssetType>(type))
+			{
+				return index;
+			}
+		}
 
 		if (useFilesystem)
 		{
-			p = filesystemPath / p;
+			path fsPath = filesystemPath / assetPath;
 
-			fstream dataFile(p, fstream::in | fstream::binary | fstream::ate);
+			fstream dataFile(fsPath, fstream::in | fstream::binary | fstream::ate);
 			if (dataFile)
 			{
-				size_t size = dataFile.tellg();
+				size = dataFile.tellg();
 				dataFile.seekg(0, fstream::beg);
 				data = new uint8_t[size];
 
@@ -96,13 +107,14 @@ namespace DunCraw
 			for (auto it = archives.rbegin(); it != archives.rend(); it++)
 			{
 				libzip::archive &archive = *it;
-				if (archive.exists(p.string()))
+				if (archive.exists(assetPath.string()))
 				{
-					libzip::stat stat = archive.stat(p.string());
-					libzip::file dataFile = archive.open(p.string());
-					data = new uint8_t[stat.size];
+					libzip::stat stat = archive.stat(assetPath.string());
+					libzip::file dataFile = archive.open(assetPath.string());
+					size = stat.size;
+					data = new uint8_t[size];
 
-					dataFile.read(data, stat.size);
+					dataFile.read(data, size);
 
 					found = true;
 					break;
@@ -113,15 +125,42 @@ namespace DunCraw
 		if (!found)
 			return -1;
 
+		bool success = false;
+		int index = currentIndex++;
+
+		switch (type)
+		{
+		case AT_TEXTURE:
+			success = systems.GetRenderer().LoadTexture(data, size, index);
+			break;
+		case AT_VERTEXSHADER:
+			success = systems.GetRenderer().LoadShader(data, size, ST_VERTEX, index);
+			break;
+		case AT_PIXELSHADER:
+			success = systems.GetRenderer().LoadShader(data, size, ST_PIXEL, index);
+			break;
+		}
+
 		delete[] data;
-		return -1;
+
+		if (!success)
+		{
+			Log::Error("Failed to load asset \"" + file + "\" from \"" + assetPath.string());
+			return -1;
+		}
+
+		loaded[index] = static_cast<AssetType>(type);
+		cache[assetPath.string()] = index;
+		return index;
 	}
 
 	string ZipResourceManager::GetDirectoryByType(int type) const
 	{
 		switch (type)
 		{
-		case AT_TEXTURE: return "Texture";
+		case AT_TEXTURE: return "Textures";
+		case AT_VERTEXSHADER:
+		case AT_PIXELSHADER: return "Shader";
 		default: return "";
 		}
 	}

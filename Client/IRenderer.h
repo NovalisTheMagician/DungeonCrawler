@@ -1,7 +1,18 @@
 #pragma once
 
+#include <stdint.h>
+
 namespace DunCraw
 {
+	enum ShaderType
+	{
+		ST_VERTEX,
+		ST_PIXEL,
+		ST_GEOMETRY,
+		ST_HULL,
+		ST_DOMAIN
+	};
+
 	class IRenderer
 	{
 	public:
@@ -12,5 +23,9 @@ namespace DunCraw
 
 		virtual void Clear() = 0;
 		virtual void Present() = 0;
+
+		virtual bool LoadTexture(const uint8_t *data, size_t size, int index) = 0;
+		virtual bool LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, int index) = 0;
+		virtual bool LoadModel(const uint8_t *data, size_t size, int index) = 0;
 	};
 }

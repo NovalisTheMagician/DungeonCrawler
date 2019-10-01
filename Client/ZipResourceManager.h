@@ -16,7 +16,9 @@ namespace DunCraw
 {
 	enum AssetType
 	{
-		AT_TEXTURE
+		AT_TEXTURE,
+		AT_VERTEXSHADER,
+		AT_PIXELSHADER
 	};
 
 	class ZipResourceManager : public IResourceManager
@@ -40,6 +42,10 @@ namespace DunCraw
 	private:
 		std::string filesystemPath;
 		bool useFilesystem;
+
+		int currentIndex;
+		std::map<int, AssetType> loaded;
+		std::map<const std::string, int> cache;
 
 		std::vector<libzip::archive> archives;
 		std::map<std::string, std::unique_ptr<uint8_t>> fileCache;

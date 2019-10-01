@@ -19,7 +19,8 @@ using std::placeholders::_1;
 namespace DunCraw
 {
 	DXRenderer::DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd)
-		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator), windowVisible(true)
+		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator), 
+			windowVisible(true), textures()
 	{
 	}
 
@@ -95,6 +96,15 @@ namespace DunCraw
 		if (!initialized)
 			return;
 
+		for (auto it = textures.begin(); it != textures.end(); it++)
+			(*it).second.Reset();
+
+		for (auto it = vertexShaders.begin(); it != vertexShaders.end(); it++)
+			(*it).second.Reset();
+
+		for (auto it = pixelShaders.begin(); it != pixelShaders.end(); it++)
+			(*it).second.Reset();
+
 		renderTargetView.Reset();
 		depthStencilView.Reset();
 		swapchain.Reset();
@@ -123,6 +133,54 @@ namespace DunCraw
 	{
 		if (!windowVisible) return;
 		swapchain->Present(1, 0);
+	}
+
+	bool DXRenderer::LoadTexture(const uint8_t *data, size_t size, int index)
+	{
+		ComPtr<ID3D11ShaderResourceView> texture;
+		HRESULT hr = DirectX::CreateDDSTextureFromMemory(device.Get(), data, size, nullptr, &texture);
+		if (SUCCEEDED(hr))
+		{
+			textures.emplace(index, std::move(texture));
+			return true;
+		}
+		return false;
+	}
+
+	bool DXRenderer::LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, int index)
+	{
+		ID3D11Device *d = device.Get();
+
+		switch (shaderType)
+		{
+		case ST_VERTEX:
+			{
+				ComPtr<ID3D11VertexShader> shader;
+				if (SUCCEEDED(d->CreateVertexShader(data, size, nullptr, &shader)))
+				{
+					vertexShaders.emplace(index, std::move(shader));
+					return true;
+				}
+			}
+			break;
+		case ST_PIXEL:
+			{
+				ComPtr<ID3D11PixelShader> shader;
+				if (SUCCEEDED(d->CreatePixelShader(data, size, nullptr, &shader)))
+				{
+					pixelShaders.emplace(index, std::move(shader));
+					return true;
+				}
+			}
+			break;
+		}
+
+		return false;
+	}
+
+	bool DXRenderer::LoadModel(const uint8_t *data, size_t size, int index)
+	{
+		return false;
 	}
 
 	void DXRenderer::OnResize(EventData data)

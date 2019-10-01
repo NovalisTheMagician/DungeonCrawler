@@ -23,6 +23,10 @@ namespace DunCraw
 		void Clear() override;
 		void Present() override;
 
+		bool LoadTexture(const uint8_t *data, size_t size, int index) override;
+		bool LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, int index) override;
+		bool LoadModel(const uint8_t *data, size_t size, int index) override;
+
 	private:
 		void OnResize(EventData data);
 		void OnWindowChange(EventData data);
@@ -34,6 +38,10 @@ namespace DunCraw
 		Microsoft::WRL::ComPtr<IDXGISwapChain> swapchain;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+
+		std::map<int, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> textures;
+		std::map<int, Microsoft::WRL::ComPtr<ID3D11VertexShader>> vertexShaders;
+		std::map<int, Microsoft::WRL::ComPtr<ID3D11PixelShader>> pixelShaders;
 
 		bool windowVisible;
 
