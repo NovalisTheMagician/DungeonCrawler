@@ -93,7 +93,7 @@ namespace DunCraw
 
 		if (!found)
 		{
-			for (auto it = archives.rbegin(); it != archives.rend; it++)
+			for (auto it = archives.rbegin(); it != archives.rend(); it++)
 			{
 				libzip::archive &archive = *it;
 				if (archive.exists(p.string()))
