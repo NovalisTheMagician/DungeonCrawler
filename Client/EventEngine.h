@@ -21,6 +21,8 @@ namespace DunCraw
 	{
 		//window/renderer stuff
 		EV_RESIZE,
+		EV_WINDOWCHANGE,
+		EV_SHOWCURSOR,
 		EV_EXIT,
 
 		//input stuff

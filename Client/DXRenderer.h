@@ -25,6 +25,7 @@ namespace DunCraw
 
 	private:
 		void OnResize(EventData data);
+		void OnWindowChange(EventData data);
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Device> device;
@@ -33,6 +34,8 @@ namespace DunCraw
 		Microsoft::WRL::ComPtr<IDXGISwapChain> swapchain;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+
+		bool windowVisible;
 
 		const HWND hWnd;
 

@@ -22,14 +22,20 @@ namespace DunCraw
 
 		bool DoEvents(int &exitCode) override;
 
-		LRESULT EventHandler(UINT uMsg, WPARAM wParam, LPARAM lParam);		
+		LRESULT EventHandler(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		void OnExit(EventData data);
+		void OnShowCursor(EventData data);
+
+		void ConfineCursor();
+		void ReleaseCursor();
 
 	private:
 		HWND hWnd;
 		HINSTANCE hInstance;
+
+		bool showCursor;
 
 		Config &config;
 		EventEngine &eventEngine;

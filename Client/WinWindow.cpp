@@ -14,7 +14,7 @@ namespace DunCraw
 	const wstring WinWindow::CLASS_NAME = L"DungeonCrawlerWindow";
 
 	WinWindow::WinWindow(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, HINSTANCE hInstance)
-		: config(config), eventEngine(eventEngine), hInstance(hInstance), systems(systemLocator)
+		: config(config), eventEngine(eventEngine), hInstance(hInstance), systems(systemLocator), showCursor(true)
 	{
 	}
 
@@ -86,13 +86,12 @@ namespace DunCraw
 			return false;
 		}
 
-		ShowWindow(hWnd, SW_SHOW);
-
 		Log::Info("Window created with dimensions " + std::to_string(width) + "x" + std::to_string(height));
 
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
 		eventEngine.RegisterCallback(EV_EXIT, std::bind(&WinWindow::OnExit, this, _1));
+		eventEngine.RegisterCallback(EV_SHOWCURSOR, std::bind(&WinWindow::OnShowCursor, this, _1));
 
 		RAWINPUTDEVICE dev;
 		dev.usUsagePage = 1;
@@ -108,7 +107,7 @@ namespace DunCraw
 			Log::Info("Registered RAWMOUSE input");
 		}
 
-		ShowCursor(false);
+		ShowWindow(hWnd, SW_SHOW);
 
 		return true;
 	}
@@ -148,12 +147,43 @@ namespace DunCraw
 		Close();
 	}
 
+	void WinWindow::OnShowCursor(EventData data)
+	{
+		showCursor = data.A;
+		ShowCursor(showCursor);
+		if (!showCursor)
+		{
+			ConfineCursor();
+		}
+		else
+		{
+			ReleaseCursor();
+		}
+	}
+
+	void WinWindow::ConfineCursor()
+	{
+		RECT rect;
+		GetWindowRect(hWnd, &rect);
+		ClipCursor(&rect);
+		SetCapture(hWnd);
+	}
+
+	void WinWindow::ReleaseCursor()
+	{
+		ClipCursor(nullptr);
+		ReleaseCapture();
+	}
+
 	LRESULT WinWindow::EventHandler(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
 		case WM_SIZE:
 			{
+				if (!showCursor)
+					ConfineCursor();
+
 				EventData data =
 				{
 					LOWORD(lParam),
@@ -284,27 +314,81 @@ namespace DunCraw
 				RAWINPUT *rawData = reinterpret_cast<RAWINPUT*>(dataPtr);
 				if (rawData->header.dwType == RIM_TYPEMOUSE)
 				{
-					LONG x = rawData->data.mouse.lLastX;
-					LONG y = rawData->data.mouse.lLastY;
-
-					EventData data =
+					if (rawData->data.mouse.usFlags == MOUSE_MOVE_RELATIVE)
 					{
-						static_cast<int>(x),
-						static_cast<int>(y),
-						0,
-						nullptr
-					};
-					eventEngine.SendEvent(EV_MOUSEMOVEREL, data);
+						LONG x = rawData->data.mouse.lLastX;
+						LONG y = rawData->data.mouse.lLastY;
+
+						EventData data =
+						{
+							static_cast<int>(x),
+							static_cast<int>(y),
+							0,
+							nullptr
+						};
+						eventEngine.SendEvent(EV_MOUSEMOVEREL, data);
+					}
 				}
 
 				delete[] dataPtr;
 			}
 			break;
+		case WM_MOVE:
+			{
+				if (!showCursor)
+					ConfineCursor();
+			}
+			break;
 		case WM_SETFOCUS:
-			//SetCursor(nullptr);
+			{
+				
+			}
 			break;
 		case WM_KILLFOCUS:
+			{
+				
+			}
 			break;
+		case WM_ACTIVATE:
+			{
+				if (LOWORD(wParam) == WA_ACTIVE)
+				{
+					if (!showCursor)
+						ConfineCursor();
+				}
+				else
+				{
+					if (!showCursor)
+						ReleaseCursor();
+				}
+			}
+			break;
+		case WM_SYSCOMMAND:
+			{
+				if (wParam == SC_MINIMIZE)
+				{
+					EventData data =
+					{
+						0,
+						0,
+						0,
+						nullptr
+					};
+					eventEngine.SendEvent(EV_WINDOWCHANGE, data, true);
+				}
+				else if (wParam == SC_RESTORE)
+				{
+					EventData data =
+					{
+						1,
+						0,
+						0,
+						nullptr
+					};
+					eventEngine.SendEvent(EV_WINDOWCHANGE, data, true);
+				}
+			}
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		default: 
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		}

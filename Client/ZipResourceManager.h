@@ -3,10 +3,22 @@
 #include "DunCraw.h"
 
 #include "IResourceManager.h"
+
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4996)
+#pragma warning(disable : 4267)
+#pragma warning(disable : 4267)
 #include <zip.hpp>
+#pragma warning(pop)
 
 namespace DunCraw
 {
+	enum AssetType
+	{
+		AT_TEXTURE
+	};
+
 	class ZipResourceManager : public IResourceManager
 	{
 	public:
@@ -20,8 +32,10 @@ namespace DunCraw
 		bool AddPatchFile(const std::string &patchFile) override;
 		void Destroy() override;
 
+		int LoadAsset(int type, const std::string &file) override;
+
 	private:
-		
+		std::string GetDirectoryByType(int type) const;
 
 	private:
 		std::string filesystemPath;

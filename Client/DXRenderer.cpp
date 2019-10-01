@@ -19,7 +19,7 @@ using std::placeholders::_1;
 namespace DunCraw
 {
 	DXRenderer::DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd)
-		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator)
+		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator), windowVisible(true)
 	{
 	}
 
@@ -84,6 +84,7 @@ namespace DunCraw
 		OnResize({ width, height, 0, nullptr });
 
 		eventEngine.RegisterCallback(EV_RESIZE, std::bind(&DXRenderer::OnResize, this, _1));
+		eventEngine.RegisterCallback(EV_WINDOWCHANGE, std::bind(&DXRenderer::OnWindowChange, this, _1));
 
 		initialized = true;
 		return true;
@@ -113,17 +114,21 @@ namespace DunCraw
 
 	void DXRenderer::Clear()
 	{
+		if (!windowVisible) return;
 		context->ClearRenderTargetView(renderTargetView.Get(), DirectX::Colors::CornflowerBlue);
 		context->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 
 	void DXRenderer::Present()
 	{
+		if (!windowVisible) return;
 		swapchain->Present(1, 0);
 	}
 
 	void DXRenderer::OnResize(EventData data)
 	{
+		if (!windowVisible) return;
+
 		int width = data.A;
 		int height = data.B;
 
@@ -160,5 +165,10 @@ namespace DunCraw
 
 		context->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), depthStencilView.Get());
 		context->RSSetViewports(1, &viewport);
+	}
+
+	void DXRenderer::OnWindowChange(EventData data)
+	{
+		windowVisible = data.A;
 	}
 }

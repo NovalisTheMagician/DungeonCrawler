@@ -12,5 +12,6 @@ namespace DunCraw
 		bool Init(const std::string &mainFile) override { return true; };
 		bool AddPatchFile(const std::string &patchFile) override { return true; };
 		void Destroy() override { };
+		int LoadAsset(int type, const std::string &file) override { return -1; };
 	};
 }

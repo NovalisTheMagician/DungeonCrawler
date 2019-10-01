@@ -114,6 +114,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>libz-static.lib;libzip-static.lib;lua5.3.0-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\libzip\x86\;$(SolutionDir)Libs\lua\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkStatus>false</LinkStatus>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(AssetPath)Shader\%(Filename).cso</ObjectFileOutput>
@@ -134,6 +135,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>libz-static.lib;libzip-static.lib;lua5.3.0-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\libzip\x64\;$(SolutionDir)Libs\lua\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkStatus>false</LinkStatus>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(AssetPath)Shader\%(Filename).cso</ObjectFileOutput>
@@ -158,6 +160,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>libz-static.lib;libzip-static.lib;lua5.3.0-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\libzip\x86\;$(SolutionDir)Libs\lua\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkStatus>false</LinkStatus>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(AssetPath)Shader\%(Filename).cso</ObjectFileOutput>
@@ -182,6 +185,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>libz-static.lib;libzip-static.lib;lua5.3.0-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\libzip\x64\;$(SolutionDir)Libs\lua\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkStatus>false</LinkStatus>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(AssetPath)Shader\%(Filename).cso</ObjectFileOutput>
