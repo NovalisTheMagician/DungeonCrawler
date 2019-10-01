@@ -32,12 +32,16 @@ namespace DunCraw
 		bool Init() override;
 		void Destroy() override;
 
+		bool LoadSound(const uint8_t *data, size_t size, const Index &index) override;
+
 	private:
 		Microsoft::WRL::ComPtr<IXAudio2> xaudio;
 		IXAudio2MasteringVoice *masteringVoice;
 		IXAudio2SubmixVoice *soundVoice;
 		IXAudio2SubmixVoice *musicVoice;
 		IXAudio2SubmixVoice *speechVoice;
+
+		std::map<Index, IXAudio2SourceVoice*> soundVoices;
 
 		bool initiallized;
 

@@ -13,7 +13,7 @@ namespace DunCraw
 {
 	ZipResourceManager::ZipResourceManager(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, const string &filesystemPath)
 		: config(config), eventEngine(eventEngine), filesystemPath(filesystemPath), useFilesystem(!filesystemPath.empty()), systems(systemLocator),
-			currentIndex(0), loaded(), cache()
+			currentIndex(0), loaded(), indexCache(), fileSizeCache()
 	{
 	}
 
@@ -65,9 +65,12 @@ namespace DunCraw
 	{
 		archives.clear();
 		fileCache.clear();
+		loaded.clear();
+		indexCache.clear();
+		fileSizeCache.clear();
 	}
 
-	int ZipResourceManager::LoadAsset(int type, const std::string &file)
+	Index ZipResourceManager::LoadAsset(int type, const std::string &file)
 	{
 		bool found = false;
 		uint8_t *data = nullptr;
@@ -76,9 +79,9 @@ namespace DunCraw
 		path assetPath = GetDirectoryByType(type);
 		assetPath /= file;
 
-		if (cache.count(assetPath.string()) > 0)
+		if (indexCache.count(assetPath.string()) > 0)
 		{
-			int index = cache.at(assetPath.string());
+			int index = indexCache.at(assetPath.string());
 			if (loaded.at(index) == static_cast<AssetType>(type))
 			{
 				return index;
@@ -141,17 +144,39 @@ namespace DunCraw
 			break;
 		}
 
-		delete[] data;
+		//delete[] data;
 
 		if (!success)
 		{
-			Log::Error("Failed to load asset \"" + file + "\" from \"" + assetPath.string());
+			Log::Error("Failed to load asset \"" + assetPath.string() + "\"");
 			return -1;
 		}
 
 		loaded[index] = static_cast<AssetType>(type);
-		cache[assetPath.string()] = index;
+		indexCache[assetPath.string()] = index;
+		fileCache.emplace(index, std::move(data));
+		fileSizeCache[index] = size;
 		return index;
+	}
+
+	uint8_t *ZipResourceManager::GetAssetData(const Index &index, size_t *size)
+	{
+		if (fileCache.count(index) > 0)
+		{
+			*size = fileSizeCache[index];
+			return fileCache[index].get();
+		}
+		return nullptr;
+	}
+
+	void ZipResourceManager::UnloadAsset(const Index &index)
+	{
+		if (fileCache.count(index) > 0)
+		{
+			fileCache.erase(index);
+			fileSizeCache.erase(index);
+			loaded[index] = AT_NONE;
+		}
 	}
 
 	string ZipResourceManager::GetDirectoryByType(int type) const
@@ -161,6 +186,7 @@ namespace DunCraw
 		case AT_TEXTURE: return "Textures";
 		case AT_VERTEXSHADER:
 		case AT_PIXELSHADER: return "Shader";
+		case AT_SOUND: return "Sounds";
 		default: return "";
 		}
 	}

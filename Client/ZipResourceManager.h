@@ -16,9 +16,11 @@ namespace DunCraw
 {
 	enum AssetType
 	{
+		AT_NONE,
 		AT_TEXTURE,
 		AT_VERTEXSHADER,
-		AT_PIXELSHADER
+		AT_PIXELSHADER,
+		AT_SOUND
 	};
 
 	class ZipResourceManager : public IResourceManager
@@ -34,7 +36,9 @@ namespace DunCraw
 		bool AddPatchFile(const std::string &patchFile) override;
 		void Destroy() override;
 
-		int LoadAsset(int type, const std::string &file) override;
+		Index LoadAsset(int type, const std::string &file) override;
+		uint8_t *GetAssetData(const Index &index, size_t *size) override;
+		void UnloadAsset(const Index &index);
 
 	private:
 		std::string GetDirectoryByType(int type) const;
@@ -43,12 +47,13 @@ namespace DunCraw
 		std::string filesystemPath;
 		bool useFilesystem;
 
-		int currentIndex;
-		std::map<int, AssetType> loaded;
-		std::map<const std::string, int> cache;
+		Index currentIndex;
+		std::map<Index, AssetType> loaded;
+		std::map<const std::string, Index> indexCache;
 
 		std::vector<libzip::archive> archives;
-		std::map<std::string, std::unique_ptr<uint8_t>> fileCache;
+		std::map<Index, std::unique_ptr<uint8_t>> fileCache;
+		std::map<Index, size_t> fileSizeCache;
 
 		Config &config;
 		EventEngine &eventEngine;

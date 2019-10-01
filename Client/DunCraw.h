@@ -7,6 +7,8 @@
 #include <queue>
 #include <memory>
 
+typedef int Index;
+
 #include "Log.h"
 #include "Config.h"
 #include "Timer.h"

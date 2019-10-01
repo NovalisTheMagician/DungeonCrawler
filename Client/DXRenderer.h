@@ -23,9 +23,9 @@ namespace DunCraw
 		void Clear() override;
 		void Present() override;
 
-		bool LoadTexture(const uint8_t *data, size_t size, int index) override;
-		bool LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, int index) override;
-		bool LoadModel(const uint8_t *data, size_t size, int index) override;
+		bool LoadTexture(const uint8_t *data, size_t size, const Index &index) override;
+		bool LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, const Index &index) override;
+		bool LoadModel(const uint8_t *data, size_t size, const Index &index) override;
 
 	private:
 		void OnResize(EventData data);

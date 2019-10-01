@@ -5,9 +5,9 @@ using Microsoft::WRL::ComPtr;
 namespace DunCraw
 {
 	DXAudioEngine::DXAudioEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator)
-		: config(config), eventEngine(eventEngine), initiallized(false), systems(systemLocator)
+		: config(config), eventEngine(eventEngine), initiallized(false), systems(systemLocator),
+			soundVoices()
 	{
-
 	}
 
 	DXAudioEngine::~DXAudioEngine()
@@ -64,5 +64,11 @@ namespace DunCraw
 			return;
 
 		xaudio.Reset();
+	}
+
+	bool LoadSound(const uint8_t *data, size_t size, const Index &index)
+	{
+
+		return false;
 	}
 }

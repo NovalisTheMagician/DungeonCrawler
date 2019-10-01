@@ -96,14 +96,23 @@ namespace DunCraw
 		if (!initialized)
 			return;
 
+		/*
 		for (auto it = textures.begin(); it != textures.end(); it++)
 			(*it).second.Reset();
+		*/
+		textures.clear();
 
+		/*
 		for (auto it = vertexShaders.begin(); it != vertexShaders.end(); it++)
 			(*it).second.Reset();
+		*/
+		vertexShaders.clear();
 
+		/*
 		for (auto it = pixelShaders.begin(); it != pixelShaders.end(); it++)
 			(*it).second.Reset();
+		*/
+		pixelShaders.clear();
 
 		renderTargetView.Reset();
 		depthStencilView.Reset();
@@ -135,7 +144,7 @@ namespace DunCraw
 		swapchain->Present(1, 0);
 	}
 
-	bool DXRenderer::LoadTexture(const uint8_t *data, size_t size, int index)
+	bool DXRenderer::LoadTexture(const uint8_t *data, size_t size, const Index &index)
 	{
 		ComPtr<ID3D11ShaderResourceView> texture;
 		HRESULT hr = DirectX::CreateDDSTextureFromMemory(device.Get(), data, size, nullptr, &texture);
@@ -147,7 +156,7 @@ namespace DunCraw
 		return false;
 	}
 
-	bool DXRenderer::LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, int index)
+	bool DXRenderer::LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, const Index &index)
 	{
 		ID3D11Device *d = device.Get();
 
@@ -178,7 +187,7 @@ namespace DunCraw
 		return false;
 	}
 
-	bool DXRenderer::LoadModel(const uint8_t *data, size_t size, int index)
+	bool DXRenderer::LoadModel(const uint8_t *data, size_t size, const Index &index)
 	{
 		return false;
 	}
