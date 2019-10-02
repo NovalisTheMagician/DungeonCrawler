@@ -6,3 +6,4 @@ s_mastervol=100
 s_musicvol=100
 s_soundvol=100
 s_speechvol=100
+s_channels=16

@@ -158,14 +158,12 @@ namespace DunCraw
 
 	bool DXRenderer::LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, const Index &index)
 	{
-		ID3D11Device *d = device.Get();
-
 		switch (shaderType)
 		{
 		case ST_VERTEX:
 			{
 				ComPtr<ID3D11VertexShader> shader;
-				if (SUCCEEDED(d->CreateVertexShader(data, size, nullptr, &shader)))
+				if (SUCCEEDED(device->CreateVertexShader(data, size, nullptr, &shader)))
 				{
 					vertexShaders.emplace(index, std::move(shader));
 					return true;
@@ -175,7 +173,7 @@ namespace DunCraw
 		case ST_PIXEL:
 			{
 				ComPtr<ID3D11PixelShader> shader;
-				if (SUCCEEDED(d->CreatePixelShader(data, size, nullptr, &shader)))
+				if (SUCCEEDED(device->CreatePixelShader(data, size, nullptr, &shader)))
 				{
 					pixelShaders.emplace(index, std::move(shader));
 					return true;

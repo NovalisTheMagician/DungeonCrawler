@@ -70,7 +70,7 @@ namespace DunCraw
 		fileSizeCache.clear();
 	}
 
-	Index ZipResourceManager::LoadAsset(int type, const std::string &file)
+	Index ZipResourceManager::LoadAsset(AssetType type, const std::string &file)
 	{
 		bool found = false;
 		uint8_t *data = nullptr;
@@ -82,7 +82,7 @@ namespace DunCraw
 		if (indexCache.count(assetPath.string()) > 0)
 		{
 			int index = indexCache.at(assetPath.string());
-			if (loaded.at(index) == static_cast<AssetType>(type))
+			if (loaded.at(index) == type)
 			{
 				return index;
 			}
@@ -142,6 +142,9 @@ namespace DunCraw
 		case AT_PIXELSHADER:
 			success = systems.GetRenderer().LoadShader(data, size, ST_PIXEL, index);
 			break;
+		case AT_SOUND:
+			success = systems.GetAudioEngine().LoadSound(data, size, index);
+			break;
 		}
 
 		//delete[] data;
@@ -152,7 +155,7 @@ namespace DunCraw
 			return -1;
 		}
 
-		loaded[index] = static_cast<AssetType>(type);
+		loaded[index] = type;
 		indexCache[assetPath.string()] = index;
 		fileCache.emplace(index, std::move(data));
 		fileSizeCache[index] = size;
@@ -179,7 +182,7 @@ namespace DunCraw
 		}
 	}
 
-	string ZipResourceManager::GetDirectoryByType(int type) const
+	string ZipResourceManager::GetDirectoryByType(AssetType type) const
 	{
 		switch (type)
 		{

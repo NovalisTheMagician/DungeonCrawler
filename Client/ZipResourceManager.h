@@ -14,15 +14,6 @@
 
 namespace DunCraw
 {
-	enum AssetType
-	{
-		AT_NONE,
-		AT_TEXTURE,
-		AT_VERTEXSHADER,
-		AT_PIXELSHADER,
-		AT_SOUND
-	};
-
 	class ZipResourceManager : public IResourceManager
 	{
 	public:
@@ -36,12 +27,12 @@ namespace DunCraw
 		bool AddPatchFile(const std::string &patchFile) override;
 		void Destroy() override;
 
-		Index LoadAsset(int type, const std::string &file) override;
+		Index LoadAsset(AssetType type, const std::string &file) override;
 		uint8_t *GetAssetData(const Index &index, size_t *size) override;
 		void UnloadAsset(const Index &index);
 
 	private:
-		std::string GetDirectoryByType(int type) const;
+		std::string GetDirectoryByType(AssetType type) const;
 
 	private:
 		std::string filesystemPath;

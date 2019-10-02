@@ -16,6 +16,8 @@ namespace DunCraw
 		Destroy();
 	}
 
+	Index meow;
+
 	bool UIEngine::Init()
 	{
 		eventEngine.RegisterCallback(EV_CHAR, std::bind(&UIEngine::OnChar, this, _1));
@@ -23,6 +25,8 @@ namespace DunCraw
 		eventEngine.RegisterCallback(EV_MOUSEDOWN, std::bind(&UIEngine::OnMouseDown, this, _1));
 		eventEngine.RegisterCallback(EV_MOUSEUP, std::bind(&UIEngine::OnMouseUp, this, _1));
 		eventEngine.RegisterCallback(EV_MOUSEWHEEL, std::bind(&UIEngine::OnMouseWheel, this, _1));
+
+		meow = systems.GetResourceManager().LoadAsset(AT_SOUND, "meow.wav");
 
 		return true;
 	}
@@ -41,6 +45,8 @@ namespace DunCraw
 	{
 		char str[2] = { static_cast<char>(data.A), '\0' };
 		OutputDebugStringA(str);
+
+		eventEngine.SendEvent(EV_PLAYSOUND, { meow, 0, 0, nullptr });
 	}
 
 	void UIEngine::OnMouseMove(EventData data)
