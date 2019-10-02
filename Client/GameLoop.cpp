@@ -14,7 +14,7 @@ using std::wstring;
 namespace DunCraw
 {
 	const float GameLoop::TARGET_DELTA = 1.0f / 60.0f;
-	const string &GameLoop::MAIN_ARCHIVE_FILE = "campaign.zip";
+	const string &GameLoop::MAIN_ARCHIVE_FILE = "campagne.zip";
 	const string &GameLoop::ASSET_FILESYSTEM_PATH = "assets";
 
 	GameLoop::GameLoop(Config &config, const Args &args)

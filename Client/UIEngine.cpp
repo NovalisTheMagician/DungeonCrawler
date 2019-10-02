@@ -27,6 +27,7 @@ namespace DunCraw
 		eventEngine.RegisterCallback(EV_MOUSEWHEEL, std::bind(&UIEngine::OnMouseWheel, this, _1));
 
 		meow = systems.GetResourceManager().LoadAsset(AT_SOUND, "meow.wav");
+		systems.GetResourceManager().UnloadAsset(meow);
 
 		return true;
 	}

@@ -110,10 +110,11 @@ namespace DunCraw
 			for (auto it = archives.rbegin(); it != archives.rend(); it++)
 			{
 				libzip::archive &archive = *it;
-				if (archive.exists(assetPath.string()))
+				string path = assetPath.generic_string();
+				if (archive.exists(path))
 				{
-					libzip::stat stat = archive.stat(assetPath.string());
-					libzip::file dataFile = archive.open(assetPath.string());
+					libzip::stat stat = archive.stat(path);
+					libzip::file dataFile = archive.open(path);
 					size = stat.size;
 					data = new uint8_t[size];
 
@@ -126,7 +127,10 @@ namespace DunCraw
 		}
 
 		if (!found)
+		{
+			Log::Error("Failed to find asset \"" + assetPath.generic_string() + "\"");
 			return -1;
+		}
 
 		bool success = false;
 		int index = currentIndex++;
@@ -151,12 +155,12 @@ namespace DunCraw
 
 		if (!success)
 		{
-			Log::Error("Failed to load asset \"" + assetPath.string() + "\"");
+			Log::Error("Failed to load asset \"" + assetPath.generic_string() + "\"");
 			return -1;
 		}
 
 		loaded[index] = type;
-		indexCache[assetPath.string()] = index;
+		indexCache[assetPath.generic_string()] = index;
 		fileCache.emplace(index, std::move(data));
 		fileSizeCache[index] = size;
 		return index;
