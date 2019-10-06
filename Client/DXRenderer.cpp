@@ -31,8 +31,8 @@ namespace DunCraw
 
 	bool DXRenderer::Init()
 	{
-		int width = config.GetInt("r_width", 800);
-		int height = config.GetInt("r_height", 600);
+		width = config.GetInt("r_width", 800);
+		height = config.GetInt("r_height", 600);
 
 		DXGI_SWAP_CHAIN_DESC swapchainDesc = { 0 };
 		swapchainDesc.BufferDesc.Width = width;
@@ -79,7 +79,7 @@ namespace DunCraw
 		}
 		if (!successRemoveAE)
 		{
-			Log::Warning("Failed to remove Alt-Enter window association! Alt-Enter may result in unexpected outcome");
+			Log::Warning("Failed to remove Alt-Enter window association! Alt-Enter may result in unexpected behaviour");
 		}
 
 		OnResize({ width, height, 0, nullptr });
@@ -96,23 +96,13 @@ namespace DunCraw
 		if (!initialized)
 			return;
 
-		/*
-		for (auto it = textures.begin(); it != textures.end(); it++)
-			(*it).second.Reset();
-		*/
 		textures.clear();
 
-		/*
-		for (auto it = vertexShaders.begin(); it != vertexShaders.end(); it++)
-			(*it).second.Reset();
-		*/
-		vertexShaders.clear();
+		uiVertexShader.Reset();
+		uiElementShader.Reset();
+		uiTextShader.Reset();
 
-		/*
-		for (auto it = pixelShaders.begin(); it != pixelShaders.end(); it++)
-			(*it).second.Reset();
-		*/
-		pixelShaders.clear();
+		uiLayout.Reset();
 
 		renderTargetView.Reset();
 		depthStencilView.Reset();
@@ -134,20 +124,75 @@ namespace DunCraw
 	void DXRenderer::Clear()
 	{
 		if (!windowVisible) return;
-		context->ClearRenderTargetView(renderTargetView.Get(), DirectX::Colors::CornflowerBlue);
+		const float *clearColor = DirectX::Colors::CornflowerBlue;
+#ifdef _DEBUG
+		clearColor = DirectX::Colors::Magenta;
+#endif
+
+		context->ClearRenderTargetView(renderTargetView.Get(), clearColor);
 		context->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 
 	void DXRenderer::Present()
 	{
 		if (!windowVisible) return;
-		swapchain->Present(1, 0);
+		HRESULT hr = swapchain->Present(1, 0);
+		if (hr == DXGI_ERROR_DEVICE_REMOVED)
+		{
+			Log::Error("Uh oh! Graphics device removed! (Either through driver upgrade or physically removed)");
+		}
 	}
 
-	bool DXRenderer::LoadTexture(const uint8_t *data, size_t size, const Index &index)
+	bool DXRenderer::LoadShaders(IResourceManager &resMan)
+	{
+		Index id = resMan.LoadAsset(AT_SHADER, "UI_VS.cso");
+		if (id == InvalidIndex) return false;
+		size_t size;
+		std::byte *data = resMan.GetAssetData(id, &size);
+		if (FAILED(device->CreateVertexShader(data, size, nullptr, &uiVertexShader)))
+		{
+			return false;
+		}
+
+		D3D11_INPUT_ELEMENT_DESC uiInputLayoutDesc[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		};
+
+		if (FAILED(device->CreateInputLayout(uiInputLayoutDesc, 2, data, size, &uiLayout)))
+		{
+			return false;
+		}
+
+		resMan.UnloadAsset(id);
+		id = resMan.LoadAsset(AT_SHADER, "UIElement_PS.cso");
+		if (id == InvalidIndex) return false;
+		data = resMan.GetAssetData(id, &size);
+
+		if (FAILED(device->CreatePixelShader(data, size, nullptr, &uiElementShader)))
+		{
+			return false;
+		}
+
+		resMan.UnloadAsset(id);
+		id = resMan.LoadAsset(AT_SHADER, "UIText_PS.cso");
+		if (id == InvalidIndex) return false;
+		data = resMan.GetAssetData(id, &size);
+
+		if (FAILED(device->CreatePixelShader(data, size, nullptr, &uiTextShader)))
+		{
+			return false;
+		}
+		resMan.UnloadAsset(id);
+
+		return true;
+	}
+
+	bool DXRenderer::LoadTexture(const std::byte *data, size_t size, const Index &index)
 	{
 		ComPtr<ID3D11ShaderResourceView> texture;
-		HRESULT hr = DirectX::CreateDDSTextureFromMemory(device.Get(), data, size, nullptr, &texture);
+		HRESULT hr = DirectX::CreateDDSTextureFromMemory(device.Get(), reinterpret_cast<const uint8_t*>(data), size, nullptr, &texture);
 		if (SUCCEEDED(hr))
 		{
 			textures.emplace(index, std::move(texture));
@@ -156,46 +201,27 @@ namespace DunCraw
 		return false;
 	}
 
-	bool DXRenderer::LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, const Index &index)
+	bool DXRenderer::LoadModel(const std::byte *data, size_t size, const Index &index)
 	{
-		switch (shaderType)
-		{
-		case ST_VERTEX:
-			{
-				ComPtr<ID3D11VertexShader> shader;
-				if (SUCCEEDED(device->CreateVertexShader(data, size, nullptr, &shader)))
-				{
-					vertexShaders.emplace(index, std::move(shader));
-					return true;
-				}
-			}
-			break;
-		case ST_PIXEL:
-			{
-				ComPtr<ID3D11PixelShader> shader;
-				if (SUCCEEDED(device->CreatePixelShader(data, size, nullptr, &shader)))
-				{
-					pixelShaders.emplace(index, std::move(shader));
-					return true;
-				}
-			}
-			break;
-		}
-
 		return false;
 	}
 
-	bool DXRenderer::LoadModel(const uint8_t *data, size_t size, const Index &index)
+	void DXRenderer::UnloadTexture(const Index &index)
 	{
-		return false;
+		textures.erase(index);
+	}
+
+	void DXRenderer::UnloadModel(const Index &index)
+	{
+
 	}
 
 	void DXRenderer::OnResize(EventData data)
 	{
 		if (!windowVisible) return;
 
-		int width = data.A;
-		int height = data.B;
+		width = static_cast<int>(data.A);
+		height = static_cast<int>(data.B);
 
 		context->ClearState();
 		depthStencilView.Reset();

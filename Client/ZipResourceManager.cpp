@@ -13,7 +13,7 @@ namespace DunCraw
 {
 	ZipResourceManager::ZipResourceManager(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, const string &filesystemPath)
 		: config(config), eventEngine(eventEngine), filesystemPath(filesystemPath), useFilesystem(!filesystemPath.empty()), systems(systemLocator),
-			currentIndex(0), loaded(), indexCache(), fileSizeCache()
+			currentIndex(0)
 	{
 	}
 
@@ -73,7 +73,7 @@ namespace DunCraw
 	Index ZipResourceManager::LoadAsset(AssetType type, const std::string &file)
 	{
 		bool found = false;
-		uint8_t *data = nullptr;
+		std::byte *data = nullptr;
 		size_t size = 0;
 
 		path assetPath = GetDirectoryByType(type);
@@ -81,7 +81,7 @@ namespace DunCraw
 
 		if (indexCache.count(assetPath.string()) > 0)
 		{
-			int index = indexCache.at(assetPath.string());
+			Index index = indexCache.at(assetPath.string());
 			if (loaded.at(index) == type)
 			{
 				return index;
@@ -97,7 +97,7 @@ namespace DunCraw
 			{
 				size = dataFile.tellg();
 				dataFile.seekg(0, fstream::beg);
-				data = new uint8_t[size];
+				data = new std::byte[size];
 
 				dataFile.read(reinterpret_cast<char*>(data), size);
 				
@@ -116,7 +116,7 @@ namespace DunCraw
 					libzip::stat stat = archive.stat(path);
 					libzip::file dataFile = archive.open(path);
 					size = stat.size;
-					data = new uint8_t[size];
+					data = new std::byte[size];
 
 					dataFile.read(data, size);
 
@@ -129,25 +129,25 @@ namespace DunCraw
 		if (!found)
 		{
 			Log::Error("Failed to find asset \"" + assetPath.generic_string() + "\"");
-			return -1;
+			return InvalidIndex;
 		}
 
 		bool success = false;
-		int index = currentIndex++;
+		Index index = currentIndex++;
 
 		switch (type)
 		{
 		case AT_TEXTURE:
 			success = systems.GetRenderer().LoadTexture(data, size, index);
 			break;
-		case AT_VERTEXSHADER:
-			success = systems.GetRenderer().LoadShader(data, size, ST_VERTEX, index);
-			break;
-		case AT_PIXELSHADER:
-			success = systems.GetRenderer().LoadShader(data, size, ST_PIXEL, index);
+		case AT_SHADER:
+			success = true;
 			break;
 		case AT_SOUND:
 			success = systems.GetAudioEngine().LoadSound(data, size, index);
+			break;
+		case AT_MISC:
+			success = true;
 			break;
 		}
 
@@ -166,7 +166,7 @@ namespace DunCraw
 		return index;
 	}
 
-	uint8_t *ZipResourceManager::GetAssetData(const Index &index, size_t *size)
+	std::byte *ZipResourceManager::GetAssetData(const Index &index, size_t *size)
 	{
 		if (fileCache.count(index) > 0)
 		{
@@ -176,13 +176,31 @@ namespace DunCraw
 		return nullptr;
 	}
 
-	void ZipResourceManager::UnloadAsset(const Index &index)
+	void ZipResourceManager::UnloadAsset(const Index &index, bool cascade)
 	{
+		if (cascade && (loaded[index] != AT_NONE || loaded[index] != AT_MISC))
+		{
+			switch (loaded[index])
+			{
+			case AT_TEXTURE:
+				systems.GetRenderer().UnloadTexture(index);
+				break;
+			case AT_VERTEXSHADER:
+			case AT_PIXELSHADER:
+				//systems.GetRenderer().UnloadShader(index);
+				break;
+			case AT_SOUND:
+				systems.GetAudioEngine().UnloadSound(index);
+				break;
+			}
+		}
+
 		if (fileCache.count(index) > 0)
 		{
 			fileCache.erase(index);
 			fileSizeCache.erase(index);
-			loaded[index] = AT_NONE;
+			if(loaded[index] == AT_MISC)
+				loaded[index] = AT_NONE;
 		}
 	}
 

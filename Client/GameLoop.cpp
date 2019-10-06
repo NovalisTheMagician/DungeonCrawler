@@ -135,6 +135,12 @@ namespace DunCraw
 		}
 		locator.Provide(scriptEngine.get());
 
+		if (!renderer->LoadShaders(*resourceManager))
+		{
+			Log::Error("Failed to all all shaders! Cancelling Game...");
+			return false;
+		}
+
 		return true;
 	}
 

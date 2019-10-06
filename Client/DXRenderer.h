@@ -7,6 +7,7 @@
 #include <dxgi.h>
 
 #include "DunCraw.h"
+#include "DunDef.h"
 #include "IRenderer.h"
 
 namespace DunCraw
@@ -23,9 +24,13 @@ namespace DunCraw
 		void Clear() override;
 		void Present() override;
 
-		bool LoadTexture(const uint8_t *data, size_t size, const Index &index) override;
-		bool LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, const Index &index) override;
-		bool LoadModel(const uint8_t *data, size_t size, const Index &index) override;
+		bool LoadShaders(IResourceManager &resMan) override;
+
+		bool LoadTexture(const std::byte *data, size_t size, const Index &index) override;
+		bool LoadModel(const std::byte *data, size_t size, const Index &index) override;
+
+		void UnloadTexture(const Index &index) override;
+		void UnloadModel(const Index &index) override;
 
 	private:
 		void OnResize(EventData data);
@@ -39,11 +44,16 @@ namespace DunCraw
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 
-		std::map<int, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> textures;
-		std::map<int, Microsoft::WRL::ComPtr<ID3D11VertexShader>> vertexShaders;
-		std::map<int, Microsoft::WRL::ComPtr<ID3D11PixelShader>> pixelShaders;
+		std::map<Index, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> textures;
+
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> uiLayout;
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> uiVertexShader;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> uiElementShader;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> uiTextShader;
 
 		bool windowVisible;
+
+		int width, height;
 
 		const HWND hWnd;
 

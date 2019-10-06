@@ -66,6 +66,18 @@ namespace DunCraw
 			return false;
 		}
 
+		//TODO check volume range [0, 100]
+
+		float masterVol = config.GetInt("s_mastervol", 100) / 100.0f;
+		float soundVol = config.GetInt("s_soundvol", 100) / 100.0f;
+		float speechVol = config.GetInt("s_speechvol", 100) / 100.0f;
+		float musicVol = config.GetInt("s_musicvol", 100) / 100.0f;
+
+		masteringVoice->SetVolume(masterVol);
+		soundVoice->SetVolume(soundVol);
+		speechVoice->SetVolume(speechVol);
+		musicVoice->SetVolume(musicVol);
+
 		int numChannels = config.GetInt("s_channels", 16);
 		channels.resize(numChannels);
 		for (auto it = channels.begin(); it != channels.end(); it++)
@@ -73,7 +85,6 @@ namespace DunCraw
 			it->free = true;
 			it->callback.SetChannel(&*it);
 		}
-			
 
 		eventEngine.RegisterCallback(EV_PLAYSOUND, std::bind(&DXAudioEngine::OnPlaySound, this, _1));
 
@@ -157,9 +168,9 @@ namespace DunCraw
 		dataStream.read(reinterpret_cast<char*>(buffer), bufferSize);
 	}
 
-	bool DXAudioEngine::LoadSound(const uint8_t *data, size_t size, const Index &index)
+	bool DXAudioEngine::LoadSound(const std::byte *data, size_t size, const Index &index)
 	{
-		uint8_t *d = const_cast<uint8_t*>(data);
+		std::byte *d = const_cast<std::byte*>(data);
 
 		std::string str(reinterpret_cast<char*>(d), size);
 		std::istringstream stream(str);
@@ -189,7 +200,7 @@ namespace DunCraw
 		{
 			return false;
 		}
-		uint8_t *waveData = new uint8_t[chunkSize];
+		std::byte *waveData = new std::byte[chunkSize];
 		ReadChunkData(stream, waveData, chunkSize, chunkPosition);
 
 		WaveData wave = { 0 };
@@ -202,10 +213,20 @@ namespace DunCraw
 		return true;
 	}
 
+	void DXAudioEngine::UnloadSound(const Index &index)
+	{
+		if (sounds.count(index) > 0)
+		{
+			const WaveData &data = sounds[index];
+			delete[] data.buffer;
+			sounds.erase(index);
+		}
+	}
+
 	void DXAudioEngine::OnPlaySound(EventData data)
 	{
-		Index index = data.A;
-		int voiceType = data.B;
+		Index index = static_cast<Index>(data.A);
+		int voiceType = static_cast<int>(data.B);
 
 		if (sounds.count(index) == 0)
 		{
@@ -213,10 +234,13 @@ namespace DunCraw
 			return;
 		}
 
+		XAUDIO2_SEND_DESCRIPTOR xSendDesc = { 0, soundVoice };
+		XAUDIO2_VOICE_SENDS xVoiceSends = { 1, &xSendDesc };
+
 		WaveData &waveData = sounds.at(index);
 		XAUDIO2_BUFFER xbuffer = { 0 };
 		xbuffer.AudioBytes = static_cast<uint32_t>(waveData.size);
-		xbuffer.pAudioData = waveData.buffer;
+		xbuffer.pAudioData = reinterpret_cast<uint8_t*>(waveData.buffer);
 		xbuffer.Flags = XAUDIO2_END_OF_STREAM;
 
 		for (auto it = channels.begin(); it != channels.end(); it++)
@@ -228,7 +252,7 @@ namespace DunCraw
 				channel.free = false;
 				if (channel.voice)
 					channel.voice->DestroyVoice();
-				xaudio->CreateSourceVoice(&channel.voice, reinterpret_cast<WAVEFORMATEX*>(&waveData.format), 0, XAUDIO2_DEFAULT_FREQ_RATIO, &channel.callback);
+				xaudio->CreateSourceVoice(&channel.voice, reinterpret_cast<WAVEFORMATEX*>(&waveData.format), 0, XAUDIO2_DEFAULT_FREQ_RATIO, &channel.callback, &xVoiceSends, nullptr);
 				channel.voice->SubmitSourceBuffer(&xbuffer);
 				channel.voice->Start(0);
 				break;

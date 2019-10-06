@@ -32,7 +32,8 @@ namespace DunCraw
 		bool Init() override;
 		void Destroy() override;
 
-		bool LoadSound(const uint8_t *data, size_t size, const Index &index) override;
+		bool LoadSound(const std::byte *data, size_t size, const Index &index) override;
+		void UnloadSound(const Index &index) override;
 
 	private:
 		void OnPlaySound(EventData data);
@@ -41,7 +42,7 @@ namespace DunCraw
 		struct WaveData
 		{
 			WAVEFORMATEXTENSIBLE format;
-			uint8_t *buffer;
+			std::byte *buffer;
 			size_t size;
 		};
 

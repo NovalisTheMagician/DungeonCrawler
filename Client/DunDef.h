@@ -1,6 +1,7 @@
 #pragma once
 
-typedef int Index;
+typedef uint64_t Index;
+constexpr Index InvalidIndex = -1;
 
 #include <streambuf>
 #include <iostream>

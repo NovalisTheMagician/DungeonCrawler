@@ -2,6 +2,12 @@
 
 #include "DunDef.h"
 
+#include <cstddef>
+
+#include <DirectXMath.h>
+
+#include "IResourceManager.h"
+
 namespace DunCraw
 {
 	enum ShaderType
@@ -11,6 +17,13 @@ namespace DunCraw
 		ST_GEOMETRY,
 		ST_HULL,
 		ST_DOMAIN
+	};
+
+	// TODO refactor to a more portable math type
+	struct UIVertex
+	{
+		DirectX::XMFLOAT2 pos;
+		DirectX::XMFLOAT2 tex;
 	};
 
 	class IRenderer
@@ -24,8 +37,12 @@ namespace DunCraw
 		virtual void Clear() = 0;
 		virtual void Present() = 0;
 
-		virtual bool LoadTexture(const uint8_t *data, size_t size, const Index &index) = 0;
-		virtual bool LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, const Index &index) = 0;
-		virtual bool LoadModel(const uint8_t *data, size_t size, const Index &index) = 0;
+		virtual bool LoadShaders(IResourceManager &resMan) = 0;
+
+		virtual bool LoadTexture(const std::byte *data, size_t size, const Index &index) = 0;
+		virtual bool LoadModel(const std::byte *data, size_t size, const Index &index) = 0;
+
+		virtual void UnloadTexture(const Index &index) = 0;
+		virtual void UnloadModel(const Index &index) = 0;
 	};
 }

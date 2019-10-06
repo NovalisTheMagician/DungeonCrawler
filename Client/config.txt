@@ -4,6 +4,6 @@ r_height=600
 r_width=800
 s_mastervol=100
 s_musicvol=100
-s_soundvol=100
+s_soundvol=25
 s_speechvol=100
 s_channels=16

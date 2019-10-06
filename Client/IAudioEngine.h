@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include "DunDef.h"
 
+#include <cstddef>
+
 namespace DunCraw
 {
 	class IAudioEngine
@@ -12,6 +14,7 @@ namespace DunCraw
 		virtual bool Init() = 0;
 		virtual void Destroy() = 0;
 
-		virtual bool LoadSound(const uint8_t *data, size_t size, const Index &index) = 0;
+		virtual bool LoadSound(const std::byte *data, size_t size, const Index &index) = 0;
+		virtual void UnloadSound(const Index &index) = 0;
 	};
 }

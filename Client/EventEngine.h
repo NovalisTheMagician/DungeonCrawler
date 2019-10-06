@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <functional>
 #include <map>
 #include <vector>
@@ -11,9 +12,9 @@ namespace DunCraw
 {
 	struct EventData
 	{
-		int A;
-		int B;
-		int C;
+		int64_t A;
+		int64_t B;
+		int64_t C;
 		void *Extra;
 	};
 

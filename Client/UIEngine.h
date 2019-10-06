@@ -27,6 +27,8 @@ namespace DunCraw
 		void OnMouseUp(EventData data);
 		void OnMouseWheel(EventData data);
 
+		void OnWindowResize(EventData data);
+
 	private:
 		Config &config;
 		EventEngine &eventEngine;

@@ -28,8 +28,8 @@ namespace DunCraw
 		void Destroy() override;
 
 		Index LoadAsset(AssetType type, const std::string &file) override;
-		uint8_t *GetAssetData(const Index &index, size_t *size) override;
-		void UnloadAsset(const Index &index);
+		std::byte *GetAssetData(const Index &index, size_t *size) override;
+		void UnloadAsset(const Index &index, bool cascade = false) override;
 
 	private:
 		std::string GetDirectoryByType(AssetType type) const;
@@ -43,7 +43,7 @@ namespace DunCraw
 		std::map<const std::string, Index> indexCache;
 
 		std::vector<libzip::archive> archives;
-		std::map<Index, std::unique_ptr<uint8_t>> fileCache;
+		std::map<Index, std::unique_ptr<std::byte>> fileCache;
 		std::map<Index, size_t> fileSizeCache;
 
 		Config &config;

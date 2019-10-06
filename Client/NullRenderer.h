@@ -13,8 +13,12 @@ namespace DunCraw
 		void Clear() override { };
 		void Present() override { };
 
-		bool LoadTexture(const uint8_t *data, size_t size, const Index &index) override { return false; };
-		bool LoadShader(const uint8_t *data, size_t size, ShaderType shaderType, const Index &index) override { return false; };
-		bool LoadModel(const uint8_t *data, size_t size, const Index &index) override { return false; };
+		bool LoadShaders(IResourceManager &resMan) override { return true; };
+
+		bool LoadTexture(const std::byte *data, size_t size, const Index &index) override { return false; };
+		bool LoadModel(const std::byte *data, size_t size, const Index &index) override { return false; };
+
+		void UnloadTexture(const Index &index) override { };
+		void UnloadModel(const Index &index) override { };
 	};
 }
