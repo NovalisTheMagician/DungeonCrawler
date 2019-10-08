@@ -140,18 +140,14 @@ namespace DunCraw
 		case AT_TEXTURE:
 			success = systems.GetRenderer().LoadTexture(data, size, index);
 			break;
-		case AT_SHADER:
-			success = true;
-			break;
 		case AT_SOUND:
 			success = systems.GetAudioEngine().LoadSound(data, size, index);
 			break;
+		case AT_SHADER:
 		case AT_MISC:
 			success = true;
 			break;
 		}
-
-		//delete[] data;
 
 		if (!success)
 		{
@@ -185,14 +181,15 @@ namespace DunCraw
 			case AT_TEXTURE:
 				systems.GetRenderer().UnloadTexture(index);
 				break;
-			case AT_VERTEXSHADER:
-			case AT_PIXELSHADER:
+			case AT_SHADER:
 				//systems.GetRenderer().UnloadShader(index);
 				break;
 			case AT_SOUND:
 				systems.GetAudioEngine().UnloadSound(index);
 				break;
 			}
+
+			loaded[index] = AT_NONE;
 		}
 
 		if (fileCache.count(index) > 0)
@@ -209,9 +206,9 @@ namespace DunCraw
 		switch (type)
 		{
 		case AT_TEXTURE: return "Textures";
-		case AT_VERTEXSHADER:
-		case AT_PIXELSHADER: return "Shader";
+		case AT_SHADER: return "Shader";
 		case AT_SOUND: return "Sounds";
+		case AT_MISC: return "";
 		default: return "";
 		}
 	}

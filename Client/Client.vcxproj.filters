@@ -152,6 +152,7 @@
     <ClInclude Include="DunDef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UICommon.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -181,10 +182,5 @@
     <FxCompile Include="UIText_PS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="UICommon.hlsli">
-      <Filter>Shader</Filter>
-    </None>
   </ItemGroup>
 </Project>
