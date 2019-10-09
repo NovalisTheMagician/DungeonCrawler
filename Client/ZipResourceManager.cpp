@@ -137,14 +137,14 @@ namespace DunCraw
 
 		switch (type)
 		{
-		case AT_TEXTURE:
+		case AssetType::TEXTURE:
 			success = systems.GetRenderer().LoadTexture(data, size, index);
 			break;
-		case AT_SOUND:
+		case AssetType::SOUND:
 			success = systems.GetAudioEngine().LoadSound(data, size, index);
 			break;
-		case AT_SHADER:
-		case AT_MISC:
+		case AssetType::SHADER:
+		case AssetType::MISC:
 			success = true;
 			break;
 		}
@@ -174,30 +174,30 @@ namespace DunCraw
 
 	void ZipResourceManager::UnloadAsset(const Index &index, bool cascade)
 	{
-		if (cascade && (loaded[index] != AT_NONE || loaded[index] != AT_MISC))
+		if (cascade && (loaded[index] != AssetType::NONE || loaded[index] != AssetType::MISC))
 		{
 			switch (loaded[index])
 			{
-			case AT_TEXTURE:
+			case AssetType::TEXTURE:
 				systems.GetRenderer().UnloadTexture(index);
 				break;
-			case AT_SHADER:
+			case AssetType::SHADER:
 				//systems.GetRenderer().UnloadShader(index);
 				break;
-			case AT_SOUND:
+			case AssetType::SOUND:
 				systems.GetAudioEngine().UnloadSound(index);
 				break;
 			}
 
-			loaded[index] = AT_NONE;
+			loaded[index] = AssetType::NONE;
 		}
 
 		if (fileCache.count(index) > 0)
 		{
 			fileCache.erase(index);
 			fileSizeCache.erase(index);
-			if(loaded[index] == AT_MISC)
-				loaded[index] = AT_NONE;
+			if(loaded[index] == AssetType::MISC)
+				loaded[index] = AssetType::NONE;
 		}
 	}
 
@@ -205,10 +205,10 @@ namespace DunCraw
 	{
 		switch (type)
 		{
-		case AT_TEXTURE: return "Textures";
-		case AT_SHADER: return "Shader";
-		case AT_SOUND: return "Sounds";
-		case AT_MISC: return "";
+		case AssetType::TEXTURE: return "Textures";
+		case AssetType::SHADER: return "Shader";
+		case AssetType::SOUND: return "Sounds";
+		case AssetType::MISC: return "";
 		default: return "";
 		}
 	}

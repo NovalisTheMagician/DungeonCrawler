@@ -16,6 +16,22 @@ namespace DunCraw
 		int64_t B;
 		int64_t C;
 		void *Extra;
+
+		template<typename T>
+		void SetA(T value) { A = static_cast<int64_t>(value); };
+		template<typename T>
+		void SetB(T value) { B = static_cast<int64_t>(value); };
+		template<typename T>
+		void SetC(T value) { C = static_cast<int64_t>(value); };
+
+		template<typename T>
+		T GetA() const { return static_cast<T>(A); };
+		template<typename T>
+		T GetB() const { return static_cast<T>(B); };
+		template<typename T>
+		T GetC() const { return static_cast<T>(C); };
+		template<typename T>
+		T *GetExtra() const { return reinterpret_cast<T*>(Extra); };
 	};
 
 	enum EventType

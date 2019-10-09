@@ -18,7 +18,7 @@ namespace DunCraw
 {
 	DXAudioEngine::DXAudioEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator)
 		: config(config), eventEngine(eventEngine), initialized(false), systems(systemLocator),
-			sounds(), channels()
+			sounds(), channels(), masteringVoice(), musicVoice(), soundVoice(), speechVoice()
 	{
 	}
 
@@ -34,7 +34,7 @@ namespace DunCraw
 		flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
 
-		CoInitialize(nullptr);
+		(void)CoInitialize(nullptr);
 
 		if (FAILED(XAudio2Create(&xaudio, flags, XAUDIO2_DEFAULT_PROCESSOR)))
 		{
@@ -120,7 +120,7 @@ namespace DunCraw
 		initialized = false;
 	}
 
-	bool FindChunk(istream &dataStream, DWORD fourcc, size_t &chunkSize, size_t &chunkDataPosition)
+	static bool FindChunk(istream &dataStream, DWORD fourcc, size_t &chunkSize, size_t &chunkDataPosition)
 	{
 		dataStream.seekg(0, istream::beg);
 
@@ -162,7 +162,7 @@ namespace DunCraw
 		return false;
 	}
 
-	void ReadChunkData(istream &dataStream, void *buffer, size_t bufferSize, size_t bufferOffset)
+	static void ReadChunkData(istream &dataStream, void *buffer, size_t bufferSize, size_t bufferOffset)
 	{
 		dataStream.seekg(bufferOffset, istream::beg);
 		dataStream.read(reinterpret_cast<char*>(buffer), bufferSize);
@@ -225,8 +225,8 @@ namespace DunCraw
 
 	void DXAudioEngine::OnPlaySound(EventData data)
 	{
-		Index index = static_cast<Index>(data.A);
-		int voiceType = static_cast<int>(data.B);
+		Index index = data.GetA<Index>();
+		int voiceType = data.GetB<int>();
 
 		if (sounds.count(index) == 0)
 		{

@@ -20,7 +20,7 @@ namespace DunCraw
 {
 	DXRenderer::DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd)
 		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator), 
-			windowVisible(true), textures()
+			windowVisible(true), textures(), width(0), height(0)
 	{
 	}
 
@@ -145,7 +145,7 @@ namespace DunCraw
 
 	bool DXRenderer::LoadShaders(IResourceManager &resMan)
 	{
-		Index id = resMan.LoadAsset(AT_SHADER, "UI_VS.cso");
+		Index id = resMan.LoadAsset(AssetType::SHADER, "UI_VS.cso");
 		if (id == InvalidIndex) return false;
 		size_t size;
 		std::byte *data = resMan.GetAssetData(id, &size);
@@ -166,7 +166,7 @@ namespace DunCraw
 		}
 
 		resMan.UnloadAsset(id);
-		id = resMan.LoadAsset(AT_SHADER, "UIElement_PS.cso");
+		id = resMan.LoadAsset(AssetType::SHADER, "UIElement_PS.cso");
 		if (id == InvalidIndex) return false;
 		data = resMan.GetAssetData(id, &size);
 
@@ -176,7 +176,7 @@ namespace DunCraw
 		}
 
 		resMan.UnloadAsset(id);
-		id = resMan.LoadAsset(AT_SHADER, "UIText_PS.cso");
+		id = resMan.LoadAsset(AssetType::SHADER, "UIText_PS.cso");
 		if (id == InvalidIndex) return false;
 		data = resMan.GetAssetData(id, &size);
 
@@ -220,8 +220,8 @@ namespace DunCraw
 	{
 		if (!windowVisible) return;
 
-		width = static_cast<int>(data.A);
-		height = static_cast<int>(data.B);
+		width = data.GetA<int>();
+		height = data.GetB<int>();
 
 		context->ClearState();
 		depthStencilView.Reset();
@@ -260,6 +260,6 @@ namespace DunCraw
 
 	void DXRenderer::OnWindowChange(EventData data)
 	{
-		windowVisible = data.A;
+		windowVisible = data.GetA<bool>();
 	}
 }

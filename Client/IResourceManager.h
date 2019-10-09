@@ -6,13 +6,13 @@
 
 namespace DunCraw
 {
-	enum AssetType
+	enum class AssetType
 	{
-		AT_NONE,
-		AT_TEXTURE,
-		AT_SHADER,
-		AT_SOUND,
-		AT_MISC
+		NONE,
+		TEXTURE,
+		SHADER,
+		SOUND,
+		MISC
 	};
 
 	class IResourceManager

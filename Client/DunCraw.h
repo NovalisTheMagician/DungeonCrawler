@@ -3,6 +3,7 @@
 #include <string>
 #include <stdint.h>
 #include <vector>
+#include <array>
 #include <map>
 #include <queue>
 #include <memory>
