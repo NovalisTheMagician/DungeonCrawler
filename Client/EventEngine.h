@@ -8,6 +8,8 @@
 
 #include "Config.h"
 
+#include "Pool.h"
+
 namespace DunCraw
 {
 	struct EventData
@@ -91,9 +93,13 @@ namespace DunCraw
 		std::map<EventType, std::vector<CallbackFun>> eventCallbacks;
 		std::queue<std::pair<EventType, EventData>> eventQueue;
 
+		Pool<EventData> eventDataPool;
+
 		int maxEventsPerTick;
 
 		Config &config;
+
+		const int POOL_SIZE;
 
 	};
 }

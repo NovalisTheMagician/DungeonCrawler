@@ -231,6 +231,7 @@
     <ClInclude Include="NullResourceManager.h" />
     <ClInclude Include="NullScriptEngine.h" />
     <ClInclude Include="NullWindow.h" />
+    <ClInclude Include="Pool.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StringSupport.h" />
     <ClInclude Include="SystemLocator.h" />

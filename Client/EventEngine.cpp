@@ -10,7 +10,7 @@ using std::pair;
 namespace DunCraw
 {
 	EventEngine::EventEngine(Config &config)
-		: config(config)
+		: config(config), POOL_SIZE(100), eventDataPool(POOL_SIZE)
 	{
 		maxEventsPerTick = config.GetInt("ev_maxevpertick", 50);
 		Log::Info("Using " + std::to_string(maxEventsPerTick) + " events per tick");
