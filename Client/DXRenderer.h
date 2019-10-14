@@ -33,8 +33,8 @@ namespace DunCraw
 		void UnloadModel(const Index &index) override;
 
 	private:
-		void OnResize(EventData data);
-		void OnWindowChange(EventData data);
+		void OnResize(EventData &data);
+		void OnWindowChange(EventData &data);
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Device> device;

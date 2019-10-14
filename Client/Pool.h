@@ -10,28 +10,33 @@ namespace DunCraw
 	class Pool
 	{
 	public:
-		struct Element
+		Pool(size_t numElements) : total(numElements) 
 		{
-			T data;
-			bool free;
+			//std::for_each(total.begin(), total.end(), [this](auto elem) { free.push_back(&elem); });
+			for (auto it = total.begin(); it != total.end(); it++)
+			{
+				free.push_back(&(*it));
+			}
 		};
 
-		Pool(size_t numElements) : elements(numElements) { };
+		~Pool()
+		{
+			total.clear();
+		}
+
 		Pool(const Pool<T> &pool) = delete;
 		Pool(Pool<T> &&pool) = delete;
 		Pool& operator=(const Pool<T> &pool) = delete;
 		Pool& operator=(Pool<T> &&pool) = delete;
 
-		Element &Aquire() const
+		T &Aquire()
 		{
-			for (auto it = elements.begin(); it != elements.end(); it++)
+			aqCnt++;
+			if (Available())
 			{
-				Element& element = *it;
-				if (element.free)
-				{
-					element.free = true;
-					return element;
-				}
+				T &data = *(free.back());
+				free.pop_back();
+				return data;
 			}
 
 			throw std::exception("No more space in pool!");
@@ -39,18 +44,29 @@ namespace DunCraw
 
 		bool Available() const
 		{
-			for (auto it = elements.begin(); it != elements.end(); it++)
-			{
-				Element& element = *it;
-				if (element.free)
-					return true;
-			}
-
-			return false;
+			return free.size() != 0;
 		};
 
+		void Release(T &data)
+		{
+			relCnt++;
+			free.push_back(&data);
+			/*
+			for (auto it = total.begin(); it != total.end(); it++)
+			{
+				if (&data == &(*it))
+				{
+					free.push_back(&data);
+				}
+			}
+			*/
+		}
+
 	private:
-		std::vector<Element> elements;
+		std::vector<T*> free;
+		std::vector<T> total;
+
+		int aqCnt, relCnt;
 
 	};
 }

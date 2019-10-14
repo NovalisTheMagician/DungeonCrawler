@@ -21,13 +21,13 @@ namespace DunCraw
 		void Draw();
 
 	private:
-		void OnChar(EventData data);
-		void OnMouseMove(EventData data);
-		void OnMouseDown(EventData data);
-		void OnMouseUp(EventData data);
-		void OnMouseWheel(EventData data);
+		void OnChar(EventData &data);
+		void OnMouseMove(EventData &data);
+		void OnMouseDown(EventData &data);
+		void OnMouseUp(EventData &data);
+		void OnMouseWheel(EventData &data);
 
-		void OnWindowResize(EventData data);
+		void OnWindowResize(EventData &data);
 
 	private:
 		Config &config;

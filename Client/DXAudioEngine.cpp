@@ -223,7 +223,7 @@ namespace DunCraw
 		}
 	}
 
-	void DXAudioEngine::OnPlaySound(EventData data)
+	void DXAudioEngine::OnPlaySound(EventData &data)
 	{
 		Index index = data.GetA<Index>();
 		int voiceType = data.GetB<int>();

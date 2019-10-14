@@ -6,11 +6,14 @@ using std::vector;
 using std::map;
 using std::queue;
 using std::pair;
+using std::set;
 
 namespace DunCraw
 {
+	const int EventEngine::POOL_SIZE = 1024;
+
 	EventEngine::EventEngine(Config &config)
-		: config(config), POOL_SIZE(100), eventDataPool(POOL_SIZE)
+		: config(config), eventDataPool(POOL_SIZE)
 	{
 		maxEventsPerTick = config.GetInt("ev_maxevpertick", 50);
 		Log::Info("Using " + std::to_string(maxEventsPerTick) + " events per tick");
@@ -21,16 +24,26 @@ namespace DunCraw
 
 	}
 
+	EventData &EventEngine::GetData()
+	{
+		EventData &data = eventDataPool.Aquire();
+		data.Clear();
+		return data;
+	}
+
 	void EventEngine::RegisterCallback(EventType eventName, CallbackFun callbackFunction)
 	{
 		vector<CallbackFun> &callbackFunctions = eventCallbacks[eventName];
 		callbackFunctions.push_back(callbackFunction);
 	}
 
-	void EventEngine::SendEvent(EventType eventName, EventData data, bool immediatly)
+	void EventEngine::SendEvent(EventType eventName, EventData &data, bool immediatly)
 	{
 		if (eventCallbacks.count(eventName) == 0)
+		{
+			eventDataPool.Release(data);
 			return;
+		}
 
 		if (immediatly)
 		{
@@ -39,25 +52,30 @@ namespace DunCraw
 			{
 				function(data);
 			}
+			eventDataPool.Release(data);
 		}
 		else
 		{
-			eventQueue.push(std::make_pair(eventName, data));
+			eventQueue.push(std::make_pair(eventName, &data));
 		}
 	}
 
 	void EventEngine::ProcessQueue()
 	{
+		set<EventData *> toRelease;
 		for (int i = 0; i < maxEventsPerTick; ++i)
 		{
 			if (eventQueue.empty())
 				break;
 
-			const pair<EventType, EventData> &event = eventQueue.front();
+			const pair<EventType, EventData*> &event = eventQueue.front();
 			EventType eventName = event.first;
-			EventData data = event.second;
+			EventData &data = *event.second;
 			SendEvent(eventName, data, true);
 			eventQueue.pop();
+			toRelease.insert(&data);
 		}
+
+		std::for_each(toRelease.begin(), toRelease.end(), [this](auto elem) { eventDataPool.Release(*elem); });
 	}
 }

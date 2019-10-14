@@ -25,8 +25,8 @@ namespace DunCraw
 		LRESULT EventHandler(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		void OnExit(EventData data);
-		void OnShowCursor(EventData data);
+		void OnExit(EventData &data);
+		void OnShowCursor(EventData &data);
 
 		void ConfineCursor();
 		void ReleaseCursor();

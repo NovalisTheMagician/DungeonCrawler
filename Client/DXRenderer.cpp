@@ -82,7 +82,10 @@ namespace DunCraw
 			Log::Warning("Failed to remove Alt-Enter window association! Alt-Enter may result in unexpected behaviour");
 		}
 
-		OnResize({ width, height, 0, nullptr });
+		EventData data;
+		data.SetA(width);
+		data.SetB(height);
+		OnResize(data);
 
 		eventEngine.RegisterCallback(EV_RESIZE, std::bind(&DXRenderer::OnResize, this, _1));
 		eventEngine.RegisterCallback(EV_WINDOWCHANGE, std::bind(&DXRenderer::OnWindowChange, this, _1));
@@ -216,7 +219,7 @@ namespace DunCraw
 
 	}
 
-	void DXRenderer::OnResize(EventData data)
+	void DXRenderer::OnResize(EventData &data)
 	{
 		if (!windowVisible) return;
 
@@ -258,7 +261,7 @@ namespace DunCraw
 		context->RSSetViewports(1, &viewport);
 	}
 
-	void DXRenderer::OnWindowChange(EventData data)
+	void DXRenderer::OnWindowChange(EventData &data)
 	{
 		windowVisible = data.GetA<bool>();
 	}

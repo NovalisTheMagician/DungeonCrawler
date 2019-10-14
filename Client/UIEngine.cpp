@@ -43,7 +43,7 @@ namespace DunCraw
 
 	}
 
-	void UIEngine::OnChar(EventData data)
+	void UIEngine::OnChar(EventData &data)
 	{
 		char str[2] = { data.GetA<char>(), '\0' };
 		OutputDebugStringA(str);
@@ -53,27 +53,27 @@ namespace DunCraw
 		eventEngine.SendEvent(EV_PLAYSOUND, soundEvent);
 	}
 
-	void UIEngine::OnMouseMove(EventData data)
+	void UIEngine::OnMouseMove(EventData &data)
 	{
 
 	}
 
-	void UIEngine::OnMouseDown(EventData data)
+	void UIEngine::OnMouseDown(EventData &data)
 	{
 
 	}
 
-	void UIEngine::OnMouseUp(EventData data)
+	void UIEngine::OnMouseUp(EventData &data)
 	{
 
 	}
 
-	void UIEngine::OnMouseWheel(EventData data)
+	void UIEngine::OnMouseWheel(EventData &data)
 	{
 
 	}
 
-	void UIEngine::OnWindowResize(EventData data)
+	void UIEngine::OnWindowResize(EventData &data)
 	{
 
 	}

@@ -9,7 +9,7 @@ using std::placeholders::_1;
 
 namespace DunCraw
 {
-	static LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	const wstring WinWindow::CLASS_NAME = L"DungeonCrawlerWindow";
 
@@ -142,12 +142,12 @@ namespace DunCraw
 		return quit;
 	}
 
-	void WinWindow::OnExit(EventData data)
+	void WinWindow::OnExit(EventData &data)
 	{
 		Close();
 	}
 
-	void WinWindow::OnShowCursor(EventData data)
+	void WinWindow::OnShowCursor(EventData &data)
 	{
 		showCursor = data.A;
 		ShowCursor(showCursor);
@@ -184,13 +184,9 @@ namespace DunCraw
 				if (!showCursor)
 					ConfineCursor();
 
-				EventData data =
-				{
-					LOWORD(lParam),
-					HIWORD(lParam),
-					0,
-					nullptr
-				};
+				EventData &data = eventEngine.GetData();
+				data.SetA(LOWORD(lParam));
+				data.SetB(HIWORD(lParam));
 				eventEngine.SendEvent(EV_RESIZE, data, true);
 			}
 			break;
@@ -210,37 +206,22 @@ namespace DunCraw
 			break;
 		case WM_KEYUP:
 			{
-				EventData data =
-				{
-					static_cast<int>(wParam),
-					0,
-					0,
-					nullptr
-				};
+				EventData &data = eventEngine.GetData();
+				data.SetA(wParam);
 				eventEngine.SendEvent(EV_KEYUP, data);
 			}
 			break;
 		case WM_KEYDOWN:
 			{
-				EventData data =
-				{
-					static_cast<int>(wParam),
-					0,
-					0,
-					nullptr
-				};
+				EventData &data = eventEngine.GetData();
+				data.SetA(wParam);
 				eventEngine.SendEvent(EV_KEYDOWN, data);
 			}
 			break;
 		case WM_CHAR:
 			{
-				EventData data =
-				{
-					static_cast<int>(wParam),
-					0,
-					0,
-					nullptr
-				};
+				EventData &data = eventEngine.GetData();
+				data.SetA(wParam);
 				eventEngine.SendEvent(EV_CHAR, data);
 			}
 			break;
@@ -249,13 +230,8 @@ namespace DunCraw
 		case WM_MBUTTONDOWN:
 		case WM_XBUTTONDOWN:
 			{
-				EventData data =
-				{
-					static_cast<int>(wParam),
-					0,
-					0,
-					nullptr
-				};
+				EventData &data = eventEngine.GetData();
+				data.SetA(wParam);
 				eventEngine.SendEvent(EV_MOUSEDOWN, data);
 			}
 			break;
@@ -264,13 +240,8 @@ namespace DunCraw
 		case WM_MBUTTONUP:
 		case WM_XBUTTONUP:
 			{
-				EventData data =
-				{
-					static_cast<int>(wParam),
-					0,
-					0,
-					nullptr
-				};
+				EventData &data = eventEngine.GetData();
+				data.SetA(wParam);
 				eventEngine.SendEvent(EV_MOUSEUP, data);
 			}
 			break;
@@ -278,26 +249,19 @@ namespace DunCraw
 			{
 				short x = GET_X_LPARAM(lParam);
 				short y = GET_Y_LPARAM(lParam);
-				EventData data =
-				{
-					static_cast<int>(x),
-					static_cast<int>(y),
-					0,
-					nullptr
-				};
+				EventData &data = eventEngine.GetData();
+				data.SetA(x);
+				data.SetB(y);
 				eventEngine.SendEvent(EV_MOUSEMOVEABS, data);
 			}
 			break;
 		case WM_MOUSEWHEEL:
 			{
 				short wheelVal = GET_WHEEL_DELTA_WPARAM(wParam);
-				EventData data =
-				{
-					static_cast<int>(wheelVal / WHEEL_DELTA),
-					static_cast<int>(wheelVal),
-					static_cast<int>(WHEEL_DELTA),
-					nullptr
-				};
+				EventData &data = eventEngine.GetData();
+				data.SetA(wheelVal / WHEEL_DELTA);
+				data.SetB(wheelVal);
+				data.SetC(WHEEL_DELTA);
 				eventEngine.SendEvent(EV_MOUSEWHEEL, data);
 			}
 			break;
@@ -319,13 +283,9 @@ namespace DunCraw
 						LONG x = rawData->data.mouse.lLastX;
 						LONG y = rawData->data.mouse.lLastY;
 
-						EventData data =
-						{
-							static_cast<int>(x),
-							static_cast<int>(y),
-							0,
-							nullptr
-						};
+						EventData &data = eventEngine.GetData();
+						data.SetA(x);
+						data.SetB(y);
 						eventEngine.SendEvent(EV_MOUSEMOVEREL, data);
 					}
 				}
@@ -367,24 +327,14 @@ namespace DunCraw
 			{
 				if (wParam == SC_MINIMIZE)
 				{
-					EventData data =
-					{
-						0,
-						0,
-						0,
-						nullptr
-					};
+					EventData &data = eventEngine.GetData();
+					data.SetA(0);
 					eventEngine.SendEvent(EV_WINDOWCHANGE, data, true);
 				}
 				else if (wParam == SC_RESTORE)
 				{
-					EventData data =
-					{
-						1,
-						0,
-						0,
-						nullptr
-					};
+					EventData &data = eventEngine.GetData();
+					data.SetA(1);
 					eventEngine.SendEvent(EV_WINDOWCHANGE, data, true);
 				}
 			}

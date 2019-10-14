@@ -19,6 +19,8 @@ namespace DunCraw
 		int64_t C;
 		void *Extra;
 
+		void Clear() { A = B = C = 0; Extra = nullptr; };
+
 		template<typename T>
 		void SetA(T value) { A = static_cast<int64_t>(value); };
 		template<typename T>
@@ -73,7 +75,7 @@ namespace DunCraw
 		EV_CUSTOM
 	};
 
-	typedef std::function<void(EventData)> CallbackFun;
+	typedef std::function<void(EventData&)> CallbackFun;
 
 	class EventEngine
 	{
@@ -83,15 +85,17 @@ namespace DunCraw
 		EventEngine(const EventEngine &ee) = delete;
 		EventEngine& operator=(const EventEngine &ee) = delete;
 
+		EventData &GetData();
+
 		void RegisterCallback(EventType eventName, CallbackFun callbackFunction);
 
-		void SendEvent(EventType, EventData data, bool immediatly = false);
+		void SendEvent(EventType, EventData &data, bool immediatly = false);
 
 		void ProcessQueue();
 
 	private:
 		std::map<EventType, std::vector<CallbackFun>> eventCallbacks;
-		std::queue<std::pair<EventType, EventData>> eventQueue;
+		std::queue<std::pair<EventType, EventData*>> eventQueue;
 
 		Pool<EventData> eventDataPool;
 
@@ -99,7 +103,7 @@ namespace DunCraw
 
 		Config &config;
 
-		const int POOL_SIZE;
+		static const int POOL_SIZE;
 
 	};
 }

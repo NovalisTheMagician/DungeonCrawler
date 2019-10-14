@@ -36,7 +36,7 @@ namespace DunCraw
 		void UnloadSound(const Index &index) override;
 
 	private:
-		void OnPlaySound(EventData data);
+		void OnPlaySound(EventData &data);
 
 	private:
 		struct WaveData
@@ -59,17 +59,17 @@ namespace DunCraw
 				this->channel = channel;
 			}
 
-			void OnStreamEnd() override
+			void __stdcall OnStreamEnd() override
 			{
 				channel->free = true;
 			};
 
-			void OnVoiceProcessingPassEnd() override { }
-			void OnVoiceProcessingPassStart(uint32_t samplesRequired) override { }
-			void OnBufferEnd(void *bufferContext) override { }
-			void OnBufferStart(void *bufferContext) override { }
-			void OnLoopEnd(void *bufferContext) override { }
-			void OnVoiceError(void *bufferContext, HRESULT Error) override { }
+			void __stdcall OnVoiceProcessingPassEnd() override { }
+			void __stdcall OnVoiceProcessingPassStart(uint32_t samplesRequired) override { }
+			void __stdcall OnBufferEnd(void *bufferContext) override { }
+			void __stdcall OnBufferStart(void *bufferContext) override { }
+			void __stdcall OnLoopEnd(void *bufferContext) override { }
+			void __stdcall OnVoiceError(void *bufferContext, HRESULT Error) override { }
 
 		private:
 			Channel *channel;
