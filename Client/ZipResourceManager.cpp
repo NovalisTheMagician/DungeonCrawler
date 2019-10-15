@@ -181,9 +181,6 @@ namespace DunCraw
 			case AssetType::TEXTURE:
 				systems.GetRenderer().UnloadTexture(index);
 				break;
-			case AssetType::SHADER:
-				//systems.GetRenderer().UnloadShader(index);
-				break;
 			case AssetType::SOUND:
 				systems.GetAudioEngine().UnloadSound(index);
 				break;

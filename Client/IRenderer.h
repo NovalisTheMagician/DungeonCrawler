@@ -8,28 +8,27 @@
 
 #include "IResourceManager.h"
 
+#include "VertexDefs.h"
+
 namespace DunCraw
 {
-	enum ShaderType
+	class ISpriteBatch
 	{
-		ST_VERTEX,
-		ST_PIXEL,
-		ST_GEOMETRY,
-		ST_HULL,
-		ST_DOMAIN
-	};
+	public:
+		virtual ~ISpriteBatch() {};
 
-	// TODO refactor to a more portable math type
-	struct UIVertex
-	{
-		DirectX::XMFLOAT2 pos;
-		DirectX::XMFLOAT2 tex;
+		virtual void AddRect(std::array<UIVertex, 4> vertices) = 0;
+
+		virtual void ClearState() = 0;
+
+		virtual void DrawBatch(const Index &texIndex) = 0;
+		virtual void DrawString(const Index &texIndex) = 0;
 	};
 
 	class IRenderer
 	{
 	public:
-		virtual ~IRenderer() {}
+		virtual ~IRenderer() {};
 
 		virtual bool Init() = 0;
 		virtual void Destroy() = 0;

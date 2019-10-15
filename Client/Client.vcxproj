@@ -237,6 +237,7 @@
     <ClInclude Include="SystemLocator.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIEngine.h" />
+    <ClInclude Include="VertexDefs.h" />
     <ClInclude Include="WinWindow.h" />
     <ClInclude Include="ZipResourceManager.h" />
   </ItemGroup>
