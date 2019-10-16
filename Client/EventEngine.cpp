@@ -7,6 +7,7 @@ using std::map;
 using std::queue;
 using std::pair;
 using std::set;
+using std::unordered_set;
 
 namespace DunCraw
 {
@@ -62,7 +63,6 @@ namespace DunCraw
 
 	void EventEngine::ProcessQueue()
 	{
-		set<EventData *> toRelease;
 		for (int i = 0; i < maxEventsPerTick; ++i)
 		{
 			if (eventQueue.empty())
@@ -73,9 +73,6 @@ namespace DunCraw
 			EventData &data = *event.second;
 			SendEvent(eventName, data, true);
 			eventQueue.pop();
-			toRelease.insert(&data);
 		}
-
-		std::for_each(toRelease.begin(), toRelease.end(), [this](auto elem) { eventDataPool.Release(*elem); });
 	}
 }

@@ -48,7 +48,7 @@ namespace DunCraw
 		char str[2] = { data.GetA<char>(), '\0' };
 		OutputDebugStringA(str);
 
-		EventData soundEvent;
+		EventData &soundEvent = eventEngine.GetData();
 		soundEvent.SetA(meow);
 		eventEngine.SendEvent(EV_PLAYSOUND, soundEvent);
 	}

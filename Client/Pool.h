@@ -10,13 +10,9 @@ namespace DunCraw
 	class Pool
 	{
 	public:
-		Pool(size_t numElements) : total(numElements) 
+		Pool(size_t numElements) : total(numElements)
 		{
-			//std::for_each(total.begin(), total.end(), [this](auto elem) { free.push_back(&elem); });
-			for (auto it = total.begin(); it != total.end(); it++)
-			{
-				free.push_back(&(*it));
-			}
+			std::for_each(total.begin(), total.end(), [this](auto &elem) { free.insert(&elem); });
 		};
 
 		~Pool()
@@ -31,12 +27,11 @@ namespace DunCraw
 
 		T &Aquire()
 		{
-			aqCnt++;
 			if (Available())
 			{
-				T &data = *(free.back());
-				free.pop_back();
-				return data;
+				T *data = *free.begin();
+				free.erase(data);
+				return *data;
 			}
 
 			throw std::exception("No more space in pool!");
@@ -49,24 +44,12 @@ namespace DunCraw
 
 		void Release(T &data)
 		{
-			relCnt++;
-			free.push_back(&data);
-			/*
-			for (auto it = total.begin(); it != total.end(); it++)
-			{
-				if (&data == &(*it))
-				{
-					free.push_back(&data);
-				}
-			}
-			*/
+			free.insert(&data);
 		}
 
 	private:
-		std::vector<T*> free;
+		std::unordered_set<T*> free;
 		std::vector<T> total;
-
-		int aqCnt, relCnt;
 
 	};
 }
