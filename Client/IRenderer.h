@@ -10,6 +10,8 @@
 
 #include "VertexDefs.h"
 
+#include <functional>
+
 namespace DunCraw
 {
 	class ISpriteBatch
@@ -17,12 +19,14 @@ namespace DunCraw
 	public:
 		virtual ~ISpriteBatch() {};
 
-		virtual void AddRect(std::array<UIVertex, 4> vertices) = 0;
+		virtual Index CreateBuffer() = 0;
+		virtual void AddRect(const Index &bufId, std::array<UIVertex, 4> vertices) = 0;
+		virtual void FinalizeBuffer(const Index &bufId) = 0;
 
 		virtual void ClearState() = 0;
 
-		virtual void DrawBatch(const Index &texIndex) = 0;
-		virtual void DrawString(const Index &texIndex) = 0;
+		virtual void DrawBatch(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position) = 0;
+		virtual void DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position) = 0;
 	};
 
 	class IRenderer
@@ -32,6 +36,8 @@ namespace DunCraw
 
 		virtual bool Init() = 0;
 		virtual void Destroy() = 0;
+
+		virtual std::optional<std::reference_wrapper<ISpriteBatch>> CreateSpriteBatch() = 0;
 
 		virtual void Clear() = 0;
 		virtual void Present() = 0;

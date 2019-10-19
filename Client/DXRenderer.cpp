@@ -12,12 +12,112 @@
 
 #include "Log.h"
 
+using std::optional;
+using std::vector;
+
 using Microsoft::WRL::ComPtr;
 
 using std::placeholders::_1;
 
 namespace DunCraw
 {
+	DXRenderer::DXSpriteBatch::DXSpriteBatch(DXRenderer &renderer)
+		: renderer(renderer), curId(0)
+	{
+
+	}
+
+	DXRenderer::DXSpriteBatch::~DXSpriteBatch()
+	{
+		std::for_each(buffers.begin(), buffers.end(), [](auto &elem) { elem.second.Reset(); });
+	}
+
+	Index DXRenderer::DXSpriteBatch::CreateBuffer()
+	{
+		Index id = curId++;
+		vertices[id];
+
+		return id;
+	}
+
+	void DXRenderer::DXSpriteBatch::AddRect(const Index &bufId, std::array<UIVertex, 4> verts)
+	{
+		if (vertices.count(bufId) > 0)
+		{
+			vector<UIVertex> &vertList = vertices.at(bufId);
+			//vertList.insert(vertList.end(), verts.begin(), verts.end());
+			vertList.push_back(verts[0]);
+			vertList.push_back(verts[1]);
+			vertList.push_back(verts[3]);
+
+			vertList.push_back(verts[1]);
+			vertList.push_back(verts[3]);
+			vertList.push_back(verts[2]);
+		}
+	}
+
+	void DXRenderer::DXSpriteBatch::FinalizeBuffer(const Index &bufId)
+	{
+		if (vertices.count(bufId) > 0)
+		{
+			vector<UIVertex> &vertList = vertices.at(bufId);
+
+			D3D11_BUFFER_DESC bufferDesc;
+			bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+			bufferDesc.ByteWidth = sizeof(UIVertex) * vertList.size();
+			bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			bufferDesc.CPUAccessFlags = 0;
+			bufferDesc.MiscFlags = 0;
+
+			D3D11_SUBRESOURCE_DATA initData;
+			initData.pSysMem = vertList.data();
+			initData.SysMemPitch = 0;
+			initData.SysMemSlicePitch = 0;
+
+			ComPtr<ID3D11Buffer> &buffer = buffers[bufId];
+
+			if (FAILED(renderer.device->CreateBuffer(&bufferDesc, &initData, buffer.ReleaseAndGetAddressOf())))
+			{
+				Log::Error("Failed to create a vertexbuffer for bufferID = " + std::to_string(bufId));
+			}
+		}
+	}
+
+	void DXRenderer::DXSpriteBatch::ClearState()
+	{
+
+	}
+
+	void DXRenderer::DXSpriteBatch::DrawBatch(const Index &bufId, const Index &texIndex, DirectX::XMFLOAT2 position)
+	{
+		ComPtr<ID3D11DeviceContext> &context = renderer.context;
+		if (buffers.count(bufId) > 0)
+		{
+			ComPtr<ID3D11Buffer> &buffer = buffers.at(bufId);
+			uint32_t stride = sizeof(UIVertex);
+			uint32_t offset = 0;
+
+			context->VSSetShader(renderer.uiVertexShader.Get(), nullptr, 0);
+			context->PSSetShader(renderer.uiElementShader.Get(), nullptr, 0);
+			context->IASetVertexBuffers(0, 1, buffer.GetAddressOf(), &stride, &offset);
+			context->IASetInputLayout(renderer.uiLayout.Get());
+			context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+			auto &texture = renderer.textures.at(texIndex);
+			context->PSSetShaderResources(0, 1, texture.GetAddressOf());
+
+			uint32_t vertCount = vertices.at(bufId).size();
+			context->Draw(vertCount, 0);
+		}
+	}
+
+	void DXRenderer::DXSpriteBatch::DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position)
+	{
+
+	}
+
+
+
 	DXRenderer::DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd)
 		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator), 
 			windowVisible(true), textures(), width(0), height(0)
@@ -124,10 +224,17 @@ namespace DunCraw
 		initialized = false;
 	}
 
+	std::optional<std::reference_wrapper<ISpriteBatch>> DXRenderer::CreateSpriteBatch()
+	{
+		spriteBatches.emplace_back(DXSpriteBatch(*this));
+		return spriteBatches.back();
+	}
+
 	void DXRenderer::Clear()
 	{
 		if (!windowVisible) return;
 		const float *clearColor = DirectX::Colors::CornflowerBlue;
+
 #ifdef _DEBUG
 		clearColor = DirectX::Colors::Magenta;
 #endif

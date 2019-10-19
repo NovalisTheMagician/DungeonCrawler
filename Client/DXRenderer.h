@@ -14,6 +14,32 @@ namespace DunCraw
 {
 	class DXRenderer : public IRenderer
 	{
+	private:
+		class DXSpriteBatch : public ISpriteBatch
+		{
+		public:
+			DXSpriteBatch(DXRenderer &renderer);
+			~DXSpriteBatch();
+
+			Index CreateBuffer() override;
+			void AddRect(const Index &bufId, std::array<UIVertex, 4> vertices) override;
+			void FinalizeBuffer(const Index &bufId) override;
+
+			void ClearState() override;
+
+			void DrawBatch(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position) override;
+			void DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position) override;
+
+		private:
+			DXRenderer &renderer;
+
+			std::map<Index, std::vector<UIVertex>> vertices;
+			std::map<Index, Microsoft::WRL::ComPtr<ID3D11Buffer>> buffers;
+
+			Index curId;
+
+		};
+
 	public:
 		DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd);
 		~DXRenderer();
@@ -23,6 +49,8 @@ namespace DunCraw
 
 		void Clear() override;
 		void Present() override;
+
+		std::optional<std::reference_wrapper<ISpriteBatch>> CreateSpriteBatch() override;
 
 		bool LoadShaders(IResourceManager &resMan) override;
 
@@ -51,6 +79,8 @@ namespace DunCraw
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> uiElementShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> uiTextShader;
 
+		std::vector<DXSpriteBatch> spriteBatches;
+
 		bool windowVisible;
 
 		int width, height;
@@ -62,6 +92,8 @@ namespace DunCraw
 		EventEngine &eventEngine;
 
 		const SystemLocator &systems;
+
+		friend DXSpriteBatch;
 
 	};
 }

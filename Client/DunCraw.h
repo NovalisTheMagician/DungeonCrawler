@@ -11,6 +11,9 @@
 #include <queue>
 #include <memory>
 
+#include <optional>
+#include <functional>
+
 #include "Log.h"
 #include "Config.h"
 #include "Timer.h"

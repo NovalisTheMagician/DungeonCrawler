@@ -13,6 +13,8 @@ namespace DunCraw
 		void Clear() override { };
 		void Present() override { };
 
+		std::optional<std::reference_wrapper<ISpriteBatch>> CreateSpriteBatch() override { return {}; };
+
 		bool LoadShaders(IResourceManager &resMan) override { return true; };
 
 		bool LoadTexture(const std::byte *data, size_t size, const Index &index) override { return false; };

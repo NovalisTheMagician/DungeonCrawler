@@ -4,6 +4,11 @@
 
 using std::placeholders::_1;
 
+//#include <DirectXMath.h>
+using namespace DirectX;
+
+using std::array;
+
 namespace DunCraw
 {
 	UIEngine::UIEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator)
@@ -16,10 +21,18 @@ namespace DunCraw
 		Destroy();
 	}
 
-	Index meow;
+	Index meowSnd;
+	Index meowImg;
+	Index meowBuffer;
 
 	bool UIEngine::Init()
 	{
+		auto tmp = systems.GetRenderer().CreateSpriteBatch();
+		if (tmp.has_value)
+		{
+			spriteBatch = tmp.value;
+		}
+
 		eventEngine.RegisterCallback(EV_CHAR, std::bind(&UIEngine::OnChar, this, _1));
 		eventEngine.RegisterCallback(EV_MOUSEMOVEABS, std::bind(&UIEngine::OnMouseMove, this, _1));
 		eventEngine.RegisterCallback(EV_MOUSEDOWN, std::bind(&UIEngine::OnMouseDown, this, _1));
@@ -27,8 +40,24 @@ namespace DunCraw
 		eventEngine.RegisterCallback(EV_MOUSEWHEEL, std::bind(&UIEngine::OnMouseWheel, this, _1));
 		eventEngine.RegisterCallback(EV_RESIZE, std::bind(&UIEngine::OnWindowResize, this, _1));
 
-		meow = systems.GetResourceManager().LoadAsset(AssetType::SOUND, "meow.wav");
-		systems.GetResourceManager().UnloadAsset(meow);
+		auto &resMan = systems.GetResourceManager();
+
+		meowSnd = resMan.LoadAsset(AssetType::SOUND, "meow.wav");
+		resMan.UnloadAsset(meowSnd);
+
+		meowImg = resMan.LoadAsset(AssetType::TEXTURE, "meow.dds");
+		resMan.UnloadAsset(meowImg);
+
+		meowBuffer = spriteBatch.CreateBuffer();
+
+		array<UIVertex, 4> vertices;
+		vertices[0] = { XMFLOAT2(0, 0), XMFLOAT2(0, 0), XMFLOAT4(1, 1, 1, 1) };
+		vertices[1] = { XMFLOAT2(200, 0), XMFLOAT2(1, 0), XMFLOAT4(1, 1, 1, 1) };
+		vertices[2] = { XMFLOAT2(200, 200), XMFLOAT2(1, 1), XMFLOAT4(1, 1, 1, 1) };
+		vertices[3] = { XMFLOAT2(0, 200), XMFLOAT2(0, 1), XMFLOAT4(1, 1, 1, 1) };
+
+		spriteBatch.AddRect(meowBuffer, vertices);
+		spriteBatch.FinalizeBuffer(meowBuffer);
 
 		return true;
 	}
@@ -40,7 +69,7 @@ namespace DunCraw
 
 	void UIEngine::Draw()
 	{
-
+		spriteBatch.DrawBatch(meowBuffer, meowImg, XMFLOAT2(0, 0));
 	}
 
 	void UIEngine::OnChar(EventData &data)
@@ -49,7 +78,7 @@ namespace DunCraw
 		OutputDebugStringA(str);
 
 		EventData &soundEvent = eventEngine.GetData();
-		soundEvent.SetA(meow);
+		soundEvent.SetA(meowSnd);
 		eventEngine.SendEvent(EV_PLAYSOUND, soundEvent);
 	}
 
