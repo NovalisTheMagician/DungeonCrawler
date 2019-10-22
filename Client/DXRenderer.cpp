@@ -137,7 +137,7 @@ namespace DunCraw
 		DXGI_SWAP_CHAIN_DESC swapchainDesc = { 0 };
 		swapchainDesc.BufferDesc.Width = width;
 		swapchainDesc.BufferDesc.Height = height;
-		swapchainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapchainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		swapchainDesc.BufferDesc.RefreshRate.Numerator = 60;
 		swapchainDesc.BufferDesc.RefreshRate.Denominator = 1;
 		swapchainDesc.BufferCount = 1;
