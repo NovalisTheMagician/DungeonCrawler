@@ -1,19 +1,12 @@
-struct VertexIn
-{
-	float2 position : POSITION;
-	float2 texCoord : TEXCOORD;
-};
-
-struct VertexOut
-{
-	float4 position : SV_POSITION;
-	float2 texCoord : TEXCOORD;
-};
+#include "UICommon.hlsli"
 
 VertexOut main(VertexIn vertIn)
 {
 	VertexOut vertOut;
-	vertOut.position = float4(vertIn.position, 0, 1);
-	vertOut.texCoord = vertIn.texCoord;
+    float2 screen = float2(vertIn.position.x / 800, vertIn.position.y / 600);
+    screen = screen - float2(1, 1);
+    vertOut.position = float4(screen, 0, 1);
+    vertOut.texCoord = vertIn.texCoord * float2(1, -1);
+	vertOut.color = vertIn.color;
 	return vertOut;
 }

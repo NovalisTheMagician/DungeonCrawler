@@ -30,7 +30,7 @@ namespace DunCraw
 		void OnWindowResize(EventData &data);
 
 	private:
-		std::reference_wrapper<ISpriteBatch> spriteBatch;
+		ISpriteBatch *spriteBatch;
 
 		Config &config;
 		EventEngine &eventEngine;

@@ -50,7 +50,7 @@ namespace DunCraw
 		void Clear() override;
 		void Present() override;
 
-		std::optional<std::reference_wrapper<ISpriteBatch>> CreateSpriteBatch() override;
+		ISpriteBatch *CreateSpriteBatch() override;
 
 		bool LoadShaders(IResourceManager &resMan) override;
 
@@ -79,7 +79,9 @@ namespace DunCraw
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> uiElementShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> uiTextShader;
 
-		std::vector<DXSpriteBatch> spriteBatches;
+		Microsoft::WRL::ComPtr<ID3D11SamplerState> uiSampler;
+
+		std::unique_ptr<DXSpriteBatch> spriteBatch;
 
 		bool windowVisible;
 

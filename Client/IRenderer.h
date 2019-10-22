@@ -37,7 +37,7 @@ namespace DunCraw
 		virtual bool Init() = 0;
 		virtual void Destroy() = 0;
 
-		virtual std::optional<std::reference_wrapper<ISpriteBatch>> CreateSpriteBatch() = 0;
+		virtual ISpriteBatch *CreateSpriteBatch() = 0;
 
 		virtual void Clear() = 0;
 		virtual void Present() = 0;

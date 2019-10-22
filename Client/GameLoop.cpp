@@ -137,7 +137,7 @@ namespace DunCraw
 
 		if (!renderer->LoadShaders(*resourceManager))
 		{
-			Log::Error("Failed to all all shaders! Cancelling Game...");
+			Log::Error("Failed to load all shaders! Cancelling Game...");
 			return false;
 		}
 

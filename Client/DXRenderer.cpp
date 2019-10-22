@@ -45,10 +45,9 @@ namespace DunCraw
 		if (vertices.count(bufId) > 0)
 		{
 			vector<UIVertex> &vertList = vertices.at(bufId);
-			//vertList.insert(vertList.end(), verts.begin(), verts.end());
-			vertList.push_back(verts[0]);
-			vertList.push_back(verts[1]);
 			vertList.push_back(verts[3]);
+			vertList.push_back(verts[1]);
+			vertList.push_back(verts[0]);
 
 			vertList.push_back(verts[1]);
 			vertList.push_back(verts[3]);
@@ -91,7 +90,7 @@ namespace DunCraw
 	void DXRenderer::DXSpriteBatch::DrawBatch(const Index &bufId, const Index &texIndex, DirectX::XMFLOAT2 position)
 	{
 		ComPtr<ID3D11DeviceContext> &context = renderer.context;
-		if (buffers.count(bufId) > 0)
+		if (buffers.count(bufId) > 0 && renderer.textures.count(texIndex) > 0)
 		{
 			ComPtr<ID3D11Buffer> &buffer = buffers.at(bufId);
 			uint32_t stride = sizeof(UIVertex);
@@ -105,6 +104,7 @@ namespace DunCraw
 
 			auto &texture = renderer.textures.at(texIndex);
 			context->PSSetShaderResources(0, 1, texture.GetAddressOf());
+			context->PSSetSamplers(0, 1, renderer.uiSampler.GetAddressOf());
 
 			uint32_t vertCount = vertices.at(bufId).size();
 			context->Draw(vertCount, 0);
@@ -182,6 +182,26 @@ namespace DunCraw
 			Log::Warning("Failed to remove Alt-Enter window association! Alt-Enter may result in unexpected behaviour");
 		}
 
+		D3D11_SAMPLER_DESC samplerDesc;
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.BorderColor[0] = 1.0f;
+		samplerDesc.BorderColor[1] = 1.0f;
+		samplerDesc.BorderColor[2] = 1.0f;
+		samplerDesc.BorderColor[3] = 1.0f;
+		samplerDesc.MipLODBias = 0;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		if (FAILED(device->CreateSamplerState(&samplerDesc, &uiSampler)))
+		{
+			Log::Error("Failed to create SamplerState for UI");
+			return false;
+		}
+
 		EventData data;
 		data.SetA(width);
 		data.SetB(height);
@@ -198,6 +218,10 @@ namespace DunCraw
 	{
 		if (!initialized)
 			return;
+
+		spriteBatch.reset();
+
+		uiSampler.Reset();
 
 		textures.clear();
 
@@ -224,10 +248,13 @@ namespace DunCraw
 		initialized = false;
 	}
 
-	std::optional<std::reference_wrapper<ISpriteBatch>> DXRenderer::CreateSpriteBatch()
+	ISpriteBatch *DXRenderer::CreateSpriteBatch()
 	{
-		spriteBatches.emplace_back(DXSpriteBatch(*this));
-		return spriteBatches.back();
+		if (!spriteBatch)
+		{
+			spriteBatch.reset(new DXSpriteBatch(*this));
+		}
+		return spriteBatch.get();
 	}
 
 	void DXRenderer::Clear()
@@ -266,12 +293,12 @@ namespace DunCraw
 
 		D3D11_INPUT_ELEMENT_DESC uiInputLayoutDesc[] =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0}
+			{ "POSITION",	0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 
-		if (FAILED(device->CreateInputLayout(uiInputLayoutDesc, 2, data, size, &uiLayout)))
+		if (FAILED(device->CreateInputLayout(uiInputLayoutDesc, _countof(uiInputLayoutDesc), data, size, &uiLayout)))
 		{
 			return false;
 		}
