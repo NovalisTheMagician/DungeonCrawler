@@ -4,7 +4,6 @@
 
 using std::placeholders::_1;
 
-//#include <DirectXMath.h>
 using namespace DirectX;
 
 using std::array;
@@ -50,9 +49,9 @@ namespace DunCraw
 
 		array<UIVertex, 4> vertices;
 		vertices[0] = { XMFLOAT2(0, 0), XMFLOAT2(0, 0), XMFLOAT4(1, 1, 1, 1) };
-		vertices[1] = { XMFLOAT2(400, 0), XMFLOAT2(1, 0), XMFLOAT4(1, 1, 1, 1) };
-		vertices[2] = { XMFLOAT2(400, 400), XMFLOAT2(1, 1), XMFLOAT4(1, 1, 1, 1) };
-		vertices[3] = { XMFLOAT2(0, 400), XMFLOAT2(0, 1), XMFLOAT4(1, 1, 1, 1) };
+		vertices[1] = { XMFLOAT2(800, 0), XMFLOAT2(1, 0), XMFLOAT4(1, 1, 1, 1) };
+		vertices[2] = { XMFLOAT2(800, 600), XMFLOAT2(1, 1), XMFLOAT4(1, 1, 1, 1) };
+		vertices[3] = { XMFLOAT2(0, 600), XMFLOAT2(0, 1), XMFLOAT4(1, 1, 1, 1) };
 
 		spriteBatch->AddRect(meowBuffer, vertices);
 		spriteBatch->FinalizeBuffer(meowBuffer);
