@@ -27,14 +27,24 @@ namespace DunCraw
 
 			void ClearState() override;
 
-			void DrawBatch(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position) override;
-			void DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position) override;
+			void BeginDraw() override;
+			void EndDraw() override;
+
+			void DrawBatch(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint) override;
+			void DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint) override;
+
+		private:
+			void UpdateTransform(DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint);
 
 		private:
 			DXRenderer &renderer;
 
 			std::map<Index, std::vector<UIVertex>> vertices;
 			std::map<Index, Microsoft::WRL::ComPtr<ID3D11Buffer>> buffers;
+
+			Microsoft::WRL::ComPtr<ID3D11Buffer> transformBuffer;
+
+			DirectX::XMFLOAT4X4 projection;
 
 			Index curId;
 

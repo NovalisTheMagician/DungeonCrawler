@@ -49,9 +49,9 @@ namespace DunCraw
 
 		array<UIVertex, 4> vertices;
 		vertices[0] = { XMFLOAT2(0, 0), XMFLOAT2(0, 0), XMFLOAT4(1, 1, 1, 1) };
-		vertices[1] = { XMFLOAT2(800, 0), XMFLOAT2(1, 0), XMFLOAT4(1, 1, 1, 1) };
-		vertices[2] = { XMFLOAT2(800, 600), XMFLOAT2(1, 1), XMFLOAT4(1, 1, 1, 1) };
-		vertices[3] = { XMFLOAT2(0, 600), XMFLOAT2(0, 1), XMFLOAT4(1, 1, 1, 1) };
+		vertices[1] = { XMFLOAT2(512, 0), XMFLOAT2(1, 0), XMFLOAT4(1, 1, 1, 1) };
+		vertices[2] = { XMFLOAT2(512, 512), XMFLOAT2(1, 1), XMFLOAT4(1, 1, 1, 1) };
+		vertices[3] = { XMFLOAT2(0, 512), XMFLOAT2(0, 1), XMFLOAT4(1, 1, 1, 1) };
 
 		spriteBatch->AddRect(meowBuffer, vertices);
 		spriteBatch->FinalizeBuffer(meowBuffer);
@@ -66,7 +66,7 @@ namespace DunCraw
 
 	void UIEngine::Draw()
 	{
-		spriteBatch->DrawBatch(meowBuffer, meowImg, XMFLOAT2(0, 0));
+		spriteBatch->DrawBatch(meowBuffer, meowImg, XMFLOAT2(100, 100), XMFLOAT4(1, 1, 1, 1));
 	}
 
 	void UIEngine::OnChar(EventData &data)

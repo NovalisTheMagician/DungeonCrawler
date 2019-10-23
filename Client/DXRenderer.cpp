@@ -19,17 +19,38 @@ using Microsoft::WRL::ComPtr;
 
 using std::placeholders::_1;
 
+using namespace DirectX;
+
 namespace DunCraw
 {
-	DXRenderer::DXSpriteBatch::DXSpriteBatch(DXRenderer &renderer)
-		: renderer(renderer), curId(0)
+	struct UITransform
 	{
+		float viewWidth;
+		float viewHeight;
+		XMFLOAT2 elemPosition;
+		XMFLOAT4 tint;
+	};
 
+	DXRenderer::DXSpriteBatch::DXSpriteBatch(DXRenderer &renderer)
+		: renderer(renderer), curId(0), projection()
+	{
+		D3D11_BUFFER_DESC bufferDesc;
+		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		bufferDesc.ByteWidth = sizeof(UITransform);
+		bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bufferDesc.MiscFlags = 0;
+
+		if (FAILED(renderer.device->CreateBuffer(&bufferDesc, nullptr, &transformBuffer)))
+		{
+			throw new std::exception("Failed to init constantbuffer");
+		}
 	}
 
 	DXRenderer::DXSpriteBatch::~DXSpriteBatch()
 	{
 		std::for_each(buffers.begin(), buffers.end(), [](auto &elem) { elem.second.Reset(); });
+		transformBuffer.Reset();
 	}
 
 	Index DXRenderer::DXSpriteBatch::CreateBuffer()
@@ -87,20 +108,51 @@ namespace DunCraw
 
 	}
 
-	void DXRenderer::DXSpriteBatch::DrawBatch(const Index &bufId, const Index &texIndex, DirectX::XMFLOAT2 position)
+	void DXRenderer::DXSpriteBatch::BeginDraw()
+	{
+		XMMATRIX projMat = XMMatrixOrthographicLH(renderer.width, renderer.height, 0.1f, 100.0f);
+		XMStoreFloat4x4(&projection, projMat);
+	}
+
+	void DXRenderer::DXSpriteBatch::EndDraw()
+	{
+
+	}
+
+	void DXRenderer::DXSpriteBatch::UpdateTransform(DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint)
+	{
+		UITransform transform;
+		transform.viewWidth = renderer.width;
+		transform.viewHeight = renderer.height;
+		transform.elemPosition = position;
+		transform.tint = tint;
+
+		D3D11_MAPPED_SUBRESOURCE subresource = { 0 };
+		renderer.context->Map(transformBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
+		memcpy(subresource.pData, &transform, sizeof transform);
+		renderer.context->Unmap(transformBuffer.Get(), 0);
+	}
+
+	void DXRenderer::DXSpriteBatch::DrawBatch(const Index &bufId, const Index &texIndex, DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint)
 	{
 		ComPtr<ID3D11DeviceContext> &context = renderer.context;
 		if (buffers.count(bufId) > 0 && renderer.textures.count(texIndex) > 0)
 		{
+			UpdateTransform(position, tint);
+
 			ComPtr<ID3D11Buffer> &buffer = buffers.at(bufId);
 			uint32_t stride = sizeof(UIVertex);
 			uint32_t offset = 0;
 
 			context->VSSetShader(renderer.uiVertexShader.Get(), nullptr, 0);
 			context->PSSetShader(renderer.uiElementShader.Get(), nullptr, 0);
+
 			context->IASetVertexBuffers(0, 1, buffer.GetAddressOf(), &stride, &offset);
 			context->IASetInputLayout(renderer.uiLayout.Get());
 			context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+			context->VSSetConstantBuffers(0, 1, transformBuffer.GetAddressOf());
+			context->PSSetConstantBuffers(0, 1, transformBuffer.GetAddressOf());
 
 			auto &texture = renderer.textures.at(texIndex);
 			context->PSSetShaderResources(0, 1, texture.GetAddressOf());
@@ -111,7 +163,7 @@ namespace DunCraw
 		}
 	}
 
-	void DXRenderer::DXSpriteBatch::DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position)
+	void DXRenderer::DXSpriteBatch::DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint)
 	{
 
 	}

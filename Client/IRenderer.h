@@ -25,8 +25,11 @@ namespace DunCraw
 
 		virtual void ClearState() = 0;
 
-		virtual void DrawBatch(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position) = 0;
-		virtual void DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position) = 0;
+		virtual void BeginDraw() = 0;
+		virtual void EndDraw() = 0;
+
+		virtual void DrawBatch(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint) = 0;
+		virtual void DrawString(const Index &bufid, const Index &texIndex, DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint) = 0;
 	};
 
 	class IRenderer
