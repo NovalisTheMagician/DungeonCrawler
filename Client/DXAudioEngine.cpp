@@ -17,17 +17,8 @@ using Microsoft::WRL::ComPtr;
 namespace DunCraw
 {
 	DXAudioEngine::DXAudioEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator)
-		: config(config), eventEngine(eventEngine), initialized(false), systems(systemLocator),
+		: config(config), eventEngine(eventEngine), systems(systemLocator),
 			sounds(), channels(), masteringVoice(), musicVoice(), soundVoice(), speechVoice()
-	{
-	}
-
-	DXAudioEngine::~DXAudioEngine()
-	{
-		Destroy();
-	}
-
-	bool DXAudioEngine::Init()
 	{
 		UINT flags = 0;
 #ifdef _DEBUG
@@ -39,31 +30,31 @@ namespace DunCraw
 		if (FAILED(XAudio2Create(&xaudio, flags, XAUDIO2_DEFAULT_PROCESSOR)))
 		{
 			Log::Error("Failed to initialized XAudio2!");
-			return false;
+			throw GameSystemException("DXAudioEngine");
 		}
 
 		if (FAILED(xaudio->CreateMasteringVoice(&masteringVoice)))
 		{
 			Log::Error("Failed to create the mastering voice!");
-			return false;
+			throw GameSystemException("DXAudioEngine");
 		}
 
 		if (FAILED(xaudio->CreateSubmixVoice(&soundVoice, 1, 44100)))
 		{
 			Log::Error("Failed to create the sound submixvoice!");
-			return false;
+			throw GameSystemException("DXAudioEngine");
 		}
 
 		if (FAILED(xaudio->CreateSubmixVoice(&musicVoice, 1, 44100)))
 		{
 			Log::Error("Failed to create the music submixvoice!");
-			return false;
+			throw GameSystemException("DXAudioEngine");
 		}
 
 		if (FAILED(xaudio->CreateSubmixVoice(&speechVoice, 1, 44100)))
 		{
 			Log::Error("Failed to create the speech submixvoice!");
-			return false;
+			throw GameSystemException("DXAudioEngine");
 		}
 
 		//TODO check volume range [0, 100]
@@ -87,16 +78,10 @@ namespace DunCraw
 		}
 
 		eventEngine.RegisterCallback(EV_PLAYSOUND, std::bind(&DXAudioEngine::OnPlaySound, this, _1));
-
-		initialized = true;
-		return true;
 	}
 
-	void DXAudioEngine::Destroy()
+	DXAudioEngine::~DXAudioEngine()
 	{
-		if (!initialized)
-			return;
-
 		for (auto it = channels.begin(); it != channels.end(); it++)
 		{
 			IXAudio2SourceVoice *voice = (*it).voice;
@@ -108,7 +93,7 @@ namespace DunCraw
 
 		for (auto it = sounds.begin(); it != sounds.end(); it++)
 		{
-			delete[] (*it).second.buffer;
+			delete[](*it).second.buffer;
 		}
 
 		speechVoice->DestroyVoice();
@@ -116,8 +101,6 @@ namespace DunCraw
 		soundVoice->DestroyVoice();
 		masteringVoice->DestroyVoice();
 		xaudio.Reset();
-
-		initialized = false;
 	}
 
 	static bool FindChunk(istream &dataStream, DWORD fourcc, size_t &chunkSize, size_t &chunkDataPosition)

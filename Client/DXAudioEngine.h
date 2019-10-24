@@ -29,9 +29,6 @@ namespace DunCraw
 		DXAudioEngine(const DXAudioEngine &ae) = delete;
 		DXAudioEngine& operator=(const DXAudioEngine &ae) = delete;
 
-		bool Init() override;
-		void Destroy() override;
-
 		bool LoadSound(const std::byte *data, size_t size, const Index &index) override;
 		void UnloadSound(const Index &index) override;
 
@@ -93,8 +90,6 @@ namespace DunCraw
 		std::vector<Channel> channels;
 
 		std::map<Index, WaveData> sounds;
-
-		bool initialized;
 
 		Config &config;
 		EventEngine &eventEngine;

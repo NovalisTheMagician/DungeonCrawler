@@ -14,9 +14,6 @@ namespace DunCraw
 		LuaScriptEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator);
 		~LuaScriptEngine();
 
-		bool Init() override;
-		void Destroy() override;
-
 		bool RunScript() override;
 
 	private:

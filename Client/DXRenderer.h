@@ -54,9 +54,6 @@ namespace DunCraw
 		DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd);
 		~DXRenderer();
 
-		bool Init() override;
-		void Destroy() override;
-
 		void Clear() override;
 		void Present() override;
 
@@ -99,7 +96,6 @@ namespace DunCraw
 
 		const HWND hWnd;
 
-		bool initialized;
 		Config &config;
 		EventEngine &eventEngine;
 

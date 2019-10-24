@@ -17,15 +17,13 @@ namespace DunCraw
 	class ZipResourceManager : public IResourceManager
 	{
 	public:
-		ZipResourceManager(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, const std::string &filesystemPath = "");
+		ZipResourceManager(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, const std::string &mainFile, const std::string &filesystemPath = "");
 		~ZipResourceManager();
 
 		ZipResourceManager(const ZipResourceManager &rm) = delete;
 		ZipResourceManager& operator=(const ZipResourceManager &rm) = delete;
 
-		bool Init(const std::string &mainFile) override;
 		bool AddPatchFile(const std::string &patchFile) override;
-		void Destroy() override;
 
 		Index LoadAsset(AssetType type, const std::string &file) override;
 		std::byte *GetAssetData(const Index &index, size_t *size) override;

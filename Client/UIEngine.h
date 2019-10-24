@@ -15,9 +15,6 @@ namespace DunCraw
 		UIEngine(const UIEngine &uiengine) = delete;
 		UIEngine& operator=(const UIEngine &uiengine) = delete;
 
-		bool Init();
-		void Destroy();
-
 		void Draw();
 
 	private:

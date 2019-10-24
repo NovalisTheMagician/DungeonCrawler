@@ -7,13 +7,10 @@ namespace DunCraw
 	class NullRenderer : public IRenderer
 	{
 	public:
-		bool Init() override { return true; };
-		void Destroy() override { };
-
 		void Clear() override { };
 		void Present() override { };
 
-		ISpriteBatch *CreateSpriteBatch() override { return {}; };
+		ISpriteBatch *CreateSpriteBatch() override { return nullptr; };
 
 		bool LoadShaders(IResourceManager &resMan) override { return true; };
 

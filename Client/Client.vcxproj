@@ -215,6 +215,7 @@
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DunCraw.h" />
     <ClInclude Include="DunDef.h" />
+    <ClInclude Include="DunExcept.h" />
     <ClInclude Include="DXAudioEngine.h" />
     <ClInclude Include="DXRenderer.h" />
     <ClInclude Include="EventEngine.h" />

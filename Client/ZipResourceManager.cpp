@@ -11,18 +11,9 @@ using std::fstream;
 
 namespace DunCraw
 {
-	ZipResourceManager::ZipResourceManager(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, const string &filesystemPath)
+	ZipResourceManager::ZipResourceManager(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator, const std::string &mainFile, const std::string &filesystemPath)
 		: config(config), eventEngine(eventEngine), filesystemPath(filesystemPath), useFilesystem(!filesystemPath.empty()), systems(systemLocator),
 			currentIndex(0)
-	{
-	}
-
-	ZipResourceManager::~ZipResourceManager()
-	{
-		Destroy();
-	}
-
-	bool ZipResourceManager::Init(const string &mainFile)
 	{
 		try
 		{
@@ -38,11 +29,18 @@ namespace DunCraw
 			else
 			{
 				Log::Error("Couldn't open main archive: " + string(er.what()));
-				return false;
+				throw GameSystemException("ZipResourceManager");
 			}
 		}
+	}
 
-		return true;
+	ZipResourceManager::~ZipResourceManager()
+	{
+		archives.clear();
+		fileCache.clear();
+		loaded.clear();
+		indexCache.clear();
+		fileSizeCache.clear();
 	}
 
 	bool ZipResourceManager::AddPatchFile(const string &patchFile)
@@ -59,15 +57,6 @@ namespace DunCraw
 		}
 
 		return true;
-	}
-
-	void ZipResourceManager::Destroy()
-	{
-		archives.clear();
-		fileCache.clear();
-		loaded.clear();
-		indexCache.clear();
-		fileSizeCache.clear();
 	}
 
 	Index ZipResourceManager::LoadAsset(AssetType type, const std::string &file)

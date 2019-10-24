@@ -20,3 +20,5 @@
 #include "EventEngine.h"
 
 #include "SystemLocator.h"
+
+#include "DunExcept.h"

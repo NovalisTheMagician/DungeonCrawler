@@ -85,13 +85,27 @@ namespace DunCraw
 			mainArchive = wstringToString(args.GetParameter(L"-main"));
 		}
 
-		resourceManager.reset(new ZipResourceManager(config, eventEngine, locator, filesystemPath));
-		if (!resourceManager->Init(mainArchive))
+		try
 		{
-			Log::Error("ResourceManager creation failed! Cancelling Game...");
+			resourceManager.reset(new ZipResourceManager(config, eventEngine, locator, mainArchive, filesystemPath));
+			locator.Provide(resourceManager.get());
+
+			renderer.reset(new DXRenderer(config, eventEngine, locator, reinterpret_cast<HWND>(window->Handle())));
+			locator.Provide(renderer.get());
+
+			audioEngine.reset(new DXAudioEngine(config, eventEngine, locator));
+			locator.Provide(audioEngine.get());
+
+			scriptEngine.reset(new LuaScriptEngine(config, eventEngine, locator));
+			locator.Provide(scriptEngine.get());
+
+			uiEngine.reset(new UIEngine(config, eventEngine, locator));
+		}
+		catch (GameSystemException &ex)
+		{
+			Log::Error(ex.what());
 			return false;
 		}
-		locator.Provide(resourceManager.get());
 
 		bool strictPatch = args.IsSet(L"-strict");
 		auto &patchFiles = args.GetParameters(L"-file");
@@ -103,37 +117,6 @@ namespace DunCraw
 				return false;
 			}
 		}
-
-		renderer.reset(new DXRenderer(config, eventEngine, locator, reinterpret_cast<HWND>(window->Handle())));
-		if (!renderer->Init())
-		{
-			Log::Error("Renderer creation failed! Cancelling Game...");
-			return false;
-		}
-		locator.Provide(renderer.get());
-
-		audioEngine.reset(new DXAudioEngine(config, eventEngine, locator));
-		if (!audioEngine->Init())
-		{
-			Log::Error("AudioEngine creation failed! Cancelling Game...");
-			return false;
-		}
-		locator.Provide(audioEngine.get());
-
-		uiEngine.reset(new UIEngine(config, eventEngine, locator));
-		if (!uiEngine->Init())
-		{
-			Log::Error("UIEngine creation failed! Cancelling Game...");
-			return false;
-		}
-
-		scriptEngine.reset(new LuaScriptEngine(config, eventEngine, locator));
-		if (!scriptEngine->Init())
-		{
-			Log::Error("ScriptEngine creation failed! Cancelling Game...");
-			return false;
-		}
-		locator.Provide(scriptEngine.get());
 
 		if (!renderer->LoadShaders(*resourceManager))
 		{
@@ -165,10 +148,6 @@ namespace DunCraw
 
 	void GameLoop::Destroy()
 	{
-		uiEngine->Destroy();
-		renderer->Destroy();
-		audioEngine->Destroy();
-		resourceManager->Destroy();
 		window->Close();
 	}
 }

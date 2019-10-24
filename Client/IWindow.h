@@ -14,7 +14,5 @@ namespace DunCraw
 		virtual bool DoEvents(int &exitCode) = 0;
 		virtual void* Handle() = 0;
 
-		//virtual void SetDefault() = 0;
-
 	};
 }

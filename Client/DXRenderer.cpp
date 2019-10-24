@@ -66,13 +66,13 @@ namespace DunCraw
 		if (vertices.count(bufId) > 0)
 		{
 			vector<UIVertex> &vertList = vertices.at(bufId);
-			vertList.push_back(verts[3]);
-			vertList.push_back(verts[1]);
 			vertList.push_back(verts[0]);
-
 			vertList.push_back(verts[1]);
 			vertList.push_back(verts[3]);
+
 			vertList.push_back(verts[2]);
+			vertList.push_back(verts[3]);
+			vertList.push_back(verts[1]);
 		}
 	}
 
@@ -174,15 +174,6 @@ namespace DunCraw
 		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator), 
 			windowVisible(true), textures(), width(0), height(0)
 	{
-	}
-
-	DXRenderer::~DXRenderer()
-	{
-		Destroy();
-	}
-
-	bool DXRenderer::Init()
-	{
 		width = config.GetInt("r_width", 800);
 		height = config.GetInt("r_height", 600);
 
@@ -211,7 +202,7 @@ namespace DunCraw
 		if (FAILED(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags, &featureLevelReq, numFeatureLevels, D3D11_SDK_VERSION, &swapchainDesc, swapchain.ReleaseAndGetAddressOf(), device.ReleaseAndGetAddressOf(), &featureLevelSupported, context.ReleaseAndGetAddressOf())))
 		{
 			Log::Error("Failed to create D3D11 device!");
-			return false;
+			throw GameSystemException("DXRenderer");
 		}
 
 		bool successRemoveAE = false;
@@ -251,7 +242,7 @@ namespace DunCraw
 		if (FAILED(device->CreateSamplerState(&samplerDesc, &uiSampler)))
 		{
 			Log::Error("Failed to create SamplerState for UI");
-			return false;
+			throw GameSystemException("DXRenderer");
 		}
 
 		EventData data;
@@ -261,16 +252,10 @@ namespace DunCraw
 
 		eventEngine.RegisterCallback(EV_RESIZE, std::bind(&DXRenderer::OnResize, this, _1));
 		eventEngine.RegisterCallback(EV_WINDOWCHANGE, std::bind(&DXRenderer::OnWindowChange, this, _1));
-
-		initialized = true;
-		return true;
 	}
 
-	void DXRenderer::Destroy()
+	DXRenderer::~DXRenderer()
 	{
-		if (!initialized)
-			return;
-
 		spriteBatch.reset();
 
 		uiSampler.Reset();
@@ -296,8 +281,6 @@ namespace DunCraw
 		}
 #endif
 		device.Reset();
-
-		initialized = false;
 	}
 
 	ISpriteBatch *DXRenderer::CreateSpriteBatch()

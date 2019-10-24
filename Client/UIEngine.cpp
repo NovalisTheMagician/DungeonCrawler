@@ -10,25 +10,16 @@ using std::array;
 
 namespace DunCraw
 {
-	UIEngine::UIEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator)
-		: config(config), eventEngine(eventEngine), systems(systemLocator), spriteBatch(nullptr)
-	{
-	}
-
-	UIEngine::~UIEngine()
-	{
-		Destroy();
-	}
-
 	Index meowSnd;
 	Index meowImg;
 	Index meowBuffer;
 
-	bool UIEngine::Init()
+	UIEngine::UIEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator)
+		: config(config), eventEngine(eventEngine), systems(systemLocator), spriteBatch(nullptr)
 	{
 		spriteBatch = systems.GetRenderer().CreateSpriteBatch();
 		if (!spriteBatch)
-			return false;
+			throw GameSystemException("UIEngine");
 
 		eventEngine.RegisterCallback(EV_CHAR, std::bind(&UIEngine::OnChar, this, _1));
 		eventEngine.RegisterCallback(EV_MOUSEMOVEABS, std::bind(&UIEngine::OnMouseMove, this, _1));
@@ -55,18 +46,16 @@ namespace DunCraw
 
 		spriteBatch->AddRect(meowBuffer, vertices);
 		spriteBatch->FinalizeBuffer(meowBuffer);
-
-		return true;
 	}
 
-	void UIEngine::Destroy()
+	UIEngine::~UIEngine()
 	{
-
+		
 	}
 
 	void UIEngine::Draw()
 	{
-		spriteBatch->DrawBatch(meowBuffer, meowImg, XMFLOAT2(100, 100), XMFLOAT4(1, 1, 1, 1));
+		spriteBatch->DrawBatch(meowBuffer, meowImg, XMFLOAT2(0, 0), XMFLOAT4(1, 1, 1, 1));
 	}
 
 	void UIEngine::OnChar(EventData &data)
