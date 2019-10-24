@@ -13,6 +13,10 @@ namespace DunCraw
 	Index meowSnd;
 	Index meowImg;
 	Index meowBuffer;
+	Index handTex;
+	Index handBuffer;
+
+	float mx, my;
 
 	UIEngine::UIEngine(Config &config, EventEngine &eventEngine, const SystemLocator &systemLocator)
 		: config(config), eventEngine(eventEngine), systems(systemLocator), spriteBatch(nullptr)
@@ -36,6 +40,9 @@ namespace DunCraw
 		meowImg = resMan.LoadAsset(AssetType::TEXTURE, "meow.dds");
 		resMan.UnloadAsset(meowImg);
 
+		handTex = resMan.LoadAsset(AssetType::TEXTURE, "cursor.dds");
+		resMan.UnloadAsset(handTex);
+
 		meowBuffer = spriteBatch->CreateBuffer();
 
 		array<UIVertex, 4> vertices;
@@ -46,6 +53,21 @@ namespace DunCraw
 
 		spriteBatch->AddRect(meowBuffer, vertices);
 		spriteBatch->FinalizeBuffer(meowBuffer);
+
+		handBuffer = spriteBatch->CreateBuffer();
+
+		array<UIVertex, 4> handVertices;
+		handVertices[0] = { XMFLOAT2(0, 0), XMFLOAT2(0, 0), XMFLOAT4(1, 1, 1, 1) };
+		handVertices[1] = { XMFLOAT2(32, 0), XMFLOAT2(1, 0), XMFLOAT4(1, 1, 1, 1) };
+		handVertices[2] = { XMFLOAT2(32, 32), XMFLOAT2(1, 1), XMFLOAT4(1, 1, 1, 1) };
+		handVertices[3] = { XMFLOAT2(0, 32), XMFLOAT2(0, 1), XMFLOAT4(1, 1, 1, 1) };
+
+		spriteBatch->AddRect(handBuffer, handVertices);
+		spriteBatch->FinalizeBuffer(handBuffer);
+
+		EventData &data = eventEngine.GetData();
+		data.SetA(false);
+		//eventEngine.SendEvent(EV_SHOWCURSOR, data);
 	}
 
 	UIEngine::~UIEngine()
@@ -55,7 +77,8 @@ namespace DunCraw
 
 	void UIEngine::Draw()
 	{
-		spriteBatch->DrawBatch(meowBuffer, meowImg, XMFLOAT2(0, 0), XMFLOAT4(1, 1, 1, 1));
+		spriteBatch->DrawBatch(handBuffer, handTex, XMFLOAT2(mx, my), XMFLOAT4(1, 1, 1, 1));
+		spriteBatch->DrawBatch(meowBuffer, meowImg, XMFLOAT2(100, 100), XMFLOAT4(1, 1, 1, 1));
 	}
 
 	void UIEngine::OnChar(EventData &data)
@@ -70,7 +93,8 @@ namespace DunCraw
 
 	void UIEngine::OnMouseMove(EventData &data)
 	{
-
+		mx = data.GetA<float>();
+		my = data.GetB<float>();
 	}
 
 	void UIEngine::OnMouseDown(EventData &data)

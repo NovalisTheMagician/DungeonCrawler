@@ -32,7 +32,7 @@ namespace DunCraw
 	};
 
 	DXRenderer::DXSpriteBatch::DXSpriteBatch(DXRenderer &renderer)
-		: renderer(renderer), curId(0), projection()
+		: renderer(renderer), curId(0)
 	{
 		D3D11_BUFFER_DESC bufferDesc;
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -84,7 +84,7 @@ namespace DunCraw
 
 			D3D11_BUFFER_DESC bufferDesc;
 			bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-			bufferDesc.ByteWidth = sizeof(UIVertex) * vertList.size();
+			bufferDesc.ByteWidth = static_cast<uint32_t>(sizeof(UIVertex) * vertList.size());
 			bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 			bufferDesc.CPUAccessFlags = 0;
 			bufferDesc.MiscFlags = 0;
@@ -110,8 +110,7 @@ namespace DunCraw
 
 	void DXRenderer::DXSpriteBatch::BeginDraw()
 	{
-		XMMATRIX projMat = XMMatrixOrthographicLH(renderer.width, renderer.height, 0.1f, 100.0f);
-		XMStoreFloat4x4(&projection, projMat);
+
 	}
 
 	void DXRenderer::DXSpriteBatch::EndDraw()
@@ -122,8 +121,8 @@ namespace DunCraw
 	void DXRenderer::DXSpriteBatch::UpdateTransform(DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 tint)
 	{
 		UITransform transform;
-		transform.viewWidth = renderer.width;
-		transform.viewHeight = renderer.height;
+		transform.viewWidth = static_cast<float>(renderer.width);
+		transform.viewHeight = static_cast<float>(renderer.height);
 		transform.elemPosition = position;
 		transform.tint = tint;
 
@@ -158,7 +157,7 @@ namespace DunCraw
 			context->PSSetShaderResources(0, 1, texture.GetAddressOf());
 			context->PSSetSamplers(0, 1, renderer.uiSampler.GetAddressOf());
 
-			uint32_t vertCount = vertices.at(bufId).size();
+			uint32_t vertCount = static_cast<uint32_t>(vertices.at(bufId).size());
 			context->Draw(vertCount, 0);
 		}
 	}
@@ -171,7 +170,7 @@ namespace DunCraw
 
 
 	DXRenderer::DXRenderer(Config &config, EventEngine &eventEngine, const SystemLocator& systemLocator, const HWND hWnd)
-		: config(config), eventEngine(eventEngine), hWnd(hWnd), initialized(false), systems(systemLocator), 
+		: config(config), eventEngine(eventEngine), hWnd(hWnd), systems(systemLocator), 
 			windowVisible(true), textures(), width(0), height(0)
 	{
 		width = config.GetInt("r_width", 800);
